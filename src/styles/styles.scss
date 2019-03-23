@@ -1,0 +1,19 @@
+@import './base/settings';
+@import './base/mixins';
+@import './base/base';
+
+@import './components/box-layout';
+@import './components/button';
+@import './components/content-container';
+@import './components/form';
+@import './components/input-group';
+@import './components/inputs';
+@import './components/header';
+@import './components/list';
+@import './components/loader';
+@import './components/modal';
+@import './components/page-header';
+@import './components/visibility';
+
+$fa-font-path: '~font-awesome/fonts';
+@import '~font-awesome/scss/font-awesome.scss';

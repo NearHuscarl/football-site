@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render LoginPage correctly 1`] = `
+<div
+  className="box-layout"
+>
+  <div
+    className="box-layout__box"
+  >
+    <h1
+      className="box-layout__title"
+    >
+      Boilerplate
+    </h1>
+    <p>
+      Tag line for app.
+    </p>
+    <button
+      className="box-layout__button button--red"
+      onClick={[MockFunction]}
+      type="button"
+    >
+      <i
+        className="fa fa-google fa-fw"
+      />
+      Login with Google
+    </button>
+    <button
+      className="box-layout__button"
+      onClick={[MockFunction]}
+      type="button"
+    >
+      <i
+        className="fa fa-facebook fa-fw"
+      />
+      Login with Facebook
+    </button>
+    <button
+      className="box-layout__button button--light-blue"
+      onClick={[MockFunction]}
+      type="button"
+    >
+      <i
+        className="fa fa-twitter fa-fw"
+      />
+      Login with Twitter
+    </button>
+    <button
+      className="box-layout__button button--dark"
+      onClick={[MockFunction]}
+      type="button"
+    >
+      <i
+        className="fa fa-github fa-fw"
+      />
+      Login with Github
+    </button>
+  </div>
+</div>
+`;

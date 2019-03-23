@@ -1,0 +1,28 @@
+/**
+* Generate button style
+* @param {String} - $name - required
+* @param {String} - $background - required - format accepted: hsla, rgb, #
+* @param {Strong} - $color - optional - format accepted: hsla, rgb, #
+*/
+@mixin set-button-color($background, $color: '') {
+	background: $background;
+	@if ($color != '') {
+		color: $color;
+	}
+
+	&:hover {
+		background: lighten($background, 7%);
+	}
+}
+
+@mixin generate-button-color($name, $background, $color: '') {
+	@if ($name == 'DEFAULT') {
+		.button {
+			@include set-button-color($background, $color);
+		}
+	} @else {
+		.button--#{$name} {
+			@include set-button-color($background, $color);
+		}
+	}
+}

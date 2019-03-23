@@ -1,0 +1,7 @@
+node_modules/
+yarn-error.log
+public/dist/
+
+.env_development
+.env_test
+setup_db.sh
