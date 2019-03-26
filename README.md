@@ -44,7 +44,7 @@ Follow [firebase instructions](https://firebase.google.com/docs/auth/?authuser=0
 -  Get your firebase environment variables after creating a firebase project
 -  Fill in the .env_development file for development database
 -  Fill in the .env_test file for seperate testing database if needed
--  In the root folder, run `./setup_db.sh` (TODO: add setup_db.sh)
+-  In the root folder, run `./setup_heroku.sh`
 -  Make sure git doesn't track those 2 files as they are your passwords to the database
 
 ## Build
@@ -59,5 +59,18 @@ $ yarn run dev-server
 ```bash
 $ yarn test
 ```
+
+## Deploy on heroku
+- Install heroku CLI on your computer
+
+```bash
+$ heroku login
+$ cd <project-dir>
+$ heroku create app-name
+$ ./setup_heroku.sh # this is bash script, use git bash to run on window
+$ git remote -v # confirm the remote is setup
+$ git push heroku master
+```
+
 
 [nodejs]: https://nodejs.org/en/download/
