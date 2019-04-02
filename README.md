@@ -1,6 +1,6 @@
-# React Boilerplate
+# [Football 365]
 
-React boilerplate is a front-end template to quickly prototype react applications
+Latest football news, fixtures, results, statistics, transfers
 
 # Details
 
@@ -8,15 +8,6 @@ React boilerplate is a front-end template to quickly prototype react application
 
 -  Front-end: react-redux
 -  Back-end: firebase
--  Testing: jest and enzyme
-
-## Pages
-
--  Login page
--  Dashboard page
--  404/Not found page
--  Loading page
--  Confirm Modal
 
 # Setup
 
@@ -30,8 +21,8 @@ $ npm install -g yarn
 
 * Open the terminal and type
 ```bash
-$ git clone https://github.com/NearHuscarl/react-boilerplate
-$ cd react-boilerplate
+$ git clone https://github.com/NearHuscarl/football-site
+$ cd football-site
 $ yarn install
 ```
 
@@ -42,8 +33,9 @@ Follow [firebase instructions](https://firebase.google.com/docs/auth/?authuser=0
 ## Setup firebase
 
 -  Get your firebase environment variables after creating a firebase project
--  Fill in the .env_development file for development database
--  Fill in the .env_test file for seperate testing database if needed
+-  Create `.env_development` and `.env_test` file in the root folder
+-  Fill in the `.env_development` file for development database
+-  Fill in the `.env_test` file for seperate testing database if needed
 -  In the root folder, run `./setup_heroku.sh`
 -  Make sure git doesn't track those 2 files as they are your passwords to the database
 
@@ -54,7 +46,7 @@ $ yarn run build:dev
 $ yarn run dev-server
 ```
 
-## Test
+## Test (Not available now)
 
 ```bash
 $ yarn test
@@ -74,3 +66,4 @@ $ git push heroku master
 
 
 [nodejs]: https://nodejs.org/en/download/
+[Football 365]: https://football-365.herokuapp.com/
