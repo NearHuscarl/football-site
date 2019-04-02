@@ -1,18 +1,31 @@
-.header {
+// HeadRoom component
+.headroom {
 	background: $dark-blue;
+	boxShadow: 1px 1px 1px rgba(0,0,0,0.25);
 }
 
 .header__content {
 	align-items: center;
 	display: flex;
-	justify-content: space-between;
+	// justify-content: space-between;
 	padding: $s-size 0;
-}
 
-.header__title {
-	color: white;
-	text-decoration: none;
-	h1 {
-		margin: 0;
+	.header__title {
+		color: white;
+		text-decoration: none;
+		margin-right: $l-size;
+		h1 {
+			margin: 0;
+		}
+
+		display: flex;
+		justify-content: center; // align horizontal
+		align-items: center; // align vertical
+	}
+
+	// Tabs component
+	.react-tabs {
+		color: $off-white;
+		margin-bottom: -$l-size;
 	}
 }
