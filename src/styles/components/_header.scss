@@ -27,5 +27,11 @@
 	.react-tabs {
 		color: $off-white;
 		margin-bottom: -$l-size;
+		margin-right: $m-size;
+	}
+
+	// SearchBar component
+	.search-bar__wrapper {
+		margin-bottom: -$l-size + 1rem;
 	}
 }

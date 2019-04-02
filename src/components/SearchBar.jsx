@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import  '../styles/components/_searchbar.scss';
 
-class SearchInput extends React.Component {
+class SearchBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,7 +20,7 @@ class SearchInput extends React.Component {
     }
 
     handleKeyDown = (e) => {
-        switch (event.key) {
+        switch (e.key) {
             case 'Enter':
               this.search();
               break;
@@ -56,22 +57,22 @@ class SearchInput extends React.Component {
     }
 }
 
-SearchInput.propTypes = {
+SearchBar.propTypes = {
     placeholder: PropTypes.string,
     onSearch: PropTypes.func,
     renderSearchButton: PropTypes.bool,
     styles: PropTypes.object,
 };
 
-SearchInput.defaultProps = {
+SearchBar.defaultProps = {
     placeholder: 'Searching...',
-    onSearch: (q) => console.log('Searching ', q),
+    onSearch: (q) => console.log('Searching', q),
     renderSearchButton: true,
     styles: {
       wrapper: 'search-bar__wrapper',
       input: 'search-bar__input',
-      submitButton: 'react-search-bar__submit',
+      submitButton: 'search-bar__submit',
     },
 };
 
-export default SearchInput
+export default SearchBar

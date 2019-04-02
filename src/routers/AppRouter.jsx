@@ -7,19 +7,20 @@ import FixturesPage from '../pages/FixturesPage';
 import TransferPage from '../pages/TransferPage';
 import MatchesPage from '../pages/MatchesPage';
 import NotFoundPage from '../pages/NotFoundPage';
-import PageRoute from './PageRoute';
+import Header from '../components/Header';
 
 export const history = createHistory();
 
-const AppRouter = () => (
+const AppRouter = (props) => (
 	<Router history={history}>
 		<div>
+			<Header history={history} />
 			<Switch>
-				<PageRoute path="/" component={DashboardPage} exact/>
-				<PageRoute path="/news" component={NewsPage} exact/>
-				<PageRoute path="/fixtures" component={FixturesPage} exact/>
-				<PageRoute path="/transfers" component={TransferPage} exact/>
-				<PageRoute path="/matches" component={MatchesPage} exact/>
+				<Route path="/" component={DashboardPage} exact />
+				<Route path="/news" component={NewsPage} exact />
+				<Route path="/fixtures" component={FixturesPage} exact />
+				<Route path="/transfers" component={TransferPage} exact />
+				<Route path="/matches" component={MatchesPage} exact />
 				<Route component={NotFoundPage} />
 			</Switch>
 		</div>
