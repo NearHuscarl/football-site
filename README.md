@@ -33,11 +33,15 @@ Follow [firebase instructions](https://firebase.google.com/docs/auth/?authuser=0
 ## Setup firebase
 
 -  Get your firebase environment variables after creating a firebase project
--  Create `.env_development` and `.env_test` file in the root folder
 -  Fill in the `.env_development` file for development database
 -  Fill in the `.env_test` file for seperate testing database if needed
 -  In the root folder, run `./setup_heroku.sh`
 -  Make sure git doesn't track those 2 files as they are your passwords to the database
+
+## Setup service APIs:
+
+-  Get API keys (free) from [News API] and [Sportmonks]
+-  Fill in the `.api_keys` file
 
 ## Build
 
@@ -67,3 +71,5 @@ $ git push heroku master
 
 [nodejs]: https://nodejs.org/en/download/
 [Football 365]: https://football-365.herokuapp.com/
+[News API]: https://newsapi.org/
+[Sportmonks]: https://www.sportmonks.com
