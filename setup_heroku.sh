@@ -15,14 +15,24 @@ fi
 # heroku login
 # heroku create app-name
 
-keyValues=""
+read_keyval() {
+  local keyValues="" filePath="$PWD/$1"
 
-for line in $(cat "$PWD/.env_development"); do
+  if [ ! -f "$filePath" ]; then
+    echo "$filePath not found"
+    return
+  fi
+
+  for line in $(cat "$filePath"); do
     key="${line%=*}"
 
     # substitution to remove any newlines https://stackoverflow.com/questions/12524308/bash-strip-trailing-linebreak-from-output
     value="$(echo "${line#*=}")"
     keyValues+="$key=$value "
-done
+  done
 
-heroku config:set $keyValues
+  echo $keyValues
+}
+
+heroku config:set $(read_keyval '.api_keys')
+heroku config:set $(read_keyval '.env_development')

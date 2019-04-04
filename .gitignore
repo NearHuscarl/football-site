@@ -2,7 +2,9 @@ node_modules/
 yarn-error.log
 public/dist/
 
+setup_db.sh
+
+# git update-index --assume-unchanged <path>
 .api_keys
 .env_development
 .env_test
-setup_db.sh

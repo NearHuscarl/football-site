@@ -35,13 +35,13 @@ Follow [firebase instructions](https://firebase.google.com/docs/auth/?authuser=0
 -  Get your firebase environment variables after creating a firebase project
 -  Fill in the `.env_development` file for development database
 -  Fill in the `.env_test` file for seperate testing database if needed
--  In the root folder, run `./setup_heroku.sh`
 -  Make sure git doesn't track those 2 files as they are your passwords to the database
 
 ## Setup service APIs:
 
 -  Get API keys (free) from [News API] and [Sportmonks]
 -  Fill in the `.api_keys` file
+-  In the root folder, run `./setup_heroku.sh`
 
 ## Build
 
