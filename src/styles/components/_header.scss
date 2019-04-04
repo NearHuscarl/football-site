@@ -2,36 +2,45 @@
 .headroom {
 	background: $dark-blue;
 	boxShadow: 1px 1px 1px rgba(0,0,0,0.25);
+	height: 8rem;
 }
 
 .header__content {
-	align-items: center;
 	display: flex;
-	// justify-content: space-between;
+	justify-content: space-between;
+	align-items: center;
 	padding: $s-size 0;
 
-	.header__title {
-		color: white;
-		text-decoration: none;
-		margin-right: $l-size;
-		h1 {
-			margin: 0;
+	.header__navbar {
+		display: flex;
+		align-items: center;
+		
+		.header__title {
+			color: white;
+			text-decoration: none;
+			font-size: 12;
+			h1 {
+				margin: 0;
+			}
+			img {
+				width: 7rem;
+			}
+	
+			display: flex;
+			justify-content: center; // align horizontal
+			align-items: center; // align vertical
+			margin-right: $m-size;
 		}
 
-		display: flex;
-		justify-content: center; // align horizontal
-		align-items: center; // align vertical
-	}
-
-	// Tabs component
-	.react-tabs {
-		color: $off-white;
-		margin-bottom: -$l-size;
-		margin-right: $m-size;
+		// Tabs component
+		.react-tabs {
+			color: $off-white;
+			margin-bottom: -$m-size;
+		}
 	}
 
 	// SearchBar component
 	.search-bar__wrapper {
-		margin-bottom: -$l-size + 1rem;
+		margin-bottom: -$m-size;
 	}
 }

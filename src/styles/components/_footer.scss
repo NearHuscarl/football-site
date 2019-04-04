@@ -1,0 +1,23 @@
+body {
+    position: relative;
+}
+
+// https://codepen.io/anon/pen/jRbppK?editors=0100#anon-login
+.footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1.5rem;
+    background-color: $off-white;
+    text-align: center;
+
+    .footer__content {
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+            color: $dark-gray;
+        }
+    }
+}

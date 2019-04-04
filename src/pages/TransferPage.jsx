@@ -2,7 +2,7 @@ import React from 'react';
 
 const TransferPage = () => {
     return (
-        <div>
+        <div className="content-container">
             Transfer page
         </div>
     );

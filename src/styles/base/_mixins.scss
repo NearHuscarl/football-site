@@ -13,6 +13,10 @@
 	&:hover {
 		background: lighten($background, 7%);
 	}
+	
+	&:focus {
+		outline-color: darken($background, 7%)
+	}
 }
 
 @mixin generate-button-color($name, $background, $color: '') {

@@ -2,6 +2,7 @@ node_modules/
 yarn-error.log
 public/dist/
 
+.api_keys
 .env_development
 .env_test
 setup_db.sh

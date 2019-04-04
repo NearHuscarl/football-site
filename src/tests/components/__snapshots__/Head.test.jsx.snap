@@ -13,10 +13,10 @@ exports[`should render Header correctly 1`] = `
       <Link
         className="header__title"
         replace={false}
-        to="/dashboard"
+        to="/"
       >
         <h1>
-          Boilerplate
+          Football 365
         </h1>
       </Link>
       <button

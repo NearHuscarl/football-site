@@ -10,6 +10,7 @@ if (process.env.NODE_ENV === 'test') {
 } else if (process.env.NODE_ENV === 'development') {
 	dotenv.config({ path: '.env_development' });
 }
+dotenv.config({ path: '.api_keys' });
 
 module.exports = (env) => {
 	const isProduction = env === 'production';
@@ -66,6 +67,12 @@ module.exports = (env) => {
 		plugins: [
 			CSSExtract,
 			new webpack.DefinePlugin({
+				'process.env.NEWS_API_KEY': JSON.stringify(
+					process.env.NEWS_API_KEY,
+				),
+				'process.env.SPORTMONKS_API_KEY': JSON.stringify(
+					process.env.SPORTMONKS_API_KEY,
+				),
 				'process.env.FIREBASE_API_KEY': JSON.stringify(
 					process.env.FIREBASE_API_KEY,
 				),

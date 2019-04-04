@@ -2,7 +2,7 @@ import React from 'react';
 
 const NewsPage = () => {
     return (
-        <div>
+        <div className="content-container">
             News page
         </div>
     );

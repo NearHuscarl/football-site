@@ -1,9 +1,13 @@
 {
-	"name": "boilerplate-react-app",
+	"name": "football365",
 	"version": "1.0.0",
 	"main": "index.js",
 	"author": "Near Huscarl",
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/NearHuscarl/football-site.git"
+	},
 	"scripts": {
 		"lint": "eslint . --ext=js,jsx --ignore-path .eslintignore",
 		"build:dev": "webpack",
@@ -27,7 +31,9 @@
 		"firebase": "^5.3.1",
 		"font-awesome": "^4.7.0",
 		"history": "^4.7.2",
+		"lodash": "^4.17.11",
 		"moment": "^2.22.2",
+		"newsapi": "^2.4.0",
 		"normalize.css": "^8.0.0",
 		"numeral": "^2.0.6",
 		"prop-types": "^15.6.2",
@@ -38,6 +44,7 @@
 		"react-headroom": "^2.2.8",
 		"react-modal": "^3.5.1",
 		"react-redux": "^5.0.7",
+		"react-responsive-carousel": "^3.1.47",
 		"react-router-dom": "^4.3.1",
 		"react-tabs": "^3.0.0",
 		"redux": "^4.0.0",

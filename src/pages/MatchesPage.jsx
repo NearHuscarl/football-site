@@ -2,7 +2,7 @@ import React from 'react';
 
 const MatchesPage = () => {
     return (
-        <div>
+        <div className="content-container">
             Matches page
         </div>
     );

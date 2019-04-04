@@ -2,7 +2,7 @@ import React from 'react';
 
 const FixturesPage = () => {
     return (
-        <div>
+        <div className="content-container">
             Fixtures page
         </div>
     );

@@ -1,0 +1,41 @@
+.content-container {
+    .carousel {
+        .control-arrow {
+            opacity: 0;
+
+            &:hover {
+                opacity: 0.9;
+                background: none;
+            }
+        }
+
+        .control-dots {
+            .dot {
+                box-shadow: none;
+            }
+        }
+
+        .slide {
+            .legend {
+                left: 0;
+                top: 50%;
+                margin-left: 0;
+                margin-top: -30%;
+                width: 35%;
+                height: 80%;
+                border-radius: 4px;
+                text-align: left;
+            }
+        }
+
+        // Original opacity is too much (1 on hovering)
+        .slide .legend {
+            opacity: 0.65;
+        }
+        &:hover {
+            .slide .legend {
+                opacity: 0.75;
+            }
+        }
+    }
+}
