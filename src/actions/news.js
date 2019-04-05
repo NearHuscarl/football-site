@@ -103,6 +103,7 @@ export const startSetNews = () => {
                 const lastUpdated = moment(meta.lastUpdated);
                 const cacheTime = moment.duration(now.diff(lastUpdated));
                 let promise = Promise.resolve(null);
+                console.log(`${(settings.newsCacheTime - cacheTime.asHours()).toFixed(2)} hour(s) left before refreshing news`);
 
                 if (cacheTime.asHours() > settings.newsCacheTime) {
                     promise = refreshNews(meta.currentIndex)

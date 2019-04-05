@@ -2,8 +2,11 @@
 @import './base/mixins';
 @import './base/base';
 
+@import './pages/homepage';
+
 @import './components/box-layout';
 @import './components/button';
+@import './components/card';
 @import './components/content-container';
 @import './components/form';
 @import './components/input-group';
