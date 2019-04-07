@@ -7,18 +7,18 @@ import _ from 'lodash';
 import '../styles/components/_carousel.scss';
 import { startSetNews } from '../actions/news';
 
-class PageHeader extends React.Component {
+export class PageHeader extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             headlines: [],
-            currentIndex: 0,
+            headlineIndex: 0,
         };
 
         props.startSetNews()
             .then(() => {
-                const { articles } = this.props;
-                const randomArticles = _.take(_.shuffle(articles), 4);
+                const { articles, meta } = this.props.news;
+                const randomArticles = _.take(_.shuffle(articles[meta.currentIndex]), 4);
                 this.setState(() => ({ headlines: randomArticles }));
             });
     }
@@ -31,8 +31,9 @@ class PageHeader extends React.Component {
         win.focus();
     }
     
-    onChangeHeadlineImage = (currentIndex) => {
-        this.setState(() => ({ currentIndex }));
+    onChangeHeadlineImage = (headlineIndex) => {
+        console.log(headlineIndex);
+        this.setState(() => ({ headlineIndex }));
     }
 
     renderHeadlineImage = (article) => {
@@ -66,20 +67,21 @@ class PageHeader extends React.Component {
     }
 
     render() {
-        const { headlines, currentIndex } = this.state;
+        const { headlines, headlineIndex } = this.state;
 
         return (
             <div className='page-header'>
                 <div className='content-container'>
                     <div className='headline'>
-                        <div className='headline__image'>
+                        <div className='headline__image carousel-wrapper'>
                             <Carousel
+                                className=''
                                 width='70rem'
                                 useKeyboardArrows
                                 infiniteLoop
-                                // Quick fix: force rendering twice to sync currentIndex
+                                // Quick fix: force rendering twice to sync headlineIndex
                                 // https://github.com/leandrowd/react-responsive-carousel/issues/204#issuecomment-389538892
-                                selectedItem={currentIndex}
+                                selectedItem={headlineIndex}
                                 autoPlay
                                 interval={5000}
                                 transitionTime={600}
@@ -94,10 +96,10 @@ class PageHeader extends React.Component {
                             </Carousel>
                         </div>
                         <div className='headline__card'>
-                            {this.renderHeadlineCard(headlines, 0, currentIndex)}
-                            {this.renderHeadlineCard(headlines, 1, currentIndex)}
-                            {this.renderHeadlineCard(headlines, 2, currentIndex)}
-                            {this.renderHeadlineCard(headlines, 3, currentIndex)}
+                            {this.renderHeadlineCard(headlines, 0, headlineIndex)}
+                            {this.renderHeadlineCard(headlines, 1, headlineIndex)}
+                            {this.renderHeadlineCard(headlines, 2, headlineIndex)}
+                            {this.renderHeadlineCard(headlines, 3, headlineIndex)}
                         </div>
                     </div>
                 </div>
@@ -107,7 +109,7 @@ class PageHeader extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    articles: state.news.articles,
+    news: state.news,
 })
 
 const mapDispatchToProps = (dispatch) => ({

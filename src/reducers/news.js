@@ -1,9 +1,11 @@
-export const newsDefaultState = {
+const newsDefaultState = {
 	meta: {
 		lastUpdated: 0, // 1970
 		currentIndex: -1,
 	},
-	articles: [],
+	articles: {
+		0: [], // articles
+	},
 };
 
 const newsReducer = (state = newsDefaultState, action) => {

@@ -70,8 +70,8 @@ module.exports = (env) => {
 				'process.env.NEWS_API_KEY': JSON.stringify(
 					process.env.NEWS_API_KEY,
 				),
-				'process.env.SPORTMONKS_API_KEY': JSON.stringify(
-					process.env.SPORTMONKS_API_KEY,
+				'process.env.FOOTBALL_DATA_API_KEY': JSON.stringify(
+					process.env.FOOTBALL_DATA_API_KEY,
 				),
 				'process.env.FIREBASE_API_KEY': JSON.stringify(
 					process.env.FIREBASE_API_KEY,

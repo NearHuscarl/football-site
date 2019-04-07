@@ -1,11 +1,11 @@
 import React from 'react';
 
-const TransferPage = () => {
+const StandingPage = () => {
     return (
         <div className="content-container">
-            Transfer page
+            Standing page
         </div>
     );
 }
 
-export default TransferPage;
+export default StandingPage;

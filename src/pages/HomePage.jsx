@@ -1,10 +1,11 @@
 import React from 'react';
 import PageHeader from '../components/PageHeader';
+import CardGroup from '../components/CardGroup';
 
-export const HomePage = () => (
+const HomePage = () => (
     <div>
         <PageHeader/>
-        <div className='content-container'>Main</div>
+        <CardGroup/>
     </div>
 )
 

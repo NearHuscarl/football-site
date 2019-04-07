@@ -1,5 +1,4 @@
-
-.card {
+%card-base {
     background-color: $off-white;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     cursor: pointer;
@@ -13,3 +12,14 @@
     }
 }
 
+
+.card {
+    @extend %card-base;
+}
+
+.card-small {
+    @extend %card-base;
+    width: 34rem;
+    height: 31.3rem;
+    padding: 0;
+}

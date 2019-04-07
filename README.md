@@ -1,6 +1,6 @@
 # [Football 365]
 
-Latest football news, fixtures, results, statistics, transfers
+Latest football news, fixtures, results, statistics, standings
 
 # Details
 

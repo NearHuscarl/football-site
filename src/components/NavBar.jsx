@@ -10,7 +10,7 @@ class NavBar extends React.Component {
             tabNames: {
                 0: 'News',
                 1: 'Fixtures',
-                2: 'Transfers',
+                2: 'Standings',
                 3: 'Matches',
             },
         }

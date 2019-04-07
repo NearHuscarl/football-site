@@ -4,7 +4,7 @@ import createHistory from 'history/createBrowserHistory';
 import HomePage from '../pages/HomePage';
 import NewsPage from '../pages/NewsPage';
 import FixturesPage from '../pages/FixturesPage';
-import TransferPage from '../pages/TransferPage';
+import StandingPage from '../pages/StandingPage';
 import MatchesPage from '../pages/MatchesPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import Header from '../components/Header';
@@ -12,7 +12,7 @@ import Footer from '../components/Footer';
 
 export const history = createHistory();
 
-const AppRouter = (props) => (
+const AppRouter = () => (
 	<Router history={history}>
 		<div>
 			<Header history={history} />
@@ -20,7 +20,7 @@ const AppRouter = (props) => (
 				<Route path="/" component={HomePage} exact />
 				<Route path="/news" component={NewsPage} exact />
 				<Route path="/fixtures" component={FixturesPage} exact />
-				<Route path="/transfers" component={TransferPage} exact />
+				<Route path="/standings/:id" component={StandingPage} />
 				<Route path="/matches" component={MatchesPage} exact />
 				<Route component={NotFoundPage} />
 			</Switch>
