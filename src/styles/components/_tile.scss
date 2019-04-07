@@ -1,0 +1,22 @@
+.tile-group {
+    display: flex;
+    justify-content: space-between;
+
+    .tile {
+        @extend %card-base;
+        flex: 0 0 34rem;
+        background-color: $dark-blue;
+        color: $off-white;
+        padding: 0;
+            
+        .tile-title {
+            font-family: 'Quicksand-Bold';
+            background-color: $dark-blue;
+            padding: $m-size;
+        }
+
+        .tile-body {
+            height: 31rem;
+        }
+    }
+}

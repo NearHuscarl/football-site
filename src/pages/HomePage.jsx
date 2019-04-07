@@ -1,11 +1,11 @@
 import React from 'react';
 import PageHeader from '../components/PageHeader';
-import CardGroup from '../components/CardGroup';
+import TileGroup from '../components/TileGroup';
 
 const HomePage = () => (
     <div>
         <PageHeader/>
-        <CardGroup/>
+        <TileGroup/>
     </div>
 )
 

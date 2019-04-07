@@ -2,6 +2,11 @@ import NewsAPI from 'newsapi';
 import database from '../firebase/firebase';
 import { checkCacheTimeExpired, updateCacheTime } from './util';
 
+export const setHeadlines = (headlines) => ({
+    type: 'SET_HEADLINES',
+    headlines,
+});
+
 const setNews = (news) => ({
     type: 'SET_NEWS',
     news,

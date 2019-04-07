@@ -4,7 +4,6 @@
     cursor: pointer;
     transition: 0.3s;
     padding: 2px 16px;
-    flex: 1;
 
     &.card--selected, &:hover {
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
@@ -12,14 +11,6 @@
     }
 }
 
-
 .card {
     @extend %card-base;
-}
-
-.card-small {
-    @extend %card-base;
-    width: 34rem;
-    height: 31.3rem;
-    padding: 0;
 }

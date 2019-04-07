@@ -6,12 +6,17 @@ const newsDefaultState = {
 	articles: {
 		0: [], // articles
 	},
+	headlines: [], // List of urls which are headlines
 };
 
 const newsReducer = (state = newsDefaultState, action) => {
 	switch (action.type) {
-        case 'SET_NEWS':
-			return action.news;
+		case 'SET_NEWS':
+			state = { ...state, ...action.news };
+			return state;
+		case 'SET_HEADLINES':
+			state.headlines = action.headlines;
+			return state;
 		default:
 			return state;
 	}

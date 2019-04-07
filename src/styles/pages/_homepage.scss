@@ -32,11 +32,15 @@
             }
         }
     
-        .headline__card {
+        .headline__card-list {
             display: flex;
             flex-direction: column;
             flex: 1;
-            font-weight: 700;
+            font-family: 'Quicksand-Bold';
+
+            .headline__card {
+                flex: 1;
+            }
         }
     }
 }

@@ -1,0 +1,28 @@
+
+$fa-font-path: '~font-awesome/fonts';
+@import '~font-awesome/scss/font-awesome.scss';
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('/fonts/Roboto-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Quicksand-Medium';
+    src: url('/fonts/Quicksand-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Quicksand-Regular';
+    src: url('/fonts/Roboto-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Quicksand-Light';
+    src: url('/fonts/Quicksand-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Quicksand-Bold';
+    src: url('/fonts/Quicksand-Bold.ttf') format('truetype');
+}
