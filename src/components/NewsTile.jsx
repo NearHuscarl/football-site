@@ -16,37 +16,9 @@ class NewsTile extends React.Component {
         win.focus();
     }
 
-    renderNews = (article) => {
-        if (!article) return null;
-        
-        return (
-            <div>
-                <img src={article.urlToImage} />
-                <div className='legend'>
-                    <p className='headline__title'>{article.title}</p>
-                </div>
-            </div>
-        );
-    }
-
-    renderNewsList = () => {
-        // const { news } = this.props;
-        // const { currentIndex } = news.meta;
-
-        // if (currentIndex === -1 || news.headlines.length === 0) {
-        //     return (<div></div>);
-        // }
-        // const articles = news.articles[currentIndex];
-        // const newsThatIsNotHeadline = articles.filter((article) => {
-        //     return !news.headlines.includes(article.url);
-        // })
-
-        // return newsThatIsNotHeadline.map((article) => {
-        //     return this.renderNews(article);
-        // });
-    }
-
     render() {
+        const { articles } = this.props;
+
         return (
             <div className='carousel-wrapper'>
                 <Carousel
@@ -61,10 +33,12 @@ class NewsTile extends React.Component {
                     showStatus={false}
                     onClickItem={this.onClickNews}>
                     {
-                        this.renderNewsList()
-                        // newsThatIsNotHeadline.forEach((news) => {
-                        //     this.renderNews(news);
-                        // })
+                        articles.map((article) => (
+                            <div key={article.publishedAt}>
+                                <img src={article.urlToImage} />
+                                <p className='headline__title'>{article.title}</p>
+                            </div>
+                        ))
                     }
                 </Carousel>
             </div>
@@ -72,9 +46,18 @@ class NewsTile extends React.Component {
     }
 }
 
+const getArticlesThatIsNotHeadline = (news, headlines) => {
+    const { currentIndex } = news.meta;
+    if (currentIndex === -1 || headlines.length === 0) return [];
+    const articles = news.articles[currentIndex];
+
+    return articles.filter((article) => {
+        return !headlines.includes(article.url);
+    });
+}
+
 const mapStateToProps = (state) => ({
-    news: state.news,
-    headlines : state.news.headlines,
+    articles: getArticlesThatIsNotHeadline(state.news, state.news.headlines),
 })
 
 export default connect(

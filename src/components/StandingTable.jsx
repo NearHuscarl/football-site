@@ -10,56 +10,61 @@ export class StandingTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            columnDefs: [],
+            rowData: [],
         };
-        this.props.startUpdateStanding(this.props.competitionId)
-            .then(() => {
-                const { competitionId, standings } = this.props;
-                const standingsData = standings[competitionId];
-                const totalStanding = standingsData.standings.find((standing) => standing.type === 'TOTAL');
+    }
 
-                this.setState(() => {
-                    return {
-                        columnDefs: [
-                            {
-                                headerName: '#',
-                                field: 'position',
-                                sortable: true,
-                                width: 40,
-                                cellStyle: { textAlign: 'left' },
-                            },
-                            {
-                                headerName: 'Team',
-                                field: 'team.name',
-                                sortable: true,
-                                width: 173,
-                                cellStyle: { textAlign: 'left' },
-                            },
-                            {
-                                headerName: 'P',
-                                field: 'playedGames',
-                                sortable: true,
-                                width: 38,
-                            },
-                            {
-                                headerName: '+/-',
-                                field: 'goalDifference',
-                                sortable: true,
-                                width: 45,
-                            },
-                            {
-                                headerName: 'PTS',
-                                field: 'points',
-                                sortable: true,
-                                width: 45,
-                            }
-                        ],
-                        rowData: totalStanding.table.map((row) => {
-                            row.team.name = row.team.name.replace(/\s*(FC|CF)$/, '');
-                            return row;
-                        }),
-                    }
-                });
+    componentDidMount() {
+        this.props.startUpdateStanding(this.props.competitionId)
+        .then(() => {
+            const { competitionId, standings } = this.props;
+            const standingsData = standings[competitionId];
+            const totalStanding = standingsData.standings.find((standing) => standing.type === 'TOTAL');
+
+            this.setState(() => {
+                return {
+                    columnDefs: [
+                        {
+                            headerName: '#',
+                            field: 'position',
+                            sortable: true,
+                            width: 40,
+                            cellStyle: { textAlign: 'left' },
+                        },
+                        {
+                            headerName: 'Team',
+                            field: 'team.name',
+                            sortable: true,
+                            width: 173,
+                            cellStyle: { textAlign: 'left' },
+                        },
+                        {
+                            headerName: 'P',
+                            field: 'playedGames',
+                            sortable: true,
+                            width: 38,
+                        },
+                        {
+                            headerName: '+/-',
+                            field: 'goalDifference',
+                            sortable: true,
+                            width: 45,
+                        },
+                        {
+                            headerName: 'PTS',
+                            field: 'points',
+                            sortable: true,
+                            width: 45,
+                        }
+                    ],
+                    rowData: totalStanding.table.map((row) => {
+                        row.team.name = row.team.name.replace(/\s*(FC|CF)$/, '');
+                        return row;
+                    }),
+                }
             });
+        });
     }
 
     onGridReady = (params) => {

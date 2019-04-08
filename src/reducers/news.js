@@ -15,7 +15,7 @@ const newsReducer = (state = newsDefaultState, action) => {
 			state = { ...state, ...action.news };
 			return state;
 		case 'SET_HEADLINES':
-			state.headlines = action.headlines;
+			state = { ...state, headlines: action.headlines };
 			return state;
 		default:
 			return state;

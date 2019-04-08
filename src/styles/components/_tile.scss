@@ -17,6 +17,20 @@
 
         .tile-body {
             height: 31rem;
+            display: flex;
+
+            .slide {
+                background-color: darken($color: $dark-blue, $amount: 10);
+            }
+
+            img {
+                height: 65%;
+                object-fit: cover; // Crop height down, do not shrink
+            }
+        }
+
+        .tile-text {
+            font-family: Quicksand-Regular;
         }
     }
 }

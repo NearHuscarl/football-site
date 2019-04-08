@@ -7,8 +7,7 @@ const standingsReducer = (state = standingsDefaultState, action) => {
     switch (action.type) {
         case 'UPDATE_STANDING':
             const { competitionId, standing } = action;
-            state[competitionId] = standing;
-            return state;
+            return { ...state, [competitionId]: standing };
         default:
             return state;
     }

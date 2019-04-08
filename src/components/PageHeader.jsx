@@ -118,7 +118,7 @@ export class PageHeader extends React.Component {
 
 const mapStateToProps = (state) => ({
     news: state.news,
-})
+});
 
 const mapDispatchToProps = (dispatch) => ({
     startSetNews: () => {
