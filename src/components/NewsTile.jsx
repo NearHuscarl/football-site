@@ -10,9 +10,9 @@ class NewsTile extends React.Component {
     }
 
     onClickNews = (index) => {
-        const { headlines } = this.state;
-        const headline = headlines[index];
-        let win = window.open(headline.url, '_blank');
+        const { articles } = this.props;
+        const article = articles[index];
+        let win = window.open(article.url, '_blank');
         win.focus();
     }
 
@@ -36,7 +36,7 @@ class NewsTile extends React.Component {
                         articles.map((article) => (
                             <div key={article.publishedAt}>
                                 <img src={article.urlToImage} />
-                                <p className='headline__title'>{article.title}</p>
+                                <p className='tile-text'>{article.title}</p>
                             </div>
                         ))
                     }
@@ -46,7 +46,7 @@ class NewsTile extends React.Component {
     }
 }
 
-const getArticlesThatIsNotHeadline = (news, headlines) => {
+const getArticlesThatAreNotHeadlines = (news, headlines) => {
     const { currentIndex } = news.meta;
     if (currentIndex === -1 || headlines.length === 0) return [];
     const articles = news.articles[currentIndex];
@@ -57,7 +57,7 @@ const getArticlesThatIsNotHeadline = (news, headlines) => {
 }
 
 const mapStateToProps = (state) => ({
-    articles: getArticlesThatIsNotHeadline(state.news, state.news.headlines),
+    articles: getArticlesThatAreNotHeadlines(state.news, state.news.headlines),
 })
 
 export default connect(
