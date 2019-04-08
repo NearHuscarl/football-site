@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`should render HomePage correctly 1`] = `
-<div>
-  Home page content
-</div>
-`;
