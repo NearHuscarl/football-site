@@ -6,6 +6,7 @@ $light-gray: #BDC3C7;
 $red: #E74C3C;
 $yellow: #F1C40F;
 $blue: #3498DB;
+$cyan: #1ABC9C;
 $dark-blue: #34495E;
 
 $off-white: #F7F9F9;
@@ -20,3 +21,16 @@ $m-size: 1.6rem;
 $l-size: 3.2rem;
 $xl-size: 4.8rem;
 $desktop-breakpoint: 45rem;
+
+// three-dots module
+// https://github.com/nzbin/three-dots
+$dotWidth: 10px;
+$dotHeight: 10px;
+$dotRadius: $dotWidth/2;
+
+$dotColor: $cyan;
+$dotBgColor: $dotColor;
+$dotBeforeColor: $dotColor;
+$dotAfterColor: $dotColor;
+
+$dotSpacing: $dotWidth + $dotWidth/2;

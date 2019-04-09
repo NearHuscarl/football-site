@@ -6,6 +6,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import '../styles/components/_carousel.scss';
 import { startSetNews, setHeadlines } from '../actions/news';
+import Loader from './Loader';
 
 export class PageHeader extends React.Component {
     constructor(props) {
@@ -34,12 +35,10 @@ export class PageHeader extends React.Component {
     }
 
     onChangeHeadlineImage = (headlineIndex) => {
-        console.log(headlineIndex);
         this.setState(() => ({ headlineIndex }));
     }
 
     renderHeadlineImage = (article) => {
-        if (!article) return null;
         const publishedAt = moment(article.publishedAt, 'YYYY-MM-DD').format('MMMM Do, YYYY');
         const description = _.truncate(article.description, {
             length: 130,
@@ -74,6 +73,35 @@ export class PageHeader extends React.Component {
         return components;
     }
 
+    renderHeadlineImageSlider = (headlines, headlineIndex) => {
+        return (headlines.length > 0
+            ?
+            <div className='carousel-wrapper'>
+                <Carousel
+                    width='70rem'
+                    useKeyboardArrows
+                    infiniteLoop
+                    // Quick fix: force rendering twice to sync headlineIndex
+                    // https://github.com/leandrowd/react-responsive-carousel/issues/204#issuecomment-389538892
+                    selectedItem={headlineIndex}
+                    autoPlay
+                    interval={5000}
+                    transitionTime={600}
+                    showThumbs={false}
+                    showStatus={false}
+                    onClickItem={this.onClickImage}
+                    onChange={this.onChangeHeadlineImage}>
+                    {
+                        headlines.map((headline) => (
+                            this.renderHeadlineImage(headline)
+                        ))
+                    }
+                </Carousel>
+            </div>
+            :
+            <Loader type='dot-rolling' />);
+    }
+
     render() {
         const { headlines, headlineIndex } = this.state;
 
@@ -81,28 +109,10 @@ export class PageHeader extends React.Component {
             <div className='page-header'>
                 <div className='content-container'>
                     <div className='headline'>
-                        <div className='headline__image carousel-wrapper'>
-                            <Carousel
-                                className=''
-                                width='70rem'
-                                useKeyboardArrows
-                                infiniteLoop
-                                // Quick fix: force rendering twice to sync headlineIndex
-                                // https://github.com/leandrowd/react-responsive-carousel/issues/204#issuecomment-389538892
-                                selectedItem={headlineIndex}
-                                autoPlay
-                                interval={5000}
-                                transitionTime={600}
-                                showThumbs={false}
-                                showStatus={false}
-                                onClickItem={this.onClickImage}
-                                onChange={this.onChangeHeadlineImage}>
-                                {
-                                    headlines.map((headline) => (
-                                        this.renderHeadlineImage(headline)
-                                    ))
-                                }
-                            </Carousel>
+                        <div className='headline__image'>
+                            {
+                                this.renderHeadlineImageSlider(headlines, headlineIndex)
+                            }
                         </div>
                         <div className='headline__card-list'>
                             {

@@ -18,9 +18,10 @@
         .tile-body {
             height: 31rem;
             display: flex;
+            background-color: darken($color: $dark-blue, $amount: 10);
 
             .slide {
-                background-color: darken($color: $dark-blue, $amount: 10);
+                background-color: transparent;
             }
 
             img {
@@ -31,6 +32,7 @@
 
         .tile-text {
             font-family: Quicksand-Regular;
+            padding: 0 $s-size;
         }
     }
 }

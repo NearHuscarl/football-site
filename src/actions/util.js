@@ -4,7 +4,7 @@ import settings from '../settings';
 
 // Randomize expired value. the smaller timeLeft value is, the higher chance
 // expired value is true. It will prevent multiple API requests at the
-// same times if many data is expired. 
+// same times if many data are expired. 
 const isExpired = (timeLeft, cacheTime) => {
     if (timeLeft > 0) {
         return false;

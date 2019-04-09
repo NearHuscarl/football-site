@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { tierOneCommpetitions } from '../settings';
 import { startUpdateFixture } from '../actions/fixtures';
 import { startUpdateTeam } from '../actions/teams';
+import Loader from './Loader';
 
 class FixtureTile extends React.Component {
     constructor(props) {
@@ -22,39 +23,58 @@ class FixtureTile extends React.Component {
 
     componentDidMount() {
         this.props.startUpdateFixture()
-        .then(() => {
-            this.competitionIds.forEach((competitionId) => {
-                this.props.startUpdateTeam(competitionId);
-            })
-        })
+            .then(() => {
+                this.competitionIds.forEach((competitionId) => {
+                    this.props.startUpdateTeam(competitionId);
+                })
+            });
+    }
+
+    isDataReady = () => {
+        const { fixtures, teams } = this.props;
+
+        if (_.isEmpty(fixtures) || _.isEmpty(teams)) {
+            return false;
+        }
+
+        for (const competitionId of this.competitionIds) {
+            if (!teams.hasOwnProperty(competitionId)) {
+                return false;
+            }
+            if (!fixtures.hasOwnProperty(competitionId)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     renderFixtures = (competitionId) => {
-        const { fixtures, teams } = this.props;
         let components = [];
-        if (_.isEmpty(fixtures) || _.isEmpty(teams)) {
-            return components;
-        }
-
+        const { fixtures, teams } = this.props;
         const randomFixtures = _.take(_.shuffle(fixtures[competitionId]), 4);
+
         randomFixtures.forEach((fixture) => {
             const homeId = fixture.homeTeam.id;
             const awayId = fixture.awayTeam.id;
-            if (!teams.hasOwnProperty(competitionId)) {
-                return;
-            }
             const homeTeam = teams[competitionId][homeId];
             const awayTeam = teams[competitionId][awayId];
+
             components.push((
                 <div key={fixture.id}>{homeTeam.name} V {awayTeam.name}</div>
             ))
         });
 
-        return (<div>{components}</div>);
+        return (
+            <div key={competitionId}>
+                {components}
+            </div>
+        );
     }
 
     render() {
-        return (
+        return (this.isDataReady()
+            ?
             <div className='carousel-wrapper'>
                 <Carousel
                     width='34rem'
@@ -73,6 +93,8 @@ class FixtureTile extends React.Component {
                     }
                 </Carousel>
             </div>
+            :
+            <Loader />
         );
     }
 }

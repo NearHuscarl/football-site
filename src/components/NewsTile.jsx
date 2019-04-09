@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Carousel } from 'react-responsive-carousel';
 import '../styles/components/_carousel.scss';
-import { history } from '../routers/AppRouter';
+import Loader from './Loader';
 
 class NewsTile extends React.Component {
     constructor(props) {
@@ -20,28 +20,31 @@ class NewsTile extends React.Component {
         const { articles } = this.props;
 
         return (
-            <div className='carousel-wrapper'>
-                <Carousel
-                    width='34rem'
-                    useKeyboardArrows
-                    infiniteLoop
-                    autoPlay
-                    interval={5000}
-                    transitionTime={600}
-                    showIndicators={false}
-                    showThumbs={false}
-                    showStatus={false}
-                    onClickItem={this.onClickNews}>
-                    {
-                        articles.map((article) => (
-                            <div key={article.publishedAt}>
-                                <img src={article.urlToImage} />
-                                <p className='tile-text'>{article.title}</p>
-                            </div>
-                        ))
-                    }
-                </Carousel>
-            </div>
+            articles.length > 0 ?
+                <div className='carousel-wrapper'>
+                    <Carousel
+                        width='34rem'
+                        useKeyboardArrows
+                        infiniteLoop
+                        autoPlay
+                        interval={5000}
+                        transitionTime={600}
+                        showIndicators={false}
+                        showThumbs={false}
+                        showStatus={false}
+                        onClickItem={this.onClickNews}>
+                        {
+                            articles.map((article) => (
+                                <div key={article.publishedAt}>
+                                    <img src={article.urlToImage} />
+                                    <p className='tile-text'>{article.title}</p>
+                                </div>
+                            ))
+                        }
+                    </Carousel>
+                </div>
+                :
+                <Loader />
         );
     }
 }

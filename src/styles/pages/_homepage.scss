@@ -5,7 +5,8 @@
         display: flex;
 
         .headline__image {
-            flex: 0 1 20%;
+            display: flex;
+            flex: 0 1 66%;
             background-size: cover;
             background-position: 50% 50%;
 
@@ -37,6 +38,7 @@
             flex-direction: column;
             flex: 1;
             font-family: 'Quicksand-Bold';
+            min-height: 320px;
 
             .headline__card {
                 flex: 1;
