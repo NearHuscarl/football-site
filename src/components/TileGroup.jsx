@@ -1,6 +1,7 @@
 import React from 'react';
-import StandingTile from './StandingTile';
 import NewsTile from './NewsTile';
+import FixtureTile from './FixtureTile';
+import StandingTile from './StandingTile';
 import Tile from './Tile';
 
 const TileGroup = () => (
@@ -10,7 +11,7 @@ const TileGroup = () => (
                 <NewsTile />
         </Tile>
             <Tile name='Fixture'>
-                Fixture
+                <FixtureTile/>
         </Tile>
             <Tile name='Standing'>
                 <StandingTile />

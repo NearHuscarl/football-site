@@ -18,5 +18,10 @@ const jsx = (
 	</Provider>
 );
 
-// ReactDOM.render(<LoadingPage />, document.getElementById('app'));
-ReactDOM.render(jsx, document.getElementById('app'));
+const renderApp = () => {
+	ReactDOM.render(jsx, document.getElementById('app'));
+}
+
+renderApp();
+// import FirebaseUtil from './firebase/firebaseUtil';
+// FirebaseUtil.updateCommonData();

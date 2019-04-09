@@ -2,6 +2,18 @@ import moment from 'moment';
 import database from '../firebase/firebase';
 import settings from '../settings';
 
+// Randomize expired value. the smaller timeLeft value is, the higher chance
+// expired value is true. It will prevent multiple API requests at the
+// same times if many data is expired. 
+const isExpired = (timeLeft, cacheTime) => {
+    if (timeLeft > 0) {
+        return false;
+    } else {
+        const rate = Math.abs(timeLeft / cacheTime) / 2;
+        return Math.random() < rate;
+    }
+}
+
 export const checkCacheTimeExpired = (dataType) => {
     let meta = {
         lastUpdated:  0,
@@ -17,23 +29,25 @@ export const checkCacheTimeExpired = (dataType) => {
 
             const now = moment();
             const lastUpdated = moment(meta.lastUpdated);
-            const cacheTime = moment.duration(now.diff(lastUpdated));
-            let cacheTimeType = dataType.replace(/[^a-z]/gi, '');
+            const cacheTimeUntilNow = moment.duration(now.diff(lastUpdated));
+            let cacheTimeType = dataType.replace(/[^a-z]/g, ''); // remove id number if there are any
             if (!settings.cacheTime.hasOwnProperty(cacheTimeType)) {
+                console.log(`%c'${cacheTimeType}' cache time not exists. Fall back to default cache time (${settings.cacheTime.default})`,
+                'background: #F1C40F; color: white');
                 cacheTimeType = 'default';
-                console.log(`Something maybe wrong. Fall back to default cache time (${settings.cacheTime.default})`);
             }
             
-            console.log(`${(settings.cacheTime[cacheTimeType] - cacheTime.asHours()).toFixed(2)} hour(s) left before refreshing ${dataType}`);
+            const cacheTime = settings.cacheTime[cacheTimeType];
+            const timeLeft = (cacheTime - cacheTimeUntilNow.asHours()).toFixed(2);
             let result = {
                 meta,
-                expired: false,
+                expired: isExpired(timeLeft, cacheTime),
             };
 
-            if (cacheTime.asHours() > settings.cacheTime[cacheTimeType]) {
-                result.expired = true;
+            if (result.expired) {
+                console.log(`%cstart refreshing ${dataType}`, 'background: yellow; color: black');
             } else {
-                result.expired = false;
+                console.log(`%c${timeLeft} hour(s) left before refreshing ${dataType}`, 'color: #bada55');
             }
             return result;
         })
