@@ -25,10 +25,11 @@ const refreshStanding = (competitionId) => {
             .set(data);
     })
     .then(() => {
-        return Promise.resolve(standings);
+        return standings;
     })
     .catch((err) => {
-        console.log('[football-site err]:', err);
+        console.log('refreshStanding:', err);
+        return standings;
     });
 }
 

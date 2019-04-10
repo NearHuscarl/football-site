@@ -36,10 +36,11 @@ const refreshFixture = () => {
             .set(fixtureData);
     })
     .then(() => {
-        return Promise.resolve(fixtureData);
+        return fixtureData;
     })
     .catch((err) => {
-        console.log('[football-site err]:', err);
+        console.log('refreshFixture:', err);
+        return fixtureData;
     });
 }
 

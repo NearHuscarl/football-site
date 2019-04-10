@@ -14,7 +14,6 @@ export class StandingTile extends React.Component {
         super(props);
         this.state = {
             standings: {},
-            isDataReady: false,
         };
         this.competitionIds = [
             tierOneCommpetitions.premierLeague,
@@ -25,14 +24,9 @@ export class StandingTile extends React.Component {
     }
 
     componentDidMount() {
-        let promises = [];
-
         this.competitionIds.forEach((competitionId) => {
-            promises.push(this.props.startUpdateStanding(competitionId));
+            this.props.startUpdateStanding(competitionId);
         });
-
-        Promise.all(promises)
-            .then(() => this.setState(() => ({ isDataReady: true })));
     }
 
     onClickStandingTable = (index) => {
@@ -40,11 +34,24 @@ export class StandingTile extends React.Component {
         history.push(`/standings/${competitionIds[index]}`);
     }
 
+    // Avoid rerendering multiple table components when data are not ready
+    isDataReady = () => {
+        const { standings } = this.props;
+
+        for (const competitionId of this.competitionIds) {
+            if (!standings.hasOwnProperty(competitionId)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
     render() {
         const { competitionIds, props } = this;
 
         return (
-            this.state.isDataReady ?
+            this.isDataReady() ?
                 <div className='carousel-wrapper'>
                     <Carousel
                         width='34rem'
@@ -58,9 +65,10 @@ export class StandingTile extends React.Component {
                         showStatus={false}
                         onClickItem={this.onClickStandingTable}>
                         {
-                            competitionIds.map((competitionId) => (
-                                <StandingTable key={competitionId} standing={props.standings[competitionId]} />
-                            ))
+                            competitionIds.map((competitionId) => {
+                                const standing = props.standings[competitionId];
+                                return <StandingTable key={competitionId} standing={standing} />
+                            })
                         }
                     </Carousel>
                 </div>

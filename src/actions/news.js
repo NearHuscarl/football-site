@@ -75,10 +75,11 @@ const refreshNews = (currentIndex) => {
         return Promise.all(promises);
     })
     .then(() => {
-        return Promise.resolve(filteredNewsList);
+        return filteredNewsList;
     })
     .catch((err) => {
-        console.log('[football-site err]:', err);
+        console.log('refreshNews:', err);
+        return filteredNewsList;
     });
 }
 

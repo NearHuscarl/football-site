@@ -31,7 +31,8 @@ const refreshTeam = (competitionId) => {
         return teamData;
     })
     .catch((err) => {
-        console.log('[football-site err]:', err);
+        console.log('refreshTeam:', err);
+        return teamData;
     });
 }
 
