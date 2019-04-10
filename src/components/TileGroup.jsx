@@ -9,10 +9,10 @@ const TileGroup = () => (
         <div className='tile-group'>
             <Tile name='News'>
                 <NewsTile />
-        </Tile>
+            </Tile>
             <Tile name='Fixture'>
-                <FixtureTile/>
-        </Tile>
+                <FixtureTile />
+            </Tile>
             <Tile name='Standing'>
                 <StandingTile />
             </Tile>

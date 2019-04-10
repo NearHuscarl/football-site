@@ -1,38 +1,104 @@
-.tile-group {
-    display: flex;
-    justify-content: space-between;
-
+@mixin tile() {
+        
     .tile {
-        @extend %card-base;
+        @include card();
+
         flex: 0 0 34rem;
         background-color: $dark-blue;
-        color: $off-white;
         padding: 0;
-            
+        
         .tile-title {
+            background-color: lighten($color: $dark-blue, $amount: 10%);
+            color: $off-white;
             font-family: 'Quicksand-Bold';
-            background-color: $dark-blue;
             padding: $m-size;
         }
 
         .tile-body {
-            height: 31rem;
             display: flex;
-            background-color: darken($color: $dark-blue, $amount: 10);
+            background-color: $off-white;
+            height: 31rem;
 
-            .slide {
-                background-color: transparent;
-            }
-
-            img {
-                height: 65%;
-                object-fit: cover; // Crop height down, do not shrink
-            }
+            @content;
         }
 
         .tile-text {
-            font-family: Quicksand-Regular;
+            font-family: 'Quicksand-Medium';
             padding: 0 $s-size;
+        }
+    }
+}
+
+.tile-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+@include tile() {
+    .slide {
+        background-color: transparent;
+    }
+
+    img {
+        height: 65%;
+        object-fit: cover; // Crop height down, do not shrink
+    }
+}
+
+@include tile() {
+    .fixture-title {
+        font-family: 'Quicksand-Medium';
+        margin: $m-size;
+    }
+
+    .fixture {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 3px;
+        
+        .fixture__info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-basis: 70%;
+            font-size: $s-size;
+            
+            .fixture__team {
+                font-family: 'Quicksand-Medium';
+        
+                .fixture__team-name {
+                    background-color: darken($color: $off-white, $amount: 10%);
+                    display: inline-block;
+                    width: 40%;
+                    margin: 0 auto;
+                    padding: 0 2px;
+                }
+
+                .fixture__team-score {
+                    display: inline-block;
+                    width: 20%;
+                    margin: 0 auto;
+                }
+            }
+
+            .fixture__date {
+                font-family: 'Quicksand-Regular';
+            }
+        }
+   
+        $logo-size: 33px;
+        .fixture__logo {
+            width: $logo-size;
+            height: $logo-size;
+            margin: $s-size;
+            margin-top: 0;
+
+            img {
+                max-width: $logo-size;
+                max-height: $logo-size;
+                width: auto;
+                height: auto;
+            }
         }
     }
 }
