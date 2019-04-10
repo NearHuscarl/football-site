@@ -24,3 +24,13 @@ button:disabled {
 .is-active {
 	font-weight: bold;
 }
+
+input {
+	border: none;
+	height: 3rem;
+	font-size: $font-size-large;
+	// font-weight: 300;
+	font-family: 'Quicksand-Light';
+    padding: $s-size;
+    width: 15rem;
+}

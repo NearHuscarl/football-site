@@ -19,10 +19,10 @@
 		.header__title {
 			color: white;
 			text-decoration: none;
-			font-size: 12;
 			h1 {
 				margin: 0;
-				font-family: Roboto;
+				font-size: $l-size;
+				font-family: 'Ubuntu-Regular';
 			}
 			img {
 				width: 7rem;
@@ -34,10 +34,16 @@
 			margin-right: $m-size;
 		}
 
-		// Tabs component
-		.react-tabs {
-			color: $off-white;
-			margin-bottom: -$m-size;
+		.mainmenu {
+			margin: 0;
+			background-color: lighten($color: $dark-blue, $amount: 5%);
+			color: darken($color: white, $amount: 10%);
+			border-bottom: none;
+
+			li:hover, .rc-menu-item-selected {
+				color: $dark-blue;
+			}
+
 		}
 	}
 

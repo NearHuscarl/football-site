@@ -1,11 +1,11 @@
 import React from 'react';
 
-const MatchesPage = () => {
+const PlayersPage = () => {
     return (
         <div className="content-container">
-            Matches page
+            Player page
         </div>
     );
 }
 
-export default MatchesPage;
+export default PlayersPage;

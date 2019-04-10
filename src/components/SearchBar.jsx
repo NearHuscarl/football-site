@@ -39,19 +39,19 @@ class SearchBar extends React.Component {
         const { props, state } = this;
 
         return (
-            <div className={props.styles.wrapper}>
+            <div className='search-bar__wrapper'>
                 <input
                     type="text"
-                    className={props.styles.input}
                     placeholder={props.placeholder}
                     onChange={this.onChange}
                     value={state.value}
                     onKeyDown={this.handleKeyDown}
                 />
                 <button
-                    className={props.styles.submitButton}
-                    onClick={this.search}
-                />
+                    className='button--yellow search-bar__submit'
+                    onClick={this.search}>
+                    <i className="fa fa-search fa-fw fa-sm" />
+                </button>
             </div>
         );
     }
@@ -61,18 +61,12 @@ SearchBar.propTypes = {
     placeholder: PropTypes.string,
     onSearch: PropTypes.func,
     renderSearchButton: PropTypes.bool,
-    styles: PropTypes.object,
 };
 
 SearchBar.defaultProps = {
     placeholder: 'Searching...',
     onSearch: (q) => console.log('Searching', q),
     renderSearchButton: true,
-    styles: {
-      wrapper: 'search-bar__wrapper',
-      input: 'search-bar__input',
-      submitButton: 'search-bar__submit',
-    },
 };
 
 export default SearchBar

@@ -8,6 +8,16 @@ $fa-font-path: '~font-awesome/fonts';
 }
 
 @font-face {
+    font-family: 'Ubuntu-Regular';
+    src: url('/fonts/Ubuntu-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Quicksand-Bold';
+    src: url('/fonts/Quicksand-Bold.ttf') format('truetype');
+}
+
+@font-face {
     font-family: 'Quicksand-Medium';
     src: url('/fonts/Quicksand-Medium.ttf') format('truetype');
 }
@@ -20,9 +30,4 @@ $fa-font-path: '~font-awesome/fonts';
 @font-face {
     font-family: 'Quicksand-Light';
     src: url('/fonts/Quicksand-Light.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Quicksand-Bold';
-    src: url('/fonts/Quicksand-Bold.ttf') format('truetype');
 }
