@@ -11,7 +11,7 @@ const Header = (props) => {
 				<div className="header__content">
 					<div className="header__navbar">
 						<Link className="header__title" to="/">
-							<img src='/images/Logo2.png' width="120"></img>
+							<img alt='website logo' src='/images/Logo2.png' width="120"></img>
 							<h1>Football365</h1>
 						</Link>
 						<NavBar history={props.history} />

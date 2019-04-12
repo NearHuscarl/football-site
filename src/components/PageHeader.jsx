@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import moment from 'moment';
-import _ from 'lodash';
+import shuffle from 'lodash/shuffle';
+import take from 'lodash/take';
+import truncate from 'lodash/truncate';
 import '../styles/components/_carousel.scss';
 import { startSetNews, setHeadlines } from '../actions/news';
 import Loader from './Loader';
@@ -19,7 +21,7 @@ export class PageHeader extends React.Component {
         props.startSetNews()
             .then(() => {
                 const { articles, meta } = this.props.news;
-                const headlines = _.take(_.shuffle(articles[meta.currentIndex]), 4);
+                const headlines = take(shuffle(articles[meta.currentIndex]), 4);
                 const headlineUrls = headlines.map((headline) => headline.url);
 
                 this.props.setHeadlines(headlineUrls);
@@ -40,14 +42,14 @@ export class PageHeader extends React.Component {
 
     renderHeadlineImage = (article) => {
         const publishedAt = moment(article.publishedAt, 'YYYY-MM-DD').format('MMMM Do, YYYY');
-        const description = _.truncate(article.description, {
+        const description = truncate(article.description, {
             length: 130,
             separator: ' ',
         });
 
         return (
             <div key={article.publishedAt}>
-                <img src={article.urlToImage} />
+                <img alt='headline' src={article.urlToImage} />
                 <div className='legend'>
                     <p className='headline__title'>{article.title}</p>
                     <p className='headline__description'>{description}</p>

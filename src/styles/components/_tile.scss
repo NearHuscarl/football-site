@@ -34,9 +34,14 @@
     justify-content: space-between;
 }
 
+// News Tile
 @include tile() {
     .slide {
         background-color: transparent;
+        
+        .tile-imageitem {
+            height: 31rem;
+        }
     }
 
     img {
@@ -45,13 +50,14 @@
     }
 }
 
+// Fixture Tile
 @include tile() {
     .fixture-title {
         font-family: 'Quicksand-Medium';
         margin: $m-size;
     }
 
-    .fixture {
+    .fixture-body {
         display: flex;
         justify-content: space-between;
         margin-bottom: 3px;

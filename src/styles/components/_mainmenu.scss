@@ -1,0 +1,14 @@
+.mainmenu {
+    margin: 0;
+    background-color: lighten($color: $dark-blue, $amount: 5%);
+    color: darken($color: white, $amount: 10%);
+    border-bottom: none;
+
+    li:hover, .rc-menu-item-selected {
+        color: $dark-blue;
+    }
+
+    li:hover {
+        cursor: pointer;
+    }
+}

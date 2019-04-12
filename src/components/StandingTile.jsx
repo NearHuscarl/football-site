@@ -67,7 +67,7 @@ export class StandingTile extends React.Component {
                         {
                             competitionIds.map((competitionId) => {
                                 const standing = props.standings[competitionId];
-                                return <StandingTable key={competitionId} standing={standing} />
+                                return <StandingTable className='tile-imageitem' key={competitionId} standing={standing} />
                             })
                         }
                     </Carousel>

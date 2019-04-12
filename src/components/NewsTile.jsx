@@ -35,8 +35,8 @@ class NewsTile extends React.Component {
                         onClickItem={this.onClickNews}>
                         {
                             articles.map((article) => (
-                                <div key={article.publishedAt}>
-                                    <img src={article.urlToImage} />
+                                <div className='tile-imageitem' key={article.publishedAt}>
+                                    <img alt='news' src={article.urlToImage} />
                                     <p className='tile-text'>{article.title}</p>
                                 </div>
                             ))

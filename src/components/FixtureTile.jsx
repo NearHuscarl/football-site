@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Carousel } from 'react-responsive-carousel';
 import '../styles/components/_carousel.scss';
-import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import take from 'lodash/take';
+import shuffle from 'lodash/shuffle';
 import moment from 'moment';
 import { tierOneCommpetitions } from '../settings';
 import { startUpdateFixture } from '../actions/fixtures';
@@ -34,7 +36,7 @@ class FixtureTile extends React.Component {
     isDataReady = () => {
         const { fixtures, teams } = this.props;
 
-        if (_.isEmpty(fixtures) || _.isEmpty(teams)) {
+        if (isEmpty(fixtures) || isEmpty(teams)) {
             return false;
         }
 
@@ -53,7 +55,7 @@ class FixtureTile extends React.Component {
     renderFixtures = (competitionId) => {
         let components = [];
         const { fixtures, teams } = this.props;
-        const randomFixtures = _.take(_.shuffle(fixtures[competitionId]), 5);
+        const randomFixtures = take(shuffle(fixtures[competitionId]), 5);
         let competitionName = '';
         let matchday = '';
 
@@ -70,9 +72,9 @@ class FixtureTile extends React.Component {
             const date = moment(fixture.utcDate).format('HH:mm ddd DD MMM');
 
             components.push((
-                <div className='fixture' key={fixture.id}>
+                <div className='fixture-body' key={fixture.id}>
                     <div className='fixture__logo' >
-                        <img src={homeTeam.crestUrl} />
+                        <img alt='home team' src={homeTeam.crestUrl} />
                     </div>
                     <div className='fixture__info'>
                         <div className='fixture__team'>
@@ -89,14 +91,14 @@ class FixtureTile extends React.Component {
                         </div>
                     </div>
                     <div className='fixture__logo' >
-                        <img src={awayTeam.crestUrl} />
+                        <img alt='away team' src={awayTeam.crestUrl} />
                     </div>
                 </div>
             ))
         });
 
         return (
-            <div key={competitionId}>
+            <div className='tile-imageitem' key={competitionId}>
                 <div className='fixture-title'>
                     {`${competitionName} | Matchday ${matchday}`}
                 </div>

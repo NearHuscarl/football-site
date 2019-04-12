@@ -1,4 +1,6 @@
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/database';
+
 const config = {
 	apiKey: process.env.FIREBASE_API_KEY,
 	authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -9,18 +11,9 @@ const config = {
 };
 
 firebase.initializeApp(config);
-
 const database = firebase.database();
-const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-const facebookAuthProvider = new firebase.auth.FacebookAuthProvider();
-const twitterAuthProvider = new firebase.auth.TwitterAuthProvider();
-const githubAuthProvider = new firebase.auth.GithubAuthProvider();
 
 export {
 	firebase,
-	googleAuthProvider,
-	facebookAuthProvider,
-	twitterAuthProvider,
-	githubAuthProvider,
 	database as default,
 };

@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -11,6 +12,11 @@ if (process.env.NODE_ENV === 'test') {
 	dotenv.config({ path: '.env_development' });
 }
 dotenv.config({ path: '.api_keys' });
+
+const jsxSuffix = /\.(js|jsx)$/;
+const cssSuffix = /\.s?css$/;
+const fontSuffix = /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/;
+const imgSuffix = /.(jpg|png|gif)$/;
 
 module.exports = (env) => {
 	const isProduction = env === 'production';
@@ -25,18 +31,19 @@ module.exports = (env) => {
 			rules: [
 				{
 					loader: 'babel-loader',
-					test: /\.(js|jsx)$/,
+					test: jsxSuffix,
 					exclude: /node_modules/,
 				},
 				{
-					test: /\.s?css$/,
+					test: cssSuffix,
 					use: [
 						'css-hot-loader',
 						{
 							loader: MiniCssExtractPlugin.loader,
-							// options: {
-							// 	hmr: !isProduction,
-							// },
+							options: {
+								hmr: !isProduction,
+								sourceMap: true,
+							},
 						},
 						{
 							loader: 'css-loader',
@@ -53,7 +60,7 @@ module.exports = (env) => {
 					]
 				},
 				{
-					test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+					test: fontSuffix,
 					use: [
 						{
 							loader: 'file-loader',
@@ -67,6 +74,7 @@ module.exports = (env) => {
 			],
 		},
 		plugins: [
+			// new BundleAnalyzerPlugin(),
 			new MiniCssExtractPlugin({
 				filename: 'styles.css',
 			}),
@@ -100,6 +108,7 @@ module.exports = (env) => {
 		devtool: isProduction ? 'source-map' : 'inline-source-map',
 		devServer: {
 			contentBase: path.join(__dirname, 'public'),
+			watchContentBase: true, // A workaround to be able to watch for html file changes
 			publicPath: '/dist/',
 			historyApiFallback: true,
 		},

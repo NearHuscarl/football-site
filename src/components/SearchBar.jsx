@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import  '../styles/components/_searchbar.scss';
+import '../styles/components/_searchbar.scss';
 
 class SearchBar extends React.Component {
     constructor(props) {
@@ -22,13 +22,13 @@ class SearchBar extends React.Component {
     handleKeyDown = (e) => {
         switch (e.key) {
             case 'Enter':
-              this.search();
-              break;
-      
+                this.search();
+                break;
+
             case 'Escape':
-              this.handleEscape();
-              break;
-          }   
+                this.handleEscape();
+                break;
+        }
     }
 
     handleEscape = () => {
@@ -40,14 +40,17 @@ class SearchBar extends React.Component {
 
         return (
             <div className='search-bar__wrapper'>
-                <input
-                    type="text"
-                    placeholder={props.placeholder}
-                    onChange={this.onChange}
-                    value={state.value}
-                    onKeyDown={this.handleKeyDown}
-                />
+                <label htmlFor='search-input'>
+                    Search bar
+                </label>
+                <input id="search-input"
+                        type="text"
+                        placeholder={props.placeholder}
+                        onChange={this.onChange}
+                        value={state.value}
+                        onKeyDown={this.handleKeyDown} />
                 <button
+                    aria-label='Search'
                     className='button--yellow search-bar__submit'
                     onClick={this.search}>
                     <i className="fa fa-search fa-fw fa-sm" />

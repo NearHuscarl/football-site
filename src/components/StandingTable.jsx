@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import '../styles/components/_ag-grid.scss';
-import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 
 class StandingTable extends React.Component {
     constructor(props) {
@@ -53,7 +54,7 @@ class StandingTable extends React.Component {
     }
 
     getRowData = (standing) => {
-        if (_.isEmpty(standing)) {
+        if (isEmpty(standing)) {
             return undefined;
         }
         const totalStanding = standing.standings.find((standing) => standing.type === 'TOTAL');
@@ -66,11 +67,11 @@ class StandingTable extends React.Component {
 
     render() {
         const { columnDefs } = this.state;
-        const { standing } = this.props;
+        const { standing, className } = this.props;
         const rowData = this.getRowData(standing);
 
         return (
-            <div className='ag-theme-balham ag-grid-wrapper'>
+            <div className={`ag-theme-balham ag-grid-wrapper ${className}`}>
                 <AgGridReact
                     columnDefs={columnDefs}
                     rowData={rowData}
@@ -80,5 +81,13 @@ class StandingTable extends React.Component {
         );
     }
 }
+
+StandingTable.propTypes = {
+	className: PropTypes.string,
+};
+
+StandingTable.defaultProps = {
+	className: '',
+};
 
 export default StandingTable;
