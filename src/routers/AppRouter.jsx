@@ -1,21 +1,38 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
-import HomePage from '../pages/HomePage';
-import NewsPage from '../pages/NewsPage';
-import FixturesPage from '../pages/FixturesPage';
-import StandingPage from '../pages/StandingPage';
-import PlayersPage from '../pages/PlayersPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+
+// Need react-router-dom 4.4.0-beta.5 (yarn add -D react-router-dom@next)
+// https://github.com/ReactTraining/react-router/issues/6420#issuecomment-435171740
+const HomePage = lazy(() => import(/*
+	webpackChunkName: "home",
+  */ '../pages/HomePage'));
+const NewsPage = lazy(() => import(/*
+	webpackChunkName: "news",
+	webpackPrefetch: true
+  */ '../pages/NewsPage'));
+const FixturesPage = lazy(() => import(/*
+	webpackChunkName: "fixture",
+	webpackPrefetch: true
+  */ '../pages/FixturesPage'));
+const StandingPage = lazy(() => import(/*
+	webpackChunkName: "standing",
+	webpackPrefetch: true
+  */ '../pages/StandingPage'));
+const PlayersPage = lazy(() => import(/*
+	webpackChunkName: "player",
+	webpackPrefetch: true
+  */ '../pages/PlayersPage'));
 
 export const history = createBrowserHistory();
 
 const AppRouter = () => (
 	<Router history={history}>
-		<div>
-			<Header history={history} />
+		<Route path="/" component={Header} />
+		<Suspense fallback={<div>Loading...</div>}>
 			<Switch>
 				<Route path="/" component={HomePage} exact />
 				<Route path="/news" component={NewsPage} exact />
@@ -25,7 +42,7 @@ const AppRouter = () => (
 				<Route component={NotFoundPage} />
 			</Switch>
 			<Footer />
-		</div>
+		</Suspense>
 	</Router>
 );
 

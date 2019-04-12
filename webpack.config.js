@@ -1,3 +1,5 @@
+// https://thesoftwaresimpleton.com/blog/2019/03/15/ts-code-splitting
+
 const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
@@ -25,7 +27,10 @@ module.exports = (env) => {
 		entry: ['@babel/polyfill', './src/app.js'],
 		output: {
 			path: path.join(__dirname, 'public', 'dist'),
-			filename: 'bundle.js',
+			// filename: 'bundle.[name].js',
+			filename: isProduction ? '[name].[chunkhash:8].chunk.js' : '[name].chunk.js',
+			chunkFilename: isProduction ? '[name].[chunkhash:8].chunk.js' : '[name].chunk.js',
+			publicPath: '/dist/',
 		},
 		module: {
 			rules: [
@@ -76,7 +81,8 @@ module.exports = (env) => {
 		plugins: [
 			// new BundleAnalyzerPlugin(),
 			new MiniCssExtractPlugin({
-				filename: 'styles.css',
+				filename: isProduction ? '[name].[chunkhash:8].chunk.css' : '[name].chunk.css',
+				chunkFilename: isProduction ? '[name].[chunkhash:8].chunk.css' : '[name].chunk.css',
 			}),
 			new webpack.DefinePlugin({
 				'process.env.NEWS_API_KEY': JSON.stringify(
@@ -109,7 +115,6 @@ module.exports = (env) => {
 		devServer: {
 			contentBase: path.join(__dirname, 'public'),
 			watchContentBase: true, // A workaround to be able to watch for html file changes
-			publicPath: '/dist/',
 			historyApiFallback: true,
 		},
 		mode: 'development',
