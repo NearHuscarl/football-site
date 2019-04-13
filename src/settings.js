@@ -9,10 +9,6 @@ export const tierOneCommpetitions = {
     primeiraLiga: 2017, // Portugal
 }
 
-export class footballDataAPI {
-    static sessionCalledCount = 0;
-}
-
 const settings = {
     cacheTime: {
         news: 24, // hours

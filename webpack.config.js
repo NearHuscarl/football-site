@@ -4,6 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
@@ -15,34 +16,28 @@ if (process.env.NODE_ENV === 'test') {
 }
 dotenv.config({ path: '.api_keys' });
 
-const jsxSuffix = /\.(js|jsx)$/;
-const cssSuffix = /\.s?css$/;
-const fontSuffix = /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/;
-const imgSuffix = /.(jpg|png|gif)$/;
-
 module.exports = (env) => {
 	const isProduction = env === 'production';
 
 	return {
 		entry: ['@babel/polyfill', './src/app.js'],
 		output: {
-			path: path.join(__dirname, 'public', 'dist'),
-			// filename: 'bundle.[name].js',
-			filename: isProduction ? '[name].[chunkhash:8].chunk.js' : '[name].chunk.js',
-			chunkFilename: isProduction ? '[name].[chunkhash:8].chunk.js' : '[name].chunk.js',
-			publicPath: '/dist/',
+			path: path.join(__dirname, 'dist'),
+			filename: isProduction ? 'js/[name].[chunkhash:8].chunk.js' : 'js/[name].chunk.js',
+			chunkFilename: isProduction ? 'js/[name].[chunkhash:8].chunk.js' : 'js/[name].chunk.js',
+			// publicPath: 'public/',
 		},
 		module: {
 			rules: [
 				{
 					loader: 'babel-loader',
-					test: jsxSuffix,
+					test:  /\.(js|jsx)$/,
 					exclude: /node_modules/,
 				},
 				{
-					test: cssSuffix,
+					test: /\.(scss|css)$/,
 					use: [
-						'css-hot-loader',
+						// 'css-hot-loader',
 						{
 							loader: MiniCssExtractPlugin.loader,
 							options: {
@@ -65,13 +60,26 @@ module.exports = (env) => {
 					]
 				},
 				{
-					test: fontSuffix,
+					test: /\.(ttf|otf|eot|svg|woff|woff2)$/,
 					use: [
 						{
 							loader: 'file-loader',
 							options: {
 								name: '[name].[ext]',
-								outputPath: 'fonts/', // where the fonts will go
+								outputPath: 'fonts/',
+								publicPath: '../fonts/',
+							},
+						},
+					],
+				},
+				{
+					test: /\.(jpg|png|gif)$/,
+					use: [
+						{
+							loader: 'file-loader',
+							options: {
+								name: '[name].[ext]',
+								outputPath: 'images/',
 							},
 						},
 					],
@@ -80,9 +88,13 @@ module.exports = (env) => {
 		},
 		plugins: [
 			// new BundleAnalyzerPlugin(),
+			new HtmlWebpackPlugin({
+				filename: 'index.html',
+				template: 'public/index.html',
+			}),
 			new MiniCssExtractPlugin({
-				filename: isProduction ? '[name].[chunkhash:8].chunk.css' : '[name].chunk.css',
-				chunkFilename: isProduction ? '[name].[chunkhash:8].chunk.css' : '[name].chunk.css',
+				filename: isProduction ? 'css/[name].[chunkhash:8].chunk.css' : 'css/[name].chunk.css',
+				chunkFilename: isProduction ? 'css/[name].[chunkhash:8].chunk.css' : 'css/[name].chunk.css',
 			}),
 			new webpack.DefinePlugin({
 				'process.env.NEWS_API_KEY': JSON.stringify(
@@ -113,8 +125,8 @@ module.exports = (env) => {
 		],
 		devtool: isProduction ? 'source-map' : 'inline-source-map',
 		devServer: {
-			contentBase: path.join(__dirname, 'public'),
-			watchContentBase: true, // A workaround to be able to watch for html file changes
+			// contentBase: path.join(__dirname, 'dist'),
+			// watchContentBase: true, // A workaround to be able to watch for html file changes
 			historyApiFallback: true,
 		},
 		mode: 'development',
