@@ -7,6 +7,27 @@ export const setHeadlines = (headlines) => ({
     headlines,
 });
 
+const setNewsAtIndex = ({ articles, index }) => ({
+    type: 'SET_NEWS_AT_INDEX',
+    articles,
+    index,
+});
+
+export const startSetNewsAtIndex = (index) => {
+    return (dispatch) => {
+        return database
+            .ref(`cachedData/news/data/${index}/articles`)
+            .once('value')
+            .then((snapshot) => {
+                let articles = [];
+                snapshot.forEach((childSnapshot) => {
+                    articles.push(childSnapshot.val());
+                });
+                dispatch(setNewsAtIndex({ index, articles }));
+            });
+    }
+}
+
 const setNews = (news) => ({
     type: 'SET_NEWS',
     news,
@@ -84,7 +105,11 @@ const refreshNews = (currentIndex) => {
 }
 
 export const startSetNews = () => {
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        if (getState().news.meta.currentIndex !== -1) {
+            return Promise.resolve();
+        }
+
         return checkCacheTimeExpired('news')
             .then((result) => {
                 const { expired, meta } = result;

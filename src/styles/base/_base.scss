@@ -38,3 +38,29 @@ input {
     padding: $s-size;
     width: 15rem;
 }
+
+.mr-s { margin-right: $s-size !important; }
+.mr-m { margin-right: $m-size !important; }
+.mr-l { margin-right: $l-size !important; }
+
+.ml-s { margin-left: $s-size !important; }
+.ml-m { margin-left: $m-size !important; }
+.ml-l { margin-left: $l-size !important; }
+
+.mt-s { margin-top: $s-size !important; }
+.mt-m { margin-top: $m-size !important; }
+.mt-l { margin-top: $l-size !important; }
+
+.mb-s { margin-bottom: $s-size !important; }
+.mb-m { margin-bottom: $m-size !important; }
+.mb-l { margin-bottom: $l-size !important; }
+
+.m-s { margin: $s-size !important; }
+.m-m { margin: $m-size !important; }
+.m-l { margin: $l-size !important; }
+// center block self
+.center-block { margin: 0 auto; }
+// position inline children
+.center-inline { text-align: center; }
+.left-inline { text-align: left; }
+.right-inline { text-align: right; }

@@ -1,4 +1,4 @@
-body {
+#app {
     position: relative;
     padding-bottom: 15rem;
 }
@@ -19,6 +19,7 @@ body {
 
         button {
             color: $dark-gray;
+            font-size: $font-size-medium;
         }
     }
 }

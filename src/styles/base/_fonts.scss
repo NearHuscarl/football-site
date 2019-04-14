@@ -26,7 +26,7 @@ $font-path: $root + 'public/fonts';
 
 @font-face {
     font-family: 'Quicksand-Regular';
-    src: url($font-path + '/Roboto-Regular.ttf') format('truetype');
+    src: url($font-path + '/Quicksand-Regular.ttf') format('truetype');
 }
 
 @font-face {

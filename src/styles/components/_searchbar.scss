@@ -1,17 +1,17 @@
 @import '../base/settings';
 
 .search-bar__wrapper {
-    display: flex;
-    position: relative;
+	display: flex;
+	position: relative;
 }
 
 .search-bar__submit {
-    border: 0;
-    cursor: pointer;
-    color: white;
-    outline: 0;
-    
-    background-color: lighten($color: $yellow, $amount: 10%);
-    border: none;
-    width: 3rem;
-  }
+	color: white;
+	width: 4rem;
+
+	// fill parent size
+	button {
+		width: 100%;
+		height: 100%;
+	}
+}

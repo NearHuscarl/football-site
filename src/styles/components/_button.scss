@@ -1,13 +1,26 @@
 .button {
 	border: none;
+	border-radius: 3px;
 	color: white;
 	display: inline-block;
+	font-family: 'Quicksand-Medium';
 	font-size: $font-size-large;
 	font-weight: 300;
 	line-height: 1;
 	padding: $s-size;
 	text-decoration: none;
 	transition: background 0.3s ease;
+}
+
+.button--icon {
+	padding: 0;
+	font-weight: initial;
+	font-size: $font-size-medium;
+}
+
+// We assume the search button is on the right of input area
+.button--search {
+	border-radius: 0 3px 3px 0;
 }
 
 @include generate-button-color('DEFAULT', $blue);

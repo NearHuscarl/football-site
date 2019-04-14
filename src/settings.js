@@ -10,6 +10,7 @@ export const tierOneCommpetitions = {
 }
 
 const settings = {
+    maxArticlesPerPage: 300,
     cacheTime: {
         news: 24, // hours
         fixtures: 1.5,

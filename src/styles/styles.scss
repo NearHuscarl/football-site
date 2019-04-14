@@ -16,10 +16,13 @@ $root: './../../';
 @import './components/footer';
 @import './components/tile';
 @import './components/list';
+@import './components/news-list';
 @import './components/loader';
 @import './components/modal';
 @import './components/mainmenu';
 @import './components/page-header';
+@import './components/scrollbar';
 @import './components/visibility';
 
-@import './pages/homepage';
+@import './sections/page-header';
+@import './sections/see-more';

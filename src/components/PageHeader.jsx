@@ -139,7 +139,7 @@ const mapDispatchToProps = (dispatch) => ({
     setHeadlines: (headlines) => {
         return dispatch(setHeadlines(headlines));
     },
-})
+});
 
 export default connect(
     mapStateToProps,

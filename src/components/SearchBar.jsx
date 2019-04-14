@@ -44,17 +44,20 @@ class SearchBar extends React.Component {
                     Search bar
                 </label>
                 <input id="search-input"
-                        type="text"
-                        placeholder={props.placeholder}
-                        onChange={this.onChange}
-                        value={state.value}
-                        onKeyDown={this.handleKeyDown} />
-                <button
-                    aria-label='Search'
-                    className='button--yellow search-bar__submit'
-                    onClick={this.search}>
-                    <i className="fa fa-search fa-fw fa-sm" />
-                </button>
+                    className='text-input'
+                    type="text"
+                    placeholder={props.placeholder}
+                    onChange={this.onChange}
+                    value={state.value}
+                    onKeyDown={this.handleKeyDown} />
+                <div className='search-bar__submit'>
+                    <button
+                        aria-label='Search'
+                        className='button button--icon button--yellow button--search'
+                        onClick={this.search}>
+                        <i className="fa fa-search fa-fw fa-sm" />
+                    </button>
+                </div>
             </div>
         );
     }

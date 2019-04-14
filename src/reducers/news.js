@@ -6,7 +6,7 @@ const newsDefaultState = {
 	articles: {
 		0: [], // articles
 	},
-	headlines: [], // List of urls which are headlines
+	headlines: [], // List of headline urls
 };
 
 const newsReducer = (state = newsDefaultState, action) => {
@@ -14,9 +14,14 @@ const newsReducer = (state = newsDefaultState, action) => {
 		case 'SET_NEWS':
 			state = { ...state, ...action.news };
 			return state;
+		case 'SET_NEWS_AT_INDEX':
+			const { index, articles } = action;
+			let newState = {
+				articles: { ...state.articles, [index]: articles },
+			};
+			return { ...state, ...newState };
 		case 'SET_HEADLINES':
-			state = { ...state, headlines: action.headlines };
-			return state;
+			return { ...state, headlines: action.headlines };
 		default:
 			return state;
 	}

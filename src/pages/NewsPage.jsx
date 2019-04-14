@@ -1,9 +1,10 @@
 import React from 'react';
+import NewsList from '../components/NewsList';
 
 const NewsPage = () => {
     return (
-        <div className="content-container">
-            News page
+        <div>
+            <NewsList/>
         </div>
     );
 }
