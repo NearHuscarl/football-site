@@ -71,7 +71,7 @@ const refreshNews = (currentIndex) => {
     const newsapi = new NewsAPI(process.env.NEWS_API_KEY);
 
     return newsapi.v2.topHeadlines({
-        sources: 'bbc-news,talksport,the-sport-bible,fox-sports',
+        sources: 'bbc-sport,talksport,the-sport-bible,fox-sports',
         pageSize: 100,
     })
     .then((response) => {
