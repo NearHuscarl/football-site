@@ -16,7 +16,7 @@ class SearchBar extends React.Component {
     }
 
     search = (query) => {
-        this.props.onSearch(this.state.value.trim());
+        this.props.onSubmit(this.state.value.trim());
     }
 
     handleKeyDown = (e) => {
@@ -53,7 +53,7 @@ class SearchBar extends React.Component {
                 <div className='search-bar__submit'>
                     <button
                         aria-label='Search'
-                        className='button button--icon button--yellow button--search'
+                        className={props.buttonClassName}
                         onClick={this.search}>
                         <i className="fa fa-search fa-fw fa-sm" />
                     </button>
@@ -65,14 +65,16 @@ class SearchBar extends React.Component {
 
 SearchBar.propTypes = {
     placeholder: PropTypes.string,
-    onSearch: PropTypes.func,
+    onSubmit: PropTypes.func,
     renderSearchButton: PropTypes.bool,
+    buttonClassName: PropTypes.string,
 };
 
 SearchBar.defaultProps = {
-    placeholder: 'Searching...',
+    placeholder: 'Search...',
     onSearch: (q) => console.log('Searching', q),
     renderSearchButton: true,
+    buttonClassName: 'button button--icon button--yellow button--search',
 };
 
 export default SearchBar

@@ -9,9 +9,10 @@
 }
 
 .page-header__title {
-	font-weight: 300;
+	color: $dark-gray;
+	cursor: default;
+	font-family: 'Quicksand-Regular';
+	font-size: $font-size-xlarge;
 	margin: 0;
-	span {
-		font-weight: 700;
-	}
+	margin-left: 4px;
 }

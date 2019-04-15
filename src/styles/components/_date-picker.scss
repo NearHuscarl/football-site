@@ -1,0 +1,60 @@
+// https://github.com/airbnb/react-dates
+// NOTE: the order of these styles DO matter
+
+.input-group {
+
+  .date-wrapper {
+
+    .DateRangePickerInput {
+      display: flex;
+      align-items: center;
+    }
+    
+    .DateInput {
+      width: 100px;
+      padding-right: 0px;
+      
+      .DateInput_input {
+        height: $input-height;
+        cursor: pointer;
+        font-family: 'Quicksand-Regular';
+        font-size: $font-size-small;
+      }
+      .DateInput_input__focused {
+        border-bottom: 2px solid $cyan;
+      }
+    }
+    .DateRangePickerInput_arrow {
+    }
+    .DateRangePickerInput_clearDates {
+      margin-right: 2px;
+    }
+
+    // Will edit everything selected including everything between a range of dates
+    .CalendarDay__selected_span {
+      background: lighten($color: $dark-blue, $amount: 6%);
+      color: white;
+      border: 1px solid $dark-blue; // default styles include a border
+    }
+  
+    // Will edit selected date or the endpoints of a range of dates
+    .CalendarDay__selected {
+      background: $cyan;
+      color: white;
+    }
+  
+    // Will edit when hovered over. _span style also has this property
+    .CalendarDay__selected:hover {
+      // background: orange;
+      // color: white;
+    }
+  
+    // Will edit when the second date (end date) in a range of dates
+    // is not yet selected. Edits the dates between your mouse and said date
+    .CalendarDay__hovered_span:hover,
+    .CalendarDay__hovered_span {
+      background: $cyan;
+      color: white;
+    }
+  }
+}

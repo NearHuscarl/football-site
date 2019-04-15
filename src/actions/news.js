@@ -1,6 +1,7 @@
 import NewsAPI from 'newsapi';
 import database from '../firebase/firebase';
 import { checkCacheTimeExpired, updateCacheTime } from './util';
+import { newsSources } from '../settings';
 
 export const setHeadlines = (headlines) => ({
     type: 'SET_HEADLINES',
@@ -33,7 +34,7 @@ const setNews = (news) => ({
     news,
 });
 
-const filterNews = (newsList, currentIndex) => {
+const filterOldNews = (newsList, currentIndex) => {
     const footballNewsList = newsList.filter(article => /\/(football|soccer)\b/.test(article.url));
 
     let oldIndexes = []; // check new source with older news and remove duplicated ones
@@ -69,15 +70,16 @@ const filterNews = (newsList, currentIndex) => {
 const refreshNews = (currentIndex) => {
     let filteredNewsList = [];
     const newsapi = new NewsAPI(process.env.NEWS_API_KEY);
+    const sources = Object.keys(newsSources).join(',');
 
     return newsapi.v2.topHeadlines({
-        sources: 'bbc-sport,talksport,the-sport-bible,fox-sports',
+        sources,
         pageSize: 100,
     })
     .then((response) => {
         updateCacheTime('news', { currentIndex: ++currentIndex });
         const newsList = response.articles;
-        return filterNews(newsList, currentIndex);
+        return filterOldNews(newsList, currentIndex);
     })
     .then((newsList) => {
         filteredNewsList = newsList;

@@ -1,10 +1,12 @@
 import React from 'react';
-import NewsList from '../components/NewsList';
+import PageHeader from '../components/PageHeader';
+import NewsListTimeline from '../components/NewsListTimeline';
 
 const NewsPage = () => {
     return (
         <div>
-            <NewsList/>
+            <PageHeader title='Latest News' />
+            <NewsListTimeline />
         </div>
     );
 }

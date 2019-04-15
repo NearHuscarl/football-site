@@ -1,10 +1,10 @@
 import React from 'react';
-import PageHeader from '../components/PageHeader';
+import Headlines from '../components/Headlines';
 import TileGroup from '../components/TileGroup';
 
 const HomePage = () => (
     <div>
-        <PageHeader/>
+        <Headlines/>
         <TileGroup/>
     </div>
 )

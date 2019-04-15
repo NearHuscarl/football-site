@@ -1,6 +1,7 @@
 import moment from 'moment';
 import database from '../firebase/firebase';
 import settings from '../settings';
+import Log from '../utilities/log';
 
 // Randomize expired value. the smaller timeLeft value is, the higher chance
 // expired value is true. It will prevent multiple API requests at the
@@ -32,8 +33,7 @@ export const checkCacheTimeExpired = (dataType) => {
             const cacheTimeUntilNow = moment.duration(now.diff(lastUpdated));
             let cacheTimeType = dataType.replace(/[^a-z]/g, ''); // remove id number if there are any
             if (!settings.cacheTime.hasOwnProperty(cacheTimeType)) {
-                console.log(`%c'${cacheTimeType}' cache time not exists. Fall back to default cache time (${settings.cacheTime.default})`,
-                'background: #F1C40F; color: white');
+                Log.info(`'${cacheTimeType}' cache time not exists. Fall back to default cache time (${settings.cacheTime.default})`);
                 cacheTimeType = 'default';
             }
             
@@ -45,9 +45,9 @@ export const checkCacheTimeExpired = (dataType) => {
             };
 
             if (result.expired) {
-                console.log(`%cstart refreshing ${dataType}`, 'background: yellow; color: black');
+                Log.warning(`start refreshing ${dataType}`);
             } else {
-                console.log(`%c${timeLeft} hour(s) left before refreshing ${dataType}`, 'color: #bada55');
+                Log.debug(`${timeLeft} hour(s) left before refreshing ${dataType}`);
             }
             return result;
         })

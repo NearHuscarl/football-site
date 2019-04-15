@@ -1,12 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import HeadRoom from 'react-headroom';
 import NavBar from './NavBar';
 import SearchBar from './SearchBar';
+import { setNewsTextFilter } from '../actions/newsFilters';
+import { startSearchNews } from '../actions/newsResults';
 import { history } from '../routers/AppRouter';
 import logo from '../../public/images/Logo2.png';
 
-const Header = () => {
+export const Header = (props) => {
 	return (
 		<HeadRoom>
 			<div className="content-container">
@@ -18,7 +21,13 @@ const Header = () => {
 						</Link>
 						<NavBar history={history} />
 					</div>
-					<SearchBar onSearch={(q) => console.log('Searching ', q)} />
+					<SearchBar
+						placeholder='Search News'
+						onSubmit={(query) => {
+							props.setNewsTextFilter(query.trim());
+							props.startSearchNews();
+							history.push('search');
+						}} />
 				</div>
 			</div>
 		</HeadRoom>
@@ -27,4 +36,12 @@ const Header = () => {
 
 export const MockHeader = Header;
 
-export default Header;
+const mapDispatchToProps = (dispatch) => ({
+	setNewsTextFilter: (text) => dispatch(setNewsTextFilter(text)),
+	startSearchNews: () => dispatch(startSearchNews()),
+});
+
+export default connect(
+	undefined,
+	mapDispatchToProps,
+)(Header);

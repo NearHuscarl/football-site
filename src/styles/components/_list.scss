@@ -14,6 +14,13 @@
 	}
 }
 
+// A line to cover the top border of list item
+hr.top-border {
+	margin: 0;
+	border: none;
+	border-bottom: 1px solid darken($off-white, 7%);
+}
+
 @mixin list-item {
 	border: 1px solid darken($off-white, 7%);
 	border-top: none;

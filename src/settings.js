@@ -9,6 +9,14 @@ export const tierOneCommpetitions = {
     primeiraLiga: 2017, // Portugal
 }
 
+// https://newsapi.org/sources
+export const newsSources = {
+    'bbc-sport': 'BBC Sport',
+    'talksport': 'TalkSport',
+    'the-sport-bible': 'The Sport Bible',
+    'fox-sports': 'Fox Sports',
+};
+
 const settings = {
     maxArticlesPerPage: 300,
     cacheTime: {
