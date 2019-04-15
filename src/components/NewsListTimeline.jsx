@@ -89,7 +89,7 @@ export class NewsListTimeline extends React.Component {
                     renderSeeMoreButton={(currentIndex > 0 && articleCount < settings.maxArticlesPerPage)}
                     onClickSeeMoreButton={this.requestMoreArticles} />
                 :
-                <Loader />
+                <Loader height='40vh' />
         );
     }
 }

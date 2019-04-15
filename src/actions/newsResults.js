@@ -9,23 +9,32 @@ const searchNews = (filters, results) => ({
     results,
 });
 
+export const setSearchNewsStatus = (isSearching) => ({
+    type: 'SET_SEARCH_NEWS_STATUS',
+    isSearching,
+});
+
 export const startSearchNews = () => {
     return (dispatch, getState) => {
+        dispatch(setSearchNewsStatus(true));
+
         const filters = getState().newsFilters;
         const { newsResults } = getState();
         const cacheResults = newsResults.cache[reduceFilters(filters)];
 
         if (cacheResults) {
             dispatch(searchNews(filters, cacheResults));
+            dispatch(setSearchNewsStatus(false));
             return Promise.resolve();
         }
         else {
-            Log.warning(`start search for news`);
+            Log.warning('start search for news');
             const newsapi = new NewsAPI(process.env.NEWS_API_KEY);
             // setTimeout(() => {
             //     dispatch(searchNews(filters, shuffle(mockArticles)));
+            //     dispatch(setSearchNewsStatus(false));
             //     return Promise.resolve();
-            // }, 4000);
+            // }, 2000);
     
             return newsapi.v2.everything({
                 q: filters.text, 
@@ -37,6 +46,7 @@ export const startSearchNews = () => {
             .then((response) => {
                 const results = response.articles;
                 dispatch(searchNews(filters, results));
+                dispatch(setSearchNewsStatus(false));
             })
             .catch((err) => {
                 console.log('startfilterNews:', err);

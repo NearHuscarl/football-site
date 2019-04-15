@@ -1,6 +1,7 @@
 const resultsDefaultState = {
     results: [],
     cache: {},
+    isSearching: false,
 };
 
 export const reduceFilters = (filters) => {
@@ -14,9 +15,16 @@ export const reduceFilters = (filters) => {
 
 const newsResultsReducer = (state = resultsDefaultState, action) => {
     switch (action.type) {
+        case 'SET_SEARCH_NEWS_STATUS':
+            const { isSearching } = action;
+            return {
+                ...state,
+                isSearching,
+            };
         case 'UPDATE_NEWS_RESULTS':
             const { filters, results } = action;
             const newState = {
+                ...state,
                 results,
                 cache: {
                     ...state.cache,

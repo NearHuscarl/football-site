@@ -4,7 +4,6 @@ import { Carousel } from 'react-responsive-carousel';
 import { tierOneCommpetitions } from '../settings';
 import '../styles/components/_carousel.scss';
 import { history } from '../routers/AppRouter';
-import 'three-dots/sass/three-dots.scss'
 import { startUpdateStanding } from '../actions/standings';
 import StandingTable from './StandingTable';
 import Loader from './Loader';

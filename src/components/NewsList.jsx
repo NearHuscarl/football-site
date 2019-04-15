@@ -7,14 +7,16 @@ export class NewsList extends React.Component {
         super(props);
     }
 
-    renderArticle = (article) => (<NewsListItem key={article.url} {...article} />);
+    renderArticle = (article, highlightedWord) => (
+        <NewsListItem key={article.url} {...article} highlightedWord={highlightedWord} />
+    );
 
     renderArticles = () => {
-        const { articles } = this.props;
+        const { articles, highlightedWord } = this.props;
         let components = [];
 
-        articles.forEach((article, index) => {
-            components.push(this.renderArticle(article));
+        articles.forEach((article) => {
+            components.push(this.renderArticle(article, highlightedWord));
         });
 
         return components;
@@ -30,7 +32,7 @@ export class NewsList extends React.Component {
             </button>
             :
             <p>End of list</p>
-            );
+        );
     }
 
     render() {
@@ -51,9 +53,10 @@ export class NewsList extends React.Component {
 }
 
 NewsList.propTypes = {
-	articles: PropTypes.arrayOf(PropTypes.object).isRequired,
+    articles: PropTypes.arrayOf(PropTypes.object).isRequired,
     onClickSeeMoreButton: PropTypes.func,
     renderSeeMoreButton: PropTypes.bool,
+    highlightedWord: PropTypes.string,
 };
 
 NewsList.defaultProps = {

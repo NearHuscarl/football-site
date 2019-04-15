@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router'
 import NewsList from './NewsList';
 import Loader from './Loader';
 import { reduceFilters } from '../reducers/newsResults';
@@ -38,16 +39,20 @@ export class NewsListSearch extends React.Component {
     render() {
         console.log('render search results');
         const { articleCount } = this.state;
-        const { articles } = this.props;
-        if (articles === undefined) return null;
+        const { articles, isSearching, query } = this.props;
 
         return (
-            <Suspense fallback={<Loader />}>
-                <NewsList
-                    articles={this.getRenderedArticles(articles)}
-                    renderSeeMoreButton={articleCount < articles.length && articleCount < settings.maxArticlesPerPage}
-                    onClickSeeMoreButton={this.requestMoreResults} />
-            </Suspense>
+            isSearching ?
+                <Loader height='40vh' />
+                :
+                articles.length > 0 ?
+                    <NewsList
+                        highlightedWord={query}
+                        articles={this.getRenderedArticles(articles)}
+                        renderSeeMoreButton={articleCount < articles.length && articleCount < settings.maxArticlesPerPage}
+                        onClickSeeMoreButton={this.requestMoreResults} />
+                    :
+                    <Redirect to="/news" />
         );
     }
 }
@@ -67,6 +72,8 @@ const getFiltersKey = (search) => {
 
 const mapStateToProps = (state) => ({
     articles: state.newsResults.results,
+    query: state.newsFilters.text,
+    isSearching: state.newsResults.isSearching,
 });
 
 export default connect(

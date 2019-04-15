@@ -43,7 +43,7 @@ const AppRouter = () => (
 				<Route path="/news" component={NewsPage} exact />
 				<Route path="/search" component={SearchPage} exact />
 				<Route path="/fixtures" component={FixturesPage} exact />
-				<Route path="/standings/:id" component={StandingPage} />
+				<Route path="/standings" component={StandingPage} />
 				<Route path="/players" component={PlayersPage} exact />
 				<Route component={NotFoundPage} />
 			</Switch>
