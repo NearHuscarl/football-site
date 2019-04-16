@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty';
 import take from 'lodash/take';
 import shuffle from 'lodash/shuffle';
 import moment from 'moment';
-import { tierOneCommpetitions } from '../settings';
+import { competitions } from '../settings';
 import { startUpdateFixture } from '../actions/fixtures';
 import { startUpdateTeam } from '../actions/teams';
 import Loader from './Loader';
@@ -15,12 +15,11 @@ class FixtureTile extends React.Component {
     constructor(props) {
         super(props);
 
-        // this.state = {};
         this.competitionIds = [
-            tierOneCommpetitions.premierLeague,
-            tierOneCommpetitions.primeraDivision,
-            tierOneCommpetitions.bundesliga,
-            tierOneCommpetitions.serieA,
+            competitions.premierLeague,
+            competitions.primeraDivision,
+            competitions.bundesliga,
+            competitions.serieA,
         ];
     }
 
@@ -29,7 +28,7 @@ class FixtureTile extends React.Component {
             .then(() => {
                 this.competitionIds.forEach((competitionId) => {
                     this.props.startUpdateTeam(competitionId);
-                })
+                });
             });
     }
 
@@ -52,9 +51,43 @@ class FixtureTile extends React.Component {
         return true;
     }
 
+    renderFixture = (fixture) => {
+        const { teams } = this.props;
+        const competitionId = fixture.competition.id;
+        const homeId = fixture.homeTeam.id;
+        const awayId = fixture.awayTeam.id;
+        const homeTeam = teams[competitionId][homeId];
+        const awayTeam = teams[competitionId][awayId];
+        const date = moment(fixture.utcDate).format('HH:mm ddd DD MMM');
+
+       return (
+            <div className='fixture-body' key={fixture.id}>
+                <div className='fixture__logo' >
+                    <img alt='home team' src={homeTeam.crestUrl} />
+                </div>
+                <div className='fixture__info'>
+                    <div className='fixture__team'>
+                        <span className='fixture__team-name'>
+                            {homeTeam.shortName}
+                        </span>
+                        <span className='fixture__team-score'>V</span>
+                        <span className='fixture__team-name'>
+                            {awayTeam.shortName}
+                        </span>
+                    </div>
+                    <div className='fixture__date'>
+                        {date}
+                    </div>
+                </div>
+                <div className='fixture__logo' >
+                    <img alt='away team' src={awayTeam.crestUrl} />
+                </div>
+            </div>
+        );
+    }
+
     renderFixtures = (competitionId) => {
-        let components = [];
-        const { fixtures, teams } = this.props;
+        const { fixtures } = this.props;
         const randomFixtures = take(shuffle(fixtures[competitionId]), 5);
         let competitionName = '';
         let matchday = '';
@@ -64,45 +97,12 @@ class FixtureTile extends React.Component {
             matchday = randomFixtures[0].season.currentMatchday;
         }
 
-        randomFixtures.forEach((fixture) => {
-            const homeId = fixture.homeTeam.id;
-            const awayId = fixture.awayTeam.id;
-            const homeTeam = teams[competitionId][homeId];
-            const awayTeam = teams[competitionId][awayId];
-            const date = moment(fixture.utcDate).format('HH:mm ddd DD MMM');
-
-            components.push((
-                <div className='fixture-body' key={fixture.id}>
-                    <div className='fixture__logo' >
-                        <img alt='home team' src={homeTeam.crestUrl} />
-                    </div>
-                    <div className='fixture__info'>
-                        <div className='fixture__team'>
-                            <span className='fixture__team-name'>
-                                {homeTeam.shortName}
-                            </span>
-                            <span className='fixture__team-score'>V</span>
-                            <span className='fixture__team-name'>
-                                {awayTeam.shortName}
-                            </span>
-                        </div>
-                        <div className='fixture__date'>
-                            {date}
-                        </div>
-                    </div>
-                    <div className='fixture__logo' >
-                        <img alt='away team' src={awayTeam.crestUrl} />
-                    </div>
-                </div>
-            ))
-        });
-
         return (
             <div className='tile-imageitem' key={competitionId}>
                 <div className='fixture-title'>
                     {`${competitionName} | Matchday ${matchday}`}
                 </div>
-                {components}
+                {randomFixtures.map((fixture) => this.renderFixture(fixture))}
             </div>
         );
     }
@@ -134,8 +134,28 @@ class FixtureTile extends React.Component {
     }
 }
 
+const getFixtureByCompetition = (fixtureData) => {
+    if (isEmpty(fixtureData)) {
+        return {};
+    }
+    const result = {};
+
+    Object.keys(fixtureData).forEach((date) => {
+        fixtureData[date].forEach((fixture) => {
+            const competitionId = fixture.competition.id;
+            
+            if (!result.hasOwnProperty(competitionId)) {
+                result[competitionId] = [];
+            }
+            result[competitionId].push(fixture);
+        });
+    });
+
+    return result;
+}
+
 const mapStateToProps = (state) => ({
-    fixtures: state.fixtures,
+    fixtures: getFixtureByCompetition(state.fixtures),
     teams: state.teams,
 })
 

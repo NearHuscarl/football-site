@@ -7,6 +7,7 @@ import fixturesReducer from '../reducers/fixtures';
 import teamsReducer from '../reducers/teams';
 import newsFiltersReducer from '../reducers/newsFilters';
 import newsResultsReducer from '../reducers/newsResults';
+import fixtureFiltersReducer from '../reducers/fixtureFilters';
 
 const store = createStore(
 	combineReducers({
@@ -16,6 +17,7 @@ const store = createStore(
 		teams: teamsReducer,
 		newsFilters: newsFiltersReducer,
 		newsResults: newsResultsReducer,
+		fixtureFilters: fixtureFiltersReducer,
 	}),
 	composeWithDevTools(applyMiddleware(thunk)),
 );

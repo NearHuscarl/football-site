@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { DateRangePicker } from 'react-dates';
 import SearchBar from './SearchBar';
 import {
 	setNewsTextFilter,
@@ -10,15 +9,13 @@ import {
 } from '../actions/newsFilters';
 import { startSearchNews } from '../actions/newsResults';
 import SelectOptions from './SelectOptions';
+import DateRange from './DateRange';
 import { newsSources } from '../settings';
 import PageHeader from './PageHeader';
 
 export class NewsListFilters extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			calanderFocused: null,
-		};
 	}
 
 	onDatesChange = ({ startDate, endDate }) => {
@@ -26,12 +23,24 @@ export class NewsListFilters extends React.Component {
 		this.props.setNewsEndDate(endDate);
 	};
 
-	onFocusChange = (calanderFocused) => {
-		this.setState(() => ({ calanderFocused }));
-	};
-
 	onSourceChange = (options) => {
 		this.props.setNewsSourcesFilter(options.map((option) => option.value));
+	}
+	
+	getdefaultOptions = () => {
+		const { sources } = this.props.filters;
+
+		return Object.keys(newsSources)
+		.filter((sourceId) => {
+			return sources.includes(sourceId);
+		})
+		.map((sourceId) => {
+			const sourceName = newsSources[sourceId];
+			return {
+				label: sourceName,
+				value: sourceId,
+			};
+		});
 	}
 
 	getSourceOptions = () => {
@@ -41,12 +50,11 @@ export class NewsListFilters extends React.Component {
 				label: sourceName,
 				value: sourceId,
 			};
-		})
+		});
 	}
 
 	onSubmit = (query) => {
 		this.props.setNewsTextFilter(query);
-		const { filters } = this.props;
 		this.props.startSearchNews();
 	}
 
@@ -63,25 +71,18 @@ export class NewsListFilters extends React.Component {
 					<div className="input-group__item">
 						<SelectOptions
 							closeMenuOnSelect={false}
-							defaultValue={this.getSourceOptions()}
+							defaultValue={this.getdefaultOptions()}
 							isMulti
 							onChange={this.onSourceChange}
 							options={this.getSourceOptions()}
 							placeholder='Select (multiple) news sources...'
 						/>
 					</div>
-					<div className="input-group__item date-wrapper">
-						<DateRangePicker
-							startDateId=''
-							endDateId=''
+					<div className="input-group__item">
+						<DateRange
 							startDate={this.props.filters.startDate}
 							endDate={this.props.filters.endDate}
 							onDatesChange={this.onDatesChange}
-							focusedInput={this.state.calanderFocused}
-							onFocusChange={this.onFocusChange}
-							showClearDates={true}
-							numberOfMonths={1}
-							isOutsideRange={(day) => false}
 						/>
 					</div>
 				</div>
@@ -97,8 +98,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
 	setNewsTextFilter: (text) => dispatch(setNewsTextFilter(text)),
 	setNewsSourcesFilter: (sources) => dispatch(setNewsSourcesFilter(sources)),
-	setNewsStartDate: (endDate) => dispatch(setNewsStartDate(endDate)),
-	setNewsEndDate: (startDate) => dispatch(setNewsEndDate(startDate)),
+	setNewsStartDate: (startDate) => dispatch(setNewsStartDate(startDate)),
+	setNewsEndDate: (endDate) => dispatch(setNewsEndDate(endDate)),
 	startSearchNews: () => dispatch(startSearchNews()),
 });
 

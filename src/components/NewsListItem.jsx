@@ -29,12 +29,12 @@ const NewsListItem = (props) => {
     
     return (
         <a className='newslist-item' href={props.url} target='_blank'>
-            <div className='newslist-image'>
+            <div className='news-item-image'>
                 <img alt='article' src={props.urlToImage} />
             </div>
-            <div className='newslist-text'>
-                <span className='newslist-text__source'>{props.source.name}</span>
-                <span className='newslist-text__date'>{publishedAt}</span>
+            <div className='news-item-text'>
+                <span className='news-item-text__source'>{props.source.name}</span>
+                <span className='news-item-text__date'>{publishedAt}</span>
                 <h2>{title}</h2>
                 <h3>{description}</h3>
                 <div>{content}</div>

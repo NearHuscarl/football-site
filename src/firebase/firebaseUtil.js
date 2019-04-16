@@ -1,5 +1,4 @@
 import FootballData from 'footballdata-api-v2';
-import { tierOneCommpetitions } from '../settings';
 import database from './firebase';
 
 const footballDataAPI = new FootballData(process.env.FOOTBALL_DATA_API_KEY);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Carousel } from 'react-responsive-carousel';
-import { tierOneCommpetitions } from '../settings';
+import { competitions } from '../settings';
 import '../styles/components/_carousel.scss';
 import { history } from '../routers/AppRouter';
 import { startUpdateStanding } from '../actions/standings';
@@ -15,10 +15,10 @@ export class StandingTile extends React.Component {
             standings: {},
         };
         this.competitionIds = [
-            tierOneCommpetitions.premierLeague,
-            tierOneCommpetitions.primeraDivision,
-            tierOneCommpetitions.bundesliga,
-            tierOneCommpetitions.serieA,
+            competitions.premierLeague,
+            competitions.primeraDivision,
+            competitions.bundesliga,
+            competitions.serieA,
         ];
     }
 

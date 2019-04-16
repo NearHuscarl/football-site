@@ -22,7 +22,7 @@ export const Header = (props) => {
 						<NavBar history={history} />
 					</div>
 					<SearchBar
-						placeholder='Search News'
+						placeholder='Search news'
 						onSubmit={(query) => {
 							props.setNewsTextFilter(query.trim());
 							props.startSearchNews();

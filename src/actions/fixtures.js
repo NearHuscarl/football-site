@@ -2,38 +2,47 @@ import database from '../firebase/firebase';
 import moment from 'moment';
 import FootballData from 'footballdata-api-v2';
 import { checkCacheTimeExpired, updateCacheTime } from './util';
-import { tierOneCommpetitions } from '../settings';
+import { competitions } from '../settings';
+import getDateRange from '../utilities/getDateRange';
 
 const updateFixture = (fixtures) => ({
     type: 'UPDATE_FIXTURE',
     fixtures,
 });
 
+const fixtureStartDate = moment();
+const fixtureEndDate = moment(fixtureStartDate).add(10, 'days');
+
 const refreshFixture = () => {
     let fixtureData = {};
     const footballData = new FootballData(process.env.FOOTBALL_DATA_API_KEY);
 
     return footballData.getMatches({
-        competitions: Object.values(tierOneCommpetitions).toString(),
-        dateFrom: moment().format('YYYY-MM-DD'),
-        dateTo: moment().add(9, 'days').format('YYYY-MM-DD'),
+        competitions: Object.values(competitions).toString(),
+        dateFrom: fixtureStartDate.format('YYYY-MM-DD'),
+        dateTo: fixtureEndDate.format('YYYY-MM-DD'), // maximum is 10-day difference
         status: 'SCHEDULED',
     })
     .then((data) => {
         updateCacheTime('fixtures');
 
+        let promises = []
+        let fixtureData = {};
         const { matches } = data;
-        matches.forEach((match) => {
-            if (fixtureData[match.competition.id] === undefined) {
-                fixtureData[match.competition.id] = [];
-            }
 
-            fixtureData[match.competition.id].push(match);
-        })
+        matches.forEach((match) => {
+            const date = moment(match.utcDate).format('YYYY-MM-DD');
+            if (!fixtureData.hasOwnProperty(date)) {
+                fixtureData[date] = [];
+            }
             
-        return database
-            .ref('cachedData/fixtures/data')
-            .set(fixtureData);
+            fixtureData[date].push(match);
+            promises.push(database
+                .ref(`cachedData/fixtures/data/${date}`)
+                .push(match));
+        });
+
+        return Promise.all(promises);
     })
     .then(() => {
         return fixtureData;
@@ -49,17 +58,28 @@ export const startUpdateFixture = () => {
         return checkCacheTimeExpired('fixtures')
             .then((result) => {
                 const { expired } = result;
-                let promise = Promise.resolve(null);
 
                 if (expired) {
-                    promise = refreshFixture()
+                    return refreshFixture()
                 } else {
-                    promise = database
-                        .ref('cachedData/fixtures/data')
-                        .once('value')
-                        .then((snapshot) => snapshot.val());
+                    let fixtureData = {};
+                    let promises = [];
+
+                    getDateRange(fixtureStartDate, fixtureEndDate)
+                    .forEach((date) => {
+                        promises.push(database
+                            .ref(`cachedData/fixtures/data/${date}`)
+                            .once('value')
+                            .then((snapshot) => {
+
+                                fixtureData[date] = [];
+                                snapshot.forEach((childSnapshot) => {
+                                    fixtureData[date].push(childSnapshot.val());
+                                });
+                            }));
+                        });
+                    return Promise.all(promises).then(() => fixtureData);
                 }
-                return promise;
             })
             .then((fixtures) => {
                 dispatch(updateFixture(fixtures));

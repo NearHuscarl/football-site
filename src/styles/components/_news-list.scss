@@ -2,24 +2,24 @@
     @include list-item();
     font-size: $font-size-small;
 
-    .newslist-image {
+    .news-item-image {
         align-items: flex-start; // override from list-item mixin
 
         img {
             width: 35rem;
         }
     }
-    .newslist-text {
+    .news-item-text {
         align-self: flex-start;
         padding-left: $s-size;
         position: relative;
     }
 
-    .newslist-text__source {
+    .news-item-text__source {
         color: $cyan;
         font-family: 'Quicksand-Medium';
     }
-    .newslist-text__date {
+    .news-item-text__date {
         position: absolute;
         right: 0;
         color: $dark-blue;
