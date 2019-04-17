@@ -4,7 +4,6 @@ import { Carousel } from 'react-responsive-carousel';
 import { competitions } from '../settings';
 import '../styles/components/_carousel.scss';
 import { history } from '../routers/AppRouter';
-import { startUpdateStanding } from '../actions/standings';
 import StandingTable from './StandingTable';
 import Loader from './Loader';
 
@@ -20,12 +19,6 @@ export class StandingTile extends React.Component {
             competitions.bundesliga,
             competitions.serieA,
         ];
-    }
-
-    componentDidMount() {
-        this.competitionIds.forEach((competitionId) => {
-            this.props.startUpdateStanding(competitionId);
-        });
     }
 
     onClickStandingTable = (index) => {
@@ -81,13 +74,7 @@ const mapStateToProps = (state) => ({
     standings: state.standings,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-    startUpdateStanding: (competitionId) => {
-        return dispatch(startUpdateStanding(competitionId));
-    }
-})
-
 export default connect(
     mapStateToProps,
-    mapDispatchToProps,
+    undefined,
 )(StandingTile);

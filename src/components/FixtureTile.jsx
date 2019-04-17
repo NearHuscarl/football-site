@@ -7,8 +7,6 @@ import take from 'lodash/take';
 import shuffle from 'lodash/shuffle';
 import moment from 'moment';
 import { competitions } from '../settings';
-import { startUpdateFixture } from '../actions/fixtures';
-import { startUpdateTeam } from '../actions/teams';
 import Loader from './Loader';
 
 class FixtureTile extends React.Component {
@@ -21,15 +19,6 @@ class FixtureTile extends React.Component {
             competitions.bundesliga,
             competitions.serieA,
         ];
-    }
-
-    componentDidMount() {
-        this.props.startUpdateFixture()
-            .then(() => {
-                this.competitionIds.forEach((competitionId) => {
-                    this.props.startUpdateTeam(competitionId);
-                });
-            });
     }
 
     isDataReady = () => {
@@ -58,7 +47,7 @@ class FixtureTile extends React.Component {
         const awayId = fixture.awayTeam.id;
         const homeTeam = teams[competitionId][homeId];
         const awayTeam = teams[competitionId][awayId];
-        const date = moment(fixture.utcDate).format('HH:mm ddd DD MMM');
+        const date = moment.utc(fixture.utcDate).format('HH:mm ddd DD MMM');
 
        return (
             <div className='fixture-body' key={fixture.id}>
@@ -134,20 +123,20 @@ class FixtureTile extends React.Component {
     }
 }
 
-const getFixtureByCompetition = (fixtureData) => {
-    if (isEmpty(fixtureData)) {
+const getMatchesByCompetition = (matchData) => {
+    if (isEmpty(matchData)) {
         return {};
     }
     const result = {};
 
-    Object.keys(fixtureData).forEach((date) => {
-        fixtureData[date].forEach((fixture) => {
-            const competitionId = fixture.competition.id;
+    Object.keys(matchData).forEach((date) => {
+        matchData[date].forEach((match) => {
+            const competitionId = match.competition.id;
             
             if (!result.hasOwnProperty(competitionId)) {
                 result[competitionId] = [];
             }
-            result[competitionId].push(fixture);
+            result[competitionId].push(match);
         });
     });
 
@@ -155,20 +144,11 @@ const getFixtureByCompetition = (fixtureData) => {
 }
 
 const mapStateToProps = (state) => ({
-    fixtures: getFixtureByCompetition(state.fixtures),
+    fixtures: getMatchesByCompetition(state.matches),
     teams: state.teams,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-    startUpdateFixture: () => {
-        return dispatch(startUpdateFixture());
-    },
-    startUpdateTeam: (competitionId) => {
-        return dispatch(startUpdateTeam(competitionId));
-    },
 })
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps,
+    undefined,
 )(FixtureTile);

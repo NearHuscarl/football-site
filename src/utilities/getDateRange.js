@@ -6,7 +6,7 @@ const getDateRange = (startDate, endDate, format = 'YYYY-MM-DD') => {
     }
 
     let dates = [];
-    while (!startDate.isSame(endDate, 'day')) {
+    while (!startDate.isAfter(endDate, 'day')) {
         dates.push(startDate.format(format));
         startDate.add(1, 'days');
     }

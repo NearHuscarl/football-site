@@ -1,15 +1,15 @@
 import moment from 'moment';
 
-const fixtureFiltersDefaultState = {
+const matchFiltersDefaultState = {
     competition: 'all',
 	date: moment(),
 };
 
-const newsFiltersReducer = (state = fixtureFiltersDefaultState, action) => {
+const newsFiltersReducer = (state = matchFiltersDefaultState, action) => {
 	switch (action.type) {
-        case 'SET_FIXTURE_COMPETITION_FILTER':
+        case 'SET_MATCH_COMPETITION_FILTER':
             return { ...state, competition: action.competition };
-		case 'SET_FIXTURE_DATE':
+		case 'SET_MATCH_DATE':
 			return { ...state, date: action.date };
 		default:
 			return state;

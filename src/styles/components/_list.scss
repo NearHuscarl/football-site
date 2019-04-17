@@ -14,11 +14,11 @@
 	}
 }
 
-// A line to cover the top border of list item
-hr.top-border {
+// A line to cover the top border of the top-most list item
+hr.list-item-top-border {
 	margin: 0;
-	border: none;
-	border-bottom: 1px solid darken($off-white, 7%);
+	border: 1px solid darken($off-white, 7%);
+	// z-index: 1;
 }
 
 @mixin list-item {

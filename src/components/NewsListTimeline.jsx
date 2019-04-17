@@ -2,33 +2,39 @@ import React from 'react';
 import { connect } from 'react-redux';
 import NewsList from './NewsList';
 import Loader from './Loader';
-import { startSetNews, startSetNewsAtIndex } from '../actions/news';
+import { startSetNewsAtIndex } from '../actions/news';
 import settings from '../settings';
 
 export class NewsListTimeline extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            currentIndex: -1,
-            articleCount: 0,
-        };
-        this.ARTICLE_BATCH = 15
 
-        props.startSetNews()
-            .then(() => {
-                const { lastIndex } = this.props;
-                this.setState((state) => ({
-                    currentIndex: lastIndex,
-                    articleCount: state.articleCount + this.ARTICLE_BATCH,
-                }));
-            });
+        this.ARTICLE_BATCH = 15
+        this.state = {
+            currentIndex: this.props.lastIndex,
+            articleCount: this.ARTICLE_BATCH,
+        };
     }
 
-    shouldComponentUpdate(_nextProps, nextState) {
-        if (this.state.articleCount !== nextState.articleCount) {
-            return true;
+    // TODO: use react-select
+    // https://redux.js.org/faq/react-redux#why-is-my-component-re-rendering-too-often
+    // because getAllArticles() will trigger rerendering every time the store change
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     if (this.state.articleCount !== nextState.articleCount) {
+    //         return true;
+    //     }
+    //     if (this.props.articles.length != nextProps.articles.length) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+    componentDidUpdate(prevProps) {
+        if (this.props.lastIndex !== prevProps.lastIndex && this.state.currentIndex === -1) {
+            this.setState(() => ({
+                currentIndex: this.props.lastIndex,
+                articleCount: this.ARTICLE_BATCH,
+            }));
         }
-        return false;
     }
 
     requestMoreArticles = () => {
@@ -44,12 +50,12 @@ export class NewsListTimeline extends React.Component {
         }
 
         return this.props.startSetNewsAtIndex(newIndex)
-        .then(() => {
-            this.setState((state) => ({
-                currentIndex: newIndex,
-                articleCount: state.articleCount + this.ARTICLE_BATCH,
-            }));
-        });
+            .then(() => {
+                this.setState((state) => ({
+                    currentIndex: newIndex,
+                    articleCount: state.articleCount + this.ARTICLE_BATCH,
+                }));
+            });
     }
 
     getRenderedArticles = () => {
@@ -69,11 +75,11 @@ export class NewsListTimeline extends React.Component {
         // store run out of articles, request more and fill the rest
         if (renderedArticles.length < articleCount) {
             this.requestMoreArticles()
-            .then(() => {
-                for (const i = lastIndex; i < articleCount; i++) {
-                    renderedArticles.push(articles[i]);
-                }
-            });
+                .then(() => {
+                    for (const i = lastIndex; i < articleCount; i++) {
+                        renderedArticles.push(articles[i]);
+                    }
+                });
         }
 
         return renderedArticles;
@@ -114,9 +120,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    startSetNews: () => {
-        return dispatch(startSetNews());
-    },
     startSetNewsAtIndex: (index) => {
         return dispatch(startSetNewsAtIndex(index));
     },

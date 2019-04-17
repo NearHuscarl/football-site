@@ -33,7 +33,7 @@ const settings = {
     maxArticlesPerPage: 300,
     cacheTime: {
         news: 24, // hours
-        fixtures: 24 * 10,
+        matches: 0.75,
         standings: 1,
         teams: 24 * 15,
         default: 2, // safe net

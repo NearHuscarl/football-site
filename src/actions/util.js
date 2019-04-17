@@ -44,9 +44,7 @@ export const checkCacheTimeExpired = (dataType) => {
                 expired: isExpired(timeLeft, cacheTime),
             };
 
-            if (result.expired) {
-                Log.warning(`start refreshing ${dataType}`);
-            } else {
+            if (!result.expired) {
                 Log.debug(`${timeLeft} hour(s) left before refreshing ${dataType}`);
             }
             return result;

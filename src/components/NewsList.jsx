@@ -38,7 +38,7 @@ export class NewsList extends React.Component {
     render() {
         return (
             <div className='content-container'>
-                <hr className='top-border' />
+                <hr className='list-item-top-border' />
                 {
                     this.renderArticles()
                 }

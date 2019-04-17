@@ -3,11 +3,8 @@ import { connect } from 'react-redux';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import moment from 'moment';
-import shuffle from 'lodash/shuffle';
-import take from 'lodash/take';
 import truncate from 'lodash/truncate';
 import '../styles/components/_carousel.scss';
-import { startSetNews, setHeadlines } from '../actions/news';
 import Loader from './Loader';
 import PageHeader from './PageHeader';
 
@@ -15,29 +12,18 @@ export class Headlines extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            headlines: [],
             headlineIndex: 0,
         };
-
-        props.startSetNews()
-            .then(() => {
-                const { articles, meta } = this.props.news;
-                const headlines = take(shuffle(articles[meta.currentIndex]), 4);
-                const headlineUrls = headlines.map((headline) => headline.url);
-
-                this.props.setHeadlines(headlineUrls);
-                this.setState(() => ({ headlines }));
-            });
     }
 
     onClickImage = (index) => {
-        const { headlines } = this.state;
+        const { headlines } = this.props;
         const headline = headlines[index];
         let win = window.open(headline.url, '_blank');
         win.focus();
     }
 
-    onChangeHeadlineImage = (headlineIndex) => {
+    onChangeHeadline = (headlineIndex) => {
         this.setState(() => ({ headlineIndex }));
     }
 
@@ -60,23 +46,28 @@ export class Headlines extends React.Component {
         );
     }
 
-    renderHeadlineCards = (headlines, currentIndex) => {
+    renderHeadlineCards = () => {
+        const { headlines } = this.props;
+        const { headlineIndex } = this.state;
         let components = [];
 
         headlines.forEach((headline, index) => {
-            const className = (index === currentIndex) ? 'headline__card card card--selected' : 'headline__card card'
+            const className = (index === headlineIndex) ? 'headline__card card card--selected' : 'headline__card card'
             components.push((
                 <div
                     key={index}
                     className={className}
-                    onClick={() => this.onChangeHeadlineImage(index)}>{headline.title}</div>
+                    onClick={() => this.onChangeHeadline(index)}>{headline.title}</div>
             ));
         });
 
         return components;
     }
 
-    renderHeadlineImageSlider = (headlines, headlineIndex) => {
+    renderHeadlineImageSlider = () => {
+        const { headlines } = this.props;
+        const { headlineIndex } = this.state;
+
         return (headlines.length > 0
             ?
             <div className='carousel-wrapper'>
@@ -93,7 +84,8 @@ export class Headlines extends React.Component {
                     showThumbs={false}
                     showStatus={false}
                     onClickItem={this.onClickImage}
-                    onChange={this.onChangeHeadlineImage}>
+                    onChange={this.onChangeHeadline}
+                    >
                     {
                         headlines.map((headline) => (
                             this.renderHeadlineImage(headline)
@@ -106,19 +98,17 @@ export class Headlines extends React.Component {
     }
 
     render() {
-        const { headlines, headlineIndex } = this.state;
-
         return (
             <PageHeader>
                 <div className='headline'>
                     <div className='headline__image'>
                         {
-                            this.renderHeadlineImageSlider(headlines, headlineIndex)
+                            this.renderHeadlineImageSlider()
                         }
                     </div>
                     <div className='headline__card-list'>
                         {
-                            this.renderHeadlineCards(headlines, headlineIndex)
+                            this.renderHeadlineCards()
                         }
                     </div>
                 </div>
@@ -128,19 +118,10 @@ export class Headlines extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    news: state.news,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    startSetNews: () => {
-        return dispatch(startSetNews());
-    },
-    setHeadlines: (headlines) => {
-        return dispatch(setHeadlines(headlines));
-    },
+    headlines: state.news.headlines,
 });
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    undefined,
 )(Headlines);

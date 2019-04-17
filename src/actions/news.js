@@ -2,6 +2,7 @@ import NewsAPI from 'newsapi';
 import database from '../firebase/firebase';
 import { checkCacheTimeExpired, updateCacheTime } from './util';
 import { newsSources } from '../settings';
+import Log from '../utilities/log'
 
 export const setHeadlines = (headlines) => ({
     type: 'SET_HEADLINES',
@@ -72,6 +73,7 @@ const refreshNews = (currentIndex) => {
     const newsapi = new NewsAPI(process.env.NEWS_API_KEY);
     const sources = Object.keys(newsSources).join(',');
 
+    Log.warning(`start getting news: sources=${sources}`);
     return newsapi.v2.topHeadlines({
         sources,
         pageSize: 100,
@@ -107,11 +109,7 @@ const refreshNews = (currentIndex) => {
 }
 
 export const startSetNews = () => {
-    return (dispatch, getState) => {
-        if (getState().news.meta.currentIndex !== -1) {
-            return Promise.resolve();
-        }
-
+    return (dispatch) => {
         return checkCacheTimeExpired('news')
             .then((result) => {
                 const { expired, meta } = result;

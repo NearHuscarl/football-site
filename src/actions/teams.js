@@ -1,6 +1,7 @@
 import database from '../firebase/firebase';
 import FootballData from 'footballdata-api-v2';
 import { checkCacheTimeExpired, updateCacheTime } from './util';
+import Log from '../utilities/log'
 
 const updateTeam = (competitionId, teams) => ({
     type: 'UPDATE_TEAM',
@@ -12,6 +13,7 @@ const refreshTeam = (competitionId) => {
     let teamData = {};
     const footballData = new FootballData(process.env.FOOTBALL_DATA_API_KEY);
 
+    Log.warning(`start getting teams: competitionId=${competitionId}`);
     return footballData.getTeamsFromCompetition({
         id: competitionId,
     })

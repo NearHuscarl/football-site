@@ -16,7 +16,6 @@ class NavBar extends React.Component {
     onSelectTab = (e) => {
         const { history } = this.props;
         const tabName = e.key;
-        console.log('selected ', tabName);
         history.push('/' + tabName);
     }
 

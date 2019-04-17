@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import {
-	setFixtureCompetitionFilter,
-	setFixtureDate,
-} from '../actions/fixtureFilters';
-import { startSearchNews } from '../actions/newsResults';
+	setMatchCompetitionFilter,
+	setMatchDate,
+} from '../actions/matchFilters';
+import { startSearchMatches } from '../actions/matchResults';
 import PageHeader from './PageHeader';
 import SelectOptions from './SelectOptions';
 import Date from './Date';
@@ -21,11 +20,13 @@ export class FixtureListFilters extends React.Component {
 	}
 
 	onDateChange = (date) => {
-		this.props.setFixtureDate(date);
+		this.props.setMatchDate(date);
+		this.props.startSearchMatches();
 	};
 
 	onSourceChange = (option) => {
-		this.props.setFixtureCompetitionFilter(option.value);
+		this.props.setMatchCompetitionFilter(option.value);
+		this.props.startSearchMatches();
 	}
 
 	getSourceOptions = () => {
@@ -34,7 +35,7 @@ export class FixtureListFilters extends React.Component {
 				const competitionName = competitionNames[competitionId];
 				return {
 					label: competitionName,
-					value: competitionId,
+					value: Number(competitionId),
 				};
 			});
 
@@ -48,7 +49,7 @@ export class FixtureListFilters extends React.Component {
 				<div className="input-group">
 					<div className="input-group__item">
 						<SelectOptions
-							width='15rem'
+							width='18rem'
 							defaultValue={this.allOption}
 							onChange={this.onSourceChange}
 							options={this.getSourceOptions()}
@@ -67,13 +68,13 @@ export class FixtureListFilters extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-	filters: state.fixtureFilters,
+	filters: state.matchFilters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	setFixtureCompetitionFilter: (competitionId) => dispatch(setFixtureCompetitionFilter(competitionId)),
-	setFixtureDate: (date) => dispatch(setFixtureDate(date)),
-	// startSearchNews: () => dispatch(startSearchNews()),
+	setMatchCompetitionFilter: (competitionId) => dispatch(setMatchCompetitionFilter(competitionId)),
+	setMatchDate: (date) => dispatch(setMatchDate(date)),
+	startSearchMatches: () => dispatch(startSearchMatches()),
 });
 
 export default connect(

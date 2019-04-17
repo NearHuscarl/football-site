@@ -28,19 +28,25 @@ export const startSearchNews = () => {
             return Promise.resolve();
         }
         else {
-            Log.warning('start search for news');
+            Log.warning('start searching for news');
             const newsapi = new NewsAPI(process.env.NEWS_API_KEY);
             // setTimeout(() => {
             //     dispatch(searchNews(filters, shuffle(mockArticles)));
             //     dispatch(setSearchNewsStatus(false));
             //     return Promise.resolve();
             // }, 2000);
+
+            const q = filters.text;
+            const from = filters.startDate.format();
+            const to = filters.endDate.format();
+            const sources = filters.sources.toString();
     
+            Log.warning(`start getting news from search: q=${q} from=${from} to=${to} sources=${sources}`);
             return newsapi.v2.everything({
-                q: filters.text, 
-                from: filters.startDate.format(),
-                to: filters.endDate.format(),
-                sources: filters.sources.toString(),
+                q, 
+                from,
+                to,
+                sources,
                 pageSize: 100,
             })
             .then((response) => {

@@ -51,11 +51,14 @@ class NewsTile extends React.Component {
 
 const getArticlesThatAreNotHeadlines = (news, headlines) => {
     const { currentIndex } = news.meta;
-    if (currentIndex === -1 || headlines.length === 0) return [];
+    if (currentIndex === -1) {
+        return []
+    };
     const articles = news.articles[currentIndex];
+    const headlineUrls = headlines.map((headline) => headline.url);
 
     return articles.filter((article) => {
-        return !headlines.includes(article.url);
+        return !headlineUrls.includes(article.url);
     });
 }
 
