@@ -1,10 +1,15 @@
+.fixturelist-groupname {
+    background: lighten($color: $dark-blue, $amount: 12%);
+    color: $off-white;
+    cursor: default;
+    padding: $m-size;
+    text-align: center;
+    font-family: 'Quicksand-Medium';
+    font-size: $font-size-large;
+}
+
 .fixturelist-item {
     @include list-item();
-
-    .fixture-item__title {
-        font-family: 'Quicksand-Medium';
-        margin: $m-size;
-    }
 
     display: flex;
     justify-content: space-between;

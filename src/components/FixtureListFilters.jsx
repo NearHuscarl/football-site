@@ -29,7 +29,18 @@ export class FixtureListFilters extends React.Component {
 		this.props.startSearchMatches();
 	}
 
-	getSourceOptions = () => {
+	getDefaultOption = () => {
+		const { competition } = this.props.filters;
+		if (competition === 'all') {
+			return this.allOption;
+		}
+		return {
+			label: competitionNames[competition],
+			value: competition,
+		};
+	}
+
+	getCompetitionOptions = () => {
 		const options = Object.keys(competitionNames)
 			.map((competitionId) => {
 				const competitionName = competitionNames[competitionId];
@@ -50,9 +61,9 @@ export class FixtureListFilters extends React.Component {
 					<div className="input-group__item">
 						<SelectOptions
 							width='18rem'
-							defaultValue={this.allOption}
+							defaultValue={this.getDefaultOption()}
 							onChange={this.onSourceChange}
-							options={this.getSourceOptions()}
+							options={this.getCompetitionOptions()}
 							placeholder='Select competition...'
 						/>
 					</div>
