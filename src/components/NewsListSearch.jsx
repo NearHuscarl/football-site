@@ -47,7 +47,7 @@ export class NewsListSearch extends React.Component {
                 :
                 articles.length > 0 ?
                     <NewsList
-                        highlightedWord={query}
+                        highlightedWords={query}
                         articles={this.getRenderedArticles(articles)}
                         renderSeeMoreButton={articleCount < articles.length && articleCount < settings.maxArticlesPerPage}
                         onClickSeeMoreButton={this.requestMoreResults} />

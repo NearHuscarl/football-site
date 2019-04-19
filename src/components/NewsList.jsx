@@ -7,16 +7,24 @@ export class NewsList extends React.Component {
         super(props);
     }
 
-    renderArticle = (article, highlightedWord) => (
-        <NewsListItem key={article.url} {...article} highlightedWord={highlightedWord} />
+    // Render NewsListItem is expensive so we need to limit rendering time to minimal
+    shouldComponentUpdate(nextProps) {
+        if (this.props.articles.length != nextProps.articles.length) {
+            return true;
+        }
+        return false;
+    }
+
+    renderArticle = (article, highlightedWords) => (
+        <NewsListItem key={article.url} {...article} highlightedWords={highlightedWords} />
     );
 
     renderArticles = () => {
-        const { articles, highlightedWord } = this.props;
+        const { articles, highlightedWords } = this.props;
         let components = [];
 
         articles.forEach((article) => {
-            components.push(this.renderArticle(article, highlightedWord));
+            components.push(this.renderArticle(article, highlightedWords));
         });
 
         return components;
@@ -36,6 +44,7 @@ export class NewsList extends React.Component {
     }
 
     render() {
+        console.log('render newslist');
         return (
             <div className='content-container'>
                 <hr className='list-item-top-border' />
@@ -56,7 +65,7 @@ NewsList.propTypes = {
     articles: PropTypes.arrayOf(PropTypes.object).isRequired,
     onClickSeeMoreButton: PropTypes.func,
     renderSeeMoreButton: PropTypes.bool,
-    highlightedWord: PropTypes.string,
+    highlightedWords: PropTypes.string,
 };
 
 NewsList.defaultProps = {

@@ -17,8 +17,8 @@
 // A line to cover the top border of the top-most list item
 hr.list-item-top-border {
 	margin: 0;
-	border: 1px solid darken($off-white, 7%);
-	// z-index: 1;
+	border: none;
+	border-top: 1px solid darken($off-white, 7%);
 }
 
 @mixin list-item {

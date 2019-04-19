@@ -2,3 +2,10 @@
     background-color: transparentize($color: $yellow, $amount: 0.33);
     border-radius: 3px;
 }
+
+// https://stackoverflow.com/questions/24310180/hint-css-manual-line-break-in-hint
+.hint-text {
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-decoration-color: $light-gray;
+}

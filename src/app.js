@@ -26,4 +26,6 @@ const renderApp = () => {
 
 renderApp();
 // import FirebaseUtil from './firebase/firebaseUtil';
-// FirebaseUtil.updateCommonData();
+// FirebaseUtil.getAllTeamNameHashes().then((teamNames) => {
+// 	console.log(teamNames);
+// });
