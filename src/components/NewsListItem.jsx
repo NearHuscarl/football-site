@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import hashMultipleWords from '../utilities/hashMultipleWords';
 import teamNames from '../utilities/teamNames';
+import Tooltip from './Tooltip';
 
 const compareHashes = (wordHashes, wordArray, startIndex = 0) => {
     let wordHashesVal = wordHashes;
@@ -76,7 +77,7 @@ const wrapWordIntoComponent = (paragraph, params) => {
                     }
 
                     const Component = param.component;
-                    wrappedContent.push(<Component {...param.props} {...result.meta} key={i}>{matchWords}</Component>);
+                    wrappedContent.push(<Component key={i} {...param.props} {...result.meta}>{matchWords}</Component>);
                     wrappedContent.push(' ' + gibberishSuffix);
                     i = result.endIndex;
                     wrapped = true;
@@ -96,7 +97,7 @@ const wrapWordIntoComponent = (paragraph, params) => {
 
 const highlightWordInContent = (content, keyword) => {
     let params = [{
-        component: 'strong',
+        component: Tooltip,
         props: { className: 'hint-text' },
         keyword: teamNames,
         matchExact: false, // can match partially
@@ -114,9 +115,10 @@ const highlightWordInContent = (content, keyword) => {
 };
 
 const NewsListItem = (props) => {
-    // const hashedQuery = hashMultipleWords(props.highlightedWords);
     const { highlightedWords } = props;
     const hashedQuery = highlightedWords.length > 0 ? hashMultipleWords(props.highlightedWords) : undefined;
+    // TODO: remove
+    // const hashedQuery = hashMultipleWords('has lost');
 
     const t0 = performance.now();
     const title = highlightWordInContent(props.title, hashedQuery);
@@ -128,13 +130,13 @@ const NewsListItem = (props) => {
     const publishedAt = moment(props.publishedAt).format('HH:mm DD/MM/YYYY');
 
     return (
-        <a className='newslist-item' href={props.url} target='_blank'>
-            <div className='news-item-image'>
+        <a className='news-list-item' href={props.url} target='_blank'>
+            <div className='news-list-item__image'>
                 <img alt='article' src={props.urlToImage} />
             </div>
-            <div className='news-item-text'>
-                <span className='news-item-text__source'>{props.source.name}</span>
-                <span className='news-item-text__date'>{publishedAt}</span>
+            <div className='news-list-item__text'>
+                <span className='news-list-item__source'>{props.source.name}</span>
+                <span className='news-list-item__date'>{publishedAt}</span>
                 <h2>{title}</h2>
                 <h3>{description}</h3>
                 <div>{content}</div>

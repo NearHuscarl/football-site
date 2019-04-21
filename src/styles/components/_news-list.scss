@@ -1,25 +1,25 @@
-.newslist-item {
+.news-list-item {
     @include list-item();
     font-size: $font-size-small;
 
-    .news-item-image {
-        align-items: flex-start; // override from list-item mixin
+    .news-list-item__image {
+        align-items: center; // override from list-item mixin
 
         img {
             width: 35rem;
         }
     }
-    .news-item-text {
+    .news-list-item__text {
         align-self: flex-start;
         padding-left: $s-size;
         position: relative;
     }
 
-    .news-item-text__source {
+    .news-list-item__source {
         color: $cyan;
         font-family: 'Quicksand-Medium';
     }
-    .news-item-text__date {
+    .news-list-item__date {
         position: absolute;
         right: 0;
         color: $dark-blue;

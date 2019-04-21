@@ -3,8 +3,14 @@ import FootballData from 'footballdata-api-v2';
 import { checkCacheTimeExpired, updateCacheTime } from './util';
 import Log from '../utilities/log'
 
-const updateTeam = (competitionId, teams) => ({
-    type: 'UPDATE_TEAM',
+export const updateTeam = (competitionId, team) => ({
+    type: 'UPDATE_SPECIFIC_TEAM',
+    competitionId,
+    team,
+});
+
+const updateTeams = (competitionId, teams) => ({
+    type: 'UPDATE_TEAMS',
     competitionId,
     teams,
 });
@@ -38,7 +44,7 @@ const refreshTeam = (competitionId) => {
     });
 }
 
-export const startUpdateTeam = (competitionId) => {
+export const startUpdateTeams = (competitionId) => {
     return (dispatch) => {
         return checkCacheTimeExpired(`teams/${competitionId}`)
             .then((result) => {
@@ -56,7 +62,7 @@ export const startUpdateTeam = (competitionId) => {
                 return promise;
             })
             .then((teams) => {
-                dispatch(updateTeam(competitionId, teams));
+                dispatch(updateTeams(competitionId, teams));
             });
     }
 }

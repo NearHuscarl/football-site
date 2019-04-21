@@ -16,7 +16,7 @@ const newsReducer = (state = newsDefaultState, action) => {
 			return state;
 		case 'SET_NEWS_AT_INDEX':
 			const { index, articles } = action;
-			let newState = {
+			const newState = {
 				articles: { ...state.articles, [index]: articles },
 			};
 			return { ...state, ...newState };
