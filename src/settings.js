@@ -21,6 +21,22 @@ export const competitionNames = {
     [competitions.primeiraLiga]: 'Primeira Liga',
 }
 
+// http://www.football-data.org/documentation/quickstart#filtering
+export const standingScores = {
+    'HOME': 'Home',
+    'AWAY': 'Away',
+    'TOTAL': 'Total',
+}
+
+export const standingYears = {
+    '2018': '2018/19',
+    '2017': '2017/18',
+    '2016': '2016/17',
+    '2015': '2015/16',
+    '2014': '2014/15',
+    '2013': '2013/14',
+}
+
 // https://newsapi.org/sources
 export const newsSources = {
     'bbc-sport': 'BBC Sport',

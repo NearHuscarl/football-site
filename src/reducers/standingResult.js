@@ -1,25 +1,25 @@
 const resultsDefaultState = {
-    results: [],
+    result: [],
     isSearching: false,
 };
 
-const matchResultsReducer = (state = resultsDefaultState, action) => {
+const standingResultReducer = (state = resultsDefaultState, action) => {
     switch (action.type) {
-        case 'SET_SEARCH_MATCH_STATUS':
+        case 'SET_SEARCH_STANDING_STATUS':
             const { isSearching } = action;
             return {
                 ...state,
                 isSearching,
             };
-        case 'UPDATE_MATCH_RESULTS':
-            const { results } = action;
+        case 'UPDATE_STANDING_RESULT':
+            const { result } = action;
             return {
                 ...state,
-                results,
+                result,
             };
         default:
             return state;
     }
 }
 
-export default matchResultsReducer;
+export default standingResultReducer;

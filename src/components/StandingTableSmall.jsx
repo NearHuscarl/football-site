@@ -6,7 +6,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import '../styles/components/_ag-grid.scss';
 import isEmpty from 'lodash/isEmpty';
 
-class StandingTable extends React.Component {
+class StandingTableSmall extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -57,8 +57,9 @@ class StandingTable extends React.Component {
         if (isEmpty(standing)) {
             return undefined;
         }
+        const totalStanding = standing.standings.find((standing) => standing.type === 'TOTAL');
 
-        return standing.map((row) => {
+        return totalStanding.table.map((row) => {
             row.team.name = row.team.name.replace(/\s*(FC|CF)$/, '');
             return row;
         });
@@ -66,11 +67,11 @@ class StandingTable extends React.Component {
 
     render() {
         const { columnDefs } = this.state;
-        const { standing } = this.props;
+        const { standing, className } = this.props;
         const rowData = this.getRowData(standing);
 
         return (
-            <div className='ag-theme-balham ag-grid-wrapper'>
+            <div className={`ag-theme-balham ag-grid-wrapper ${className}`}>
                 <AgGridReact
                     columnDefs={columnDefs}
                     rowData={rowData}
@@ -81,8 +82,12 @@ class StandingTable extends React.Component {
     }
 }
 
-StandingTable.propTypes = {
-	standing: PropTypes.object.isRequired,
+StandingTableSmall.propTypes = {
+	className: PropTypes.string,
 };
 
-export default StandingTable;
+StandingTableSmall.defaultProps = {
+	className: '',
+};
+
+export default StandingTableSmall;

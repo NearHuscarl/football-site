@@ -16,7 +16,6 @@ const refreshStanding = (competitionId) => {
     Log.warning(`start getting standing: competitionId=${competitionId}`);
     return footballData.getStandingsFromCompetition({
         id: competitionId,
-        standingType: 'TOTAL',
     })
     .then((data) => {
         updateCacheTime(`standings/${competitionId}`);

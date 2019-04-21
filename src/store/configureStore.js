@@ -9,6 +9,8 @@ import newsFiltersReducer from '../reducers/newsFilters';
 import newsResultsReducer from '../reducers/newsResults';
 import matchFiltersReducer from '../reducers/matchFilters';
 import matchResultsReducer from '../reducers/matchResults';
+import standingFiltersReducer from '../reducers/standingFilters';
+import standingResultReducer from '../reducers/standingResult';
 
 const store = createStore(
 	combineReducers({
@@ -20,6 +22,8 @@ const store = createStore(
 		newsResults: newsResultsReducer,
 		matchFilters: matchFiltersReducer,
 		matchResults: matchResultsReducer,
+		standingFilters: standingFiltersReducer,
+		standingResult: standingResultReducer,
 	}),
 	composeWithDevTools(applyMiddleware(thunk)),
 );

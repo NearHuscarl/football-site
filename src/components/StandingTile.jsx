@@ -4,7 +4,7 @@ import { Carousel } from 'react-responsive-carousel';
 import { competitions } from '../settings';
 import '../styles/components/_carousel.scss';
 import { history } from '../routers/AppRouter';
-import StandingTable from './StandingTable';
+import StandingTableSmall from './StandingTableSmall';
 import Loader from './Loader';
 
 export class StandingTile extends React.Component {
@@ -59,7 +59,7 @@ export class StandingTile extends React.Component {
                         {
                             competitionIds.map((competitionId) => {
                                 const standing = props.standings[competitionId];
-                                return <StandingTable className='tile-imageitem' key={competitionId} standing={standing} />
+                                return <StandingTableSmall className='tile-imageitem' key={competitionId} standing={standing} />
                             })
                         }
                     </Carousel>

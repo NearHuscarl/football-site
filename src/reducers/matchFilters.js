@@ -5,7 +5,7 @@ const matchFiltersDefaultState = {
 	date: moment(),
 };
 
-const newsFiltersReducer = (state = matchFiltersDefaultState, action) => {
+const matchFiltersReducer = (state = matchFiltersDefaultState, action) => {
 	switch (action.type) {
         case 'SET_MATCH_COMPETITION_FILTER':
             return { ...state, competition: action.competition };
@@ -16,4 +16,4 @@ const newsFiltersReducer = (state = matchFiltersDefaultState, action) => {
 	}
 };
 
-export default newsFiltersReducer;
+export default matchFiltersReducer;

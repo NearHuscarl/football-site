@@ -43,7 +43,7 @@ class Tooltip extends React.Component {
 
     getTeam = () => {
         const teamId = this.props.id;
-        const { teams } = store.getState()
+        const { teams } = store.getState();
         const competitionIds = Object.keys(teams);
 
         for (const competitionId of competitionIds) {

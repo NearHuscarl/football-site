@@ -100,7 +100,6 @@ const highlightWordInContent = (content, keyword) => {
         component: Tooltip,
         props: { className: 'hint-text' },
         keyword: teamNames,
-        matchExact: false, // can match partially
     }];
 
     if (keyword) {
@@ -108,7 +107,6 @@ const highlightWordInContent = (content, keyword) => {
             component: 'span',
             props: { className: 'search-result' },
             keyword,
-            matchExact: true, // have to match the exact words before wrapped into component
         });
     }
     return wrapWordIntoComponent(content, params);
