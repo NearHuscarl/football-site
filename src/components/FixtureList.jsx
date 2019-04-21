@@ -6,6 +6,7 @@ import Loader from './Loader';
 import { startSearchMatches } from '../actions/matchResults';
 import { competitions } from '../settings';
 
+// TODO: convert into presentation props (move connect upward)
 class FixtureList extends React.Component {
     constructor(props) {
         super(props);
@@ -78,7 +79,6 @@ class FixtureList extends React.Component {
     }
 
     render() {
-        // TODO: convert to presentation component, move connect() to FixturePage
         return (
             <div className='content-container'>
                 {this.isDataReady() ?

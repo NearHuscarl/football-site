@@ -51,6 +51,7 @@ const settings = {
         news: 24, // hours
         matches: 0.75,
         standings: 1,
+        topScorers: 24,
         teams: 24 * 15,
         default: 2, // safe net
     },

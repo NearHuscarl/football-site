@@ -1,10 +1,11 @@
-.list-header {
-	background: $off-white;
-	border: 1px solid darken($off-white, 7%);
-	color: $gray;
-	display: flex;
-	justify-content: space-between;
-	padding: $s-size $m-size;
+@mixin list-header() {
+	background: lighten($color: $dark-blue, $amount: 12%);
+    color: $off-white;
+    cursor: default;
+    padding: $m-size;
+    text-align: center;
+    font-family: 'Quicksand-Medium';
+    font-size: $font-size-large;
 }
 
 .list-body {

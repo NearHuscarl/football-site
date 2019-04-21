@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import '../styles/components/_ag-grid.scss';
 import isEmpty from 'lodash/isEmpty';
 
 class StandingTableSmall extends React.Component {

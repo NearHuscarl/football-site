@@ -5,6 +5,7 @@ $root: './../../';
 @import './base/fonts';
 @import './base/base';
 
+@import './components/ag-grid';
 @import './components/box-layout';
 @import './components/button';
 @import './components/card';
@@ -20,6 +21,7 @@ $root: './../../';
 @import './components/list';
 @import './components/news-list';
 @import './components/fixture-list';
+@import './components/top-scorer-list';
 @import './components/loader';
 @import './components/modal';
 @import './components/mainmenu';
@@ -28,5 +30,7 @@ $root: './../../';
 @import './components/tooltip';
 @import './components/visibility';
 
+// Sections/Pages
 @import './sections/page-header';
+@import './sections/standings';
 @import './sections/see-more';

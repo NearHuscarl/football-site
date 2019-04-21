@@ -1,0 +1,20 @@
+.top-scorer-list {
+    margin-left: $m-size;
+}
+
+.top-scorer__header {
+    @include list-header();
+}
+
+.top-scorer-item {
+    @include card();
+    padding: $s-size;
+
+    .top-scorer-item__name {
+
+    }
+
+    .top-scorer-item__info {
+
+    }
+}

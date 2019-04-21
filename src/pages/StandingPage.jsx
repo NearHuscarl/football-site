@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import StandingFilters from '../components/StandingFilters';
 import StandingTable from '../components/StandingTable';
+import TopScorerList from '../components/TopScorerList';
 import Loader from '../components/Loader';
 import { startSearchStanding } from '../actions/standingResult';
 
@@ -12,18 +13,24 @@ export class StandingPage extends React.Component {
     }
 
     render() {
-        const { standing, isSearching } = this.props;
+        const { standing, topScorers, isSearching } = this.props;
 
         return (
             <div>
                 <StandingFilters />
-                {
-                    (standing.length > 0 && !isSearching) ?
-                        <div className='content-container'>
-                            <StandingTable standing={this.props.standing} />
-                        </div>
-                        :
-                        <Loader height='40vh' />
+                {(standing.length > 0 && !isSearching) ?
+                    <div className='content-container standing-page'>
+                        <StandingTable standing={this.props.standing} />
+                        {topScorers ?
+                            <TopScorerList
+                                competition={topScorers.competition.name}
+                                scorers={topScorers.scorers} />
+                            :
+                            <Loader height='40vh' />
+                        }
+                    </div>
+                    :
+                    <Loader height='40vh' />
                 }
             </div>
         );
@@ -35,6 +42,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
+    topScorers: state.topScorers[state.standingResult.competitionId],
     standing: state.standingResult.result,
     isSearching: state.standingResult.isSearching,
 })

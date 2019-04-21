@@ -12,10 +12,11 @@ const standingResultReducer = (state = resultsDefaultState, action) => {
                 isSearching,
             };
         case 'UPDATE_STANDING_RESULT':
-            const { result } = action;
+            const { result, competitionId } = action;
             return {
                 ...state,
                 result,
+                competitionId,
             };
         default:
             return state;

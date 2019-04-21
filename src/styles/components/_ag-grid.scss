@@ -4,3 +4,26 @@
         border: none;
     }
 }
+
+.table-wrapper {
+    // border: 1px solid $gray !important;
+    font-family: 'Quicksand-Regular' !important;
+    font-size: $font-size-small !important;
+    
+    .ag-root {
+        border: none !important;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+    .ag-header {
+        // border-top: 1px solid $gray !important;
+        // border-left: 1px solid $gray !important;
+        // border-right: 1px solid $gray !important;
+    }
+    .ag-row {
+        // border-left: 1px solid $gray !important;
+        // border-right: 1px solid $gray !important;
+    }
+    .ag-row-last {
+        // border-bottom: 1px solid $gray !important;
+    }
+}

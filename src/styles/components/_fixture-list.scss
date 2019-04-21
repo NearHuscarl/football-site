@@ -1,11 +1,5 @@
 .fixturelist-groupname {
-    background: lighten($color: $dark-blue, $amount: 12%);
-    color: $off-white;
-    cursor: default;
-    padding: $m-size;
-    text-align: center;
-    font-family: 'Quicksand-Medium';
-    font-size: $font-size-large;
+   @include list-header();
 }
 
 .fixturelist-item {

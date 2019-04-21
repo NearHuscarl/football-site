@@ -81,35 +81,35 @@ class Tooltip extends React.Component {
                             </div>
                             <div className='tooltip-team__text'>
                                 <div>
-                                    <span className='tooltip-team__field'>Code:</span>{' '}
+                                    <span className='bold'>Code:</span>{' '}
                                     {team.tla}
                                 </div>
                                 <div>
-                                    <span className='tooltip-team__field'>Area:</span>{' '}
+                                    <span className='bold'>Area:</span>{' '}
                                     {team.area.name}
                                 </div>
                                 <div>
-                                    <span className='tooltip-team__field'>Club color:</span>{' '}
+                                    <span className='bold'>Club color:</span>{' '}
                                     {team.clubColors}
                                 </div>
                                 <div>
-                                    <span className='tooltip-team__field'>Founded:</span>{' '}
+                                    <span className='bold'>Founded:</span>{' '}
                                     {team.founded}
                                 </div>
                                 <div>
-                                    <span className='tooltip-team__field'>Venue:</span>{' '}
+                                    <span className='bold'>Venue:</span>{' '}
                                     {team.venue}
                                 </div>
                                 <div>
-                                    <span className='tooltip-team__field'>Email:</span>{' '}
+                                    <span className='bold'>Email:</span>{' '}
                                     {team.email}
                                 </div>
                                 <div>
-                                    <span className='tooltip-team__field'>Address:</span>{' '}
+                                    <span className='bold'>Address:</span>{' '}
                                     {team.address}
                                 </div>
                                 <div>
-                                    <span className='tooltip-team__field'>Website:</span>{' '}
+                                    <span className='bold'>Website:</span>{' '}
                                     <a href={team.website} target='_blank'>{team.website}</a>
                                 </div>
                             </div>
