@@ -82,7 +82,7 @@ class StandingTable extends React.Component {
 }
 
 StandingTable.propTypes = {
-	standing: PropTypes.object.isRequired,
+	standing: PropTypes.array.isRequired,
 };
 
 export default StandingTable;

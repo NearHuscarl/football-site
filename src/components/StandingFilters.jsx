@@ -71,7 +71,7 @@ export class StandingFilters extends React.Component {
 					</div>
 					<div className="input-group__item">
 						<SelectOptions
-							width='18rem'
+							width='12rem'
 							defaultValue={this.getOption(filters.year, standingYears)}
 							onChange={this.onYearOptionChange}
 							options={this.getOptions(standingYears)}
@@ -80,7 +80,7 @@ export class StandingFilters extends React.Component {
 					</div>
 					<div className="input-group__item">
 						<SelectOptions
-							width='18rem'
+							width='12rem'
 							defaultValue={this.getOption(filters.scoreType, standingScores)}
 							onChange={this.onScoreOptionChange}
 							options={this.getOptions(standingScores)}

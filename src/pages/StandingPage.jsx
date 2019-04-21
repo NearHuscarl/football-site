@@ -12,13 +12,13 @@ export class StandingPage extends React.Component {
     }
 
     render() {
-        const { standing } = this.props;
+        const { standing, isSearching } = this.props;
 
         return (
             <div>
                 <StandingFilters />
                 {
-                    standing.length > 0 ?
+                    (standing.length > 0 && !isSearching) ?
                         <div className='content-container'>
                             <StandingTable standing={this.props.standing} />
                         </div>
@@ -36,6 +36,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => ({
     standing: state.standingResult.result,
+    isSearching: state.standingResult.isSearching,
 })
 
 export default connect(

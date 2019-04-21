@@ -42,7 +42,7 @@ export const startUpdateStanding = (competitionId) => {
                 let promise = Promise.resolve(null);
 
                 if (expired) {
-                    promise = refreshStanding(competitionId)
+                    promise = refreshStanding(competitionId);
                 } else {
                     promise = database
                         .ref(`cachedData/standings/${competitionId}/data`)
