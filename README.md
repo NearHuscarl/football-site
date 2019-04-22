@@ -9,6 +9,11 @@ Latest football news, fixtures, results, statistics, standings
 -  Front-end: react-redux
 -  Back-end: firebase
 
+## APIs used
+
+- [Football data]
+- [News API]
+
 # Setup
 
 ## Download
@@ -73,3 +78,4 @@ $ git push heroku master
 [Football 365]: https://football-365.herokuapp.com/
 [News API]: https://newsapi.org/
 [Sportmonks]: https://www.sportmonks.com
+[Football data]: https://www.football-data.org/
