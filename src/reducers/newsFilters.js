@@ -2,7 +2,7 @@ import moment from 'moment';
 import { newsSources } from '../settings';
 
 const newsFiltersDefaultState = {
-    text: '',
+    query: '',
     sources: Object.keys(newsSources),
 	startDate: moment().subtract(30, 'days'),
 	endDate: moment(),
@@ -10,14 +10,18 @@ const newsFiltersDefaultState = {
 
 const newsFiltersReducer = (state = newsFiltersDefaultState, action) => {
 	switch (action.type) {
-		case 'SET_NEWS_TEXT_FILTER':
-            return { ...state, text: action.text };
+		case 'SET_NEWS_SEARCH_QUERY':
+			const { query } = action.payload;
+            return { ...state, query };
         case 'SET_NEWS_SOURCES_FILTER':
-            return { ...state, sources: action.sources };
+			const { sources } = action.payload;
+            return { ...state, sources };
 		case 'SET_NEWS_START_DATE':
-			return { ...state, startDate: action.startDate };
+			const { startDate } = action.payload;
+			return { ...state, startDate };
 		case 'SET_NEWS_END_DATE':
-            return { ...state, endDate: action.endDate };
+			const { endDate } = action.payload;
+            return { ...state, endDate };
 		default:
 			return state;
 	}

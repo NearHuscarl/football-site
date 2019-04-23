@@ -5,14 +5,15 @@ import { competitionNames } from '../settings';
 import getDateRange from '../utilities/getDateRange';
 import Log from '../utilities/log';
 
-const searchMatches = (results) => ({
-    type: 'UPDATE_MATCH_RESULTS',
-    results,
+const searchMatchesPending = () => ({
+    type: 'SEARCH_MATCHES_PENDING',
 });
 
-export const setSearchMatchStatus = (isSearching) => ({
-    type: 'SET_SEARCH_MATCH_STATUS',
-    isSearching,
+const searchMatchesCompleted = (results) => ({
+    type: 'SEARCH_MATCHES_COMPLETED',
+    payload: {
+        results,
+    },
 });
 
 const getDateRangeToCacheMatches = (date) => {
@@ -32,7 +33,7 @@ const getDateRangeToCacheMatches = (date) => {
 
 export const startSearchMatches = () => {
     return (dispatch, getState) => {
-        dispatch(setSearchMatchStatus(true));
+        dispatch(searchMatchesPending());
         const filters = getState().matchFilters;
         const date = filters.date.format('YYYY-MM-DD');
         const { matches } = getState();
@@ -41,8 +42,7 @@ export const startSearchMatches = () => {
             const filteredResults = results.filter((match) => {
                 return (match.competition.id === filters.competition || filters.competition === 'all');
             });
-            dispatch(searchMatches(filteredResults));
-            dispatch(setSearchMatchStatus(false));
+            dispatch(searchMatchesCompleted(filteredResults));
         }
 
         if (matches[date]) {

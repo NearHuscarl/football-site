@@ -5,8 +5,10 @@ import Log from '../utilities/log'
 
 const updateTopScorers = (competitionId, scorers) => ({
     type: 'UPDATE_TOP_SCORERS',
-    competitionId,
-    scorers,
+    payload: {
+        competitionId,
+        scorers,
+    },
 });
 
 const refreshTopScorer = (competitionId) => {

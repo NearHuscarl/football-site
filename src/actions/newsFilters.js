@@ -1,25 +1,33 @@
-const setNewsTextFilter = (text = '') => ({
-	type: 'SET_NEWS_TEXT_FILTER',
-	text,
+const setNewsSearchQuery = (query = '') => ({
+    type: 'SET_NEWS_SEARCH_QUERY',
+    payload: {
+        query,
+    },
 });
 
 const setNewsSourcesFilter = (sources) => ({
     type: 'SET_NEWS_SOURCES_FILTER',
-    sources,
+    payload: {
+        sources,
+    },
 });
 
 const setNewsStartDate = (startDate) => ({
     type: 'SET_NEWS_START_DATE',
-    startDate,
+    payload: {
+        startDate,
+    },
 });
 
 const setNewsEndDate = (endDate) => ({
     type: 'SET_NEWS_END_DATE',
-    endDate,
+    payload: {
+        endDate,
+    },
 });
 
 export {
-    setNewsTextFilter,
+    setNewsSearchQuery,
     setNewsSourcesFilter,
     setNewsStartDate,
     setNewsEndDate,

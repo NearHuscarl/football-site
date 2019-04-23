@@ -2,20 +2,21 @@ import isEmpty from 'lodash/isEmpty';
 import { startUpdateStanding } from './standings';
 import { startUpdateTopScorers } from './topScorers';
 
-const searchStanding = (result, competitionId) => ({
-    type: 'UPDATE_STANDING_RESULT',
-    result,
-    competitionId,
+export const searchStandingPending = () => ({
+    type: 'SEARCH_STANDING_PENDING',
 });
 
-export const setSearchStandingStatus = (isSearching) => ({
-    type: 'SET_SEARCH_STANDING_STATUS',
-    isSearching,
+const searchStandingCompleted = (result, competitionId) => ({
+    type: 'SEARCH_STANDING_COMPLETED',
+    payload: {
+        result,
+        competitionId,
+    }
 });
 
 export const startSearchStanding = () => {
     return (dispatch, getState) => {
-        dispatch(setSearchStandingStatus(true));
+        dispatch(searchStandingPending());
 
         const filters = getState().standingFilters;
         const { standings, topScorers } = getState();
@@ -28,8 +29,7 @@ export const startSearchStanding = () => {
                 .find((standing) => standing.type === filters.scoreType)
                 .table;
 
-            dispatch(searchStanding(table, competitionId));
-            dispatch(setSearchStandingStatus(false));
+            dispatch(searchStandingCompleted(table, competitionId));
             if (!topScorers[competitionId]) {
                 dispatch(startUpdateTopScorers(competitionId));
             }

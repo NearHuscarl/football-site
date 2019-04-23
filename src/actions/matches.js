@@ -20,7 +20,9 @@ const defaultParams = {
 
 export const updateMatch = (matches) => ({
     type: 'UPDATE_MATCH',
-    matches,
+    payload: {
+        matches,
+    },
 });
 
 export const refreshMatch = (params = defaultParams) => {

@@ -12,16 +12,18 @@ const newsDefaultState = {
 const newsReducer = (state = newsDefaultState, action) => {
 	switch (action.type) {
 		case 'SET_NEWS':
-			state = { ...state, ...action.news };
+			const { news } = action.payload;
+			state = { ...state, ...news };
 			return state;
 		case 'SET_NEWS_AT_INDEX':
-			const { index, articles } = action;
+			const { index, articles } = action.payload;
 			const newState = {
 				articles: { ...state.articles, [index]: articles },
 			};
 			return { ...state, ...newState };
 		case 'SET_HEADLINES':
-			return { ...state, headlines: action.headlines };
+			const { headlines } = action.payload;
+			return { ...state, headlines };
 		default:
 			return state;
 	}

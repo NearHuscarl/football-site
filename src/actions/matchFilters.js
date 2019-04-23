@@ -1,11 +1,15 @@
 const setMatchCompetitionFilter = (competition) => ({
     type: 'SET_MATCH_COMPETITION_FILTER',
-    competition,
+    payload: {
+        competition,
+    },
 });
 
 const setMatchDate = (date) => ({
     type: 'SET_MATCH_DATE',
-    date,
+    payload: {
+        date,
+    },
 });
 
 export {

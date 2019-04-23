@@ -15,7 +15,7 @@ class SearchBar extends React.Component {
         this.setState({ value });
     }
 
-    search = (query) => {
+    search = () => {
         this.props.onSubmit(this.state.value.trim());
     }
 

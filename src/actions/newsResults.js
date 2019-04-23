@@ -3,40 +3,39 @@ import shuffle from 'lodash/shuffle';
 import { reduceFilters } from '../reducers/newsResults';
 import Log from '../utilities/log';
 
-const searchNews = (filters, results) => ({
-    type: 'UPDATE_NEWS_RESULTS',
-    filters,
-    results,
+export const searchNewsPending = () => ({
+    type: 'SEARCH_NEWS_PENDING',
 });
 
-export const setSearchNewsStatus = (isSearching) => ({
-    type: 'SET_SEARCH_NEWS_STATUS',
-    isSearching,
+export const searchNewsCompleted = (filters, results) => ({
+    type: 'SEARCH_NEWS_COMPLETED',
+    payload: {
+        filters,
+        results,
+    },
 });
 
 export const startSearchNews = () => {
     return (dispatch, getState) => {
-        dispatch(setSearchNewsStatus(true));
+        dispatch(searchNewsPending());
 
         const filters = getState().newsFilters;
         const { newsResults } = getState();
         const cacheResults = newsResults.cache[reduceFilters(filters)];
 
         if (cacheResults) {
-            dispatch(searchNews(filters, cacheResults));
-            dispatch(setSearchNewsStatus(false));
+            dispatch(searchNewsCompleted(filters, cacheResults));
             return Promise.resolve();
         }
         else {
             Log.warning('start searching for news');
             const newsapi = new NewsAPI(process.env.NEWS_API_KEY);
             // setTimeout(() => {
-            //     dispatch(searchNews(filters, shuffle(mockArticles)));
-            //     dispatch(setSearchNewsStatus(false));
+            //     dispatch(searchNewsCompleted(filters, shuffle(mockArticles)));
             //     return Promise.resolve();
             // }, 2000);
 
-            const q = filters.text;
+            const q = filters.query;
             const from = filters.startDate.format();
             const to = filters.endDate.format();
             const sources = filters.sources.toString();
@@ -51,8 +50,7 @@ export const startSearchNews = () => {
             })
             .then((response) => {
                 const results = response.articles;
-                dispatch(searchNews(filters, results));
-                dispatch(setSearchNewsStatus(false));
+                dispatch(searchNewsCompleted(filters, results));
             })
             .catch((err) => {
                 console.log('startfilterNews:', err);

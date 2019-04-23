@@ -1,16 +1,22 @@
 const setStandingCompetitionFilter = (competition) => ({
     type: 'SET_STANDING_COMPETITION_FILTER',
-    competition,
+    payload: {
+        competition,
+    },
 });
 
 const setStandingYear = (year) => ({
     type: 'SET_STANDING_YEAR',
-    year,
+    payload: {
+        year,
+    },
 });
 
 const setStandingScoreType = (scoreType) => ({
     type: 'SET_STANDING_SCORE_TYPE',
-    scoreType,
+    payload: {
+        scoreType,
+    },
 });
 
 export {

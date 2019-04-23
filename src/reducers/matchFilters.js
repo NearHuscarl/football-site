@@ -7,10 +7,12 @@ const matchFiltersDefaultState = {
 
 const matchFiltersReducer = (state = matchFiltersDefaultState, action) => {
 	switch (action.type) {
-        case 'SET_MATCH_COMPETITION_FILTER':
-            return { ...state, competition: action.competition };
+		case 'SET_MATCH_COMPETITION_FILTER':
+			const { competition } = action.payload;
+            return { ...state, competition };
 		case 'SET_MATCH_DATE':
-			return { ...state, date: action.date };
+			const { date } = action.payload;
+			return { ...state, date };
 		default:
 			return state;
 	}

@@ -1,6 +1,6 @@
 // Here is a list of the updated logo urls for some teams",
 // Normally the logo is cache on firebase to limit number of API calls",
-// But some links are old and missing so latest urls is patched here",
+// But some links are old and missing so latest urls are patched here",
 
 const teamLogoUrls = {
     668:

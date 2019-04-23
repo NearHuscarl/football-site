@@ -6,13 +6,17 @@ import Log from '../utilities/log'
 
 export const setHeadlines = (headlines) => ({
     type: 'SET_HEADLINES',
-    headlines,
+    payload: {
+        headlines,
+    },
 });
 
 const setNewsAtIndex = ({ articles, index }) => ({
     type: 'SET_NEWS_AT_INDEX',
-    articles,
-    index,
+    payload: {
+        articles,
+        index,
+    },
 });
 
 export const startSetNewsAtIndex = (index) => {
@@ -32,7 +36,9 @@ export const startSetNewsAtIndex = (index) => {
 
 const setNews = (news) => ({
     type: 'SET_NEWS',
-    news,
+    payload: {
+        news,
+    },
 });
 
 const filterOldNews = (newsList, currentIndex) => {

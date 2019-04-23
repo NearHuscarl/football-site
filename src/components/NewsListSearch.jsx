@@ -39,10 +39,10 @@ export class NewsListSearch extends React.Component {
     render() {
         console.log('render search results');
         const { articleCount } = this.state;
-        const { articles, isSearching, query } = this.props;
+        const { articles, searchPending, query } = this.props;
 
         return (
-            isSearching ?
+            searchPending ?
                 <Loader height='40vh' />
                 :
                 articles.length > 0 ?
@@ -72,8 +72,8 @@ const getFiltersKey = (search) => {
 
 const mapStateToProps = (state) => ({
     articles: state.newsResults.results,
-    query: state.newsFilters.text,
-    isSearching: state.newsResults.isSearching,
+    query: state.newsFilters.query,
+    searchPending: state.newsResults.pending,
 });
 
 export default connect(

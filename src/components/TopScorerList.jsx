@@ -31,7 +31,6 @@ class TopScorerList extends React.Component {
     
     render() {
         const { scorers, competition } = this.props;
-        console.log(scorers);
 
         return (
             <div className='top-scorer-list'>

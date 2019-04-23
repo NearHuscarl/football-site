@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import SearchBar from './SearchBar';
 import {
-	setNewsTextFilter,
+	setNewsSearchQuery,
 	setNewsSourcesFilter,
 	setNewsStartDate,
 	setNewsEndDate,
@@ -54,7 +54,7 @@ export class NewsListFilters extends React.Component {
 	}
 
 	onSubmit = (query) => {
-		this.props.setNewsTextFilter(query);
+		this.props.setNewsSearchQuery(query);
 		this.props.startSearchNews();
 	}
 
@@ -96,7 +96,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	setNewsTextFilter: (text) => dispatch(setNewsTextFilter(text)),
+	setNewsSearchQuery: (query) => dispatch(setNewsSearchQuery(query)),
 	setNewsSourcesFilter: (sources) => dispatch(setNewsSourcesFilter(sources)),
 	setNewsStartDate: (startDate) => dispatch(setNewsStartDate(startDate)),
 	setNewsEndDate: (endDate) => dispatch(setNewsEndDate(endDate)),

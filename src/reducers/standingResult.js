@@ -1,22 +1,19 @@
 const resultsDefaultState = {
     result: [],
-    isSearching: false,
+    competitionId: null,
+    pending: false,
 };
 
 const standingResultReducer = (state = resultsDefaultState, action) => {
     switch (action.type) {
-        case 'SET_SEARCH_STANDING_STATUS':
-            const { isSearching } = action;
+        case 'SEARCH_STANDING_PENDING':
+            return { ...state, pending : true };
+        case 'SEARCH_STANDING_COMPLETED':
+            const { result, competitionId } = action.payload;
             return {
-                ...state,
-                isSearching,
-            };
-        case 'UPDATE_STANDING_RESULT':
-            const { result, competitionId } = action;
-            return {
-                ...state,
                 result,
                 competitionId,
+                pending : false,
             };
         default:
             return state;

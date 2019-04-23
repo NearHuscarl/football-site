@@ -5,14 +5,18 @@ import Log from '../utilities/log'
 
 export const updateTeam = (competitionId, team) => ({
     type: 'UPDATE_SPECIFIC_TEAM',
-    competitionId,
-    team,
+    payload: {
+        competitionId,
+        team,
+    },
 });
 
 const updateTeams = (competitionId, teams) => ({
     type: 'UPDATE_TEAMS',
-    competitionId,
-    teams,
+    payload: {
+        competitionId,
+        teams,
+    },
 });
 
 const refreshTeam = (competitionId) => {

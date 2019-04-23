@@ -5,8 +5,10 @@ import Log from '../utilities/log'
 
 const updateStanding = (competitionId, standing) => ({
     type: 'UPDATE_STANDING',
-    competitionId,
-    standing,
+    payload: {
+        competitionId,
+        standing,
+    },
 });
 
 const refreshStanding = (competitionId) => {

@@ -13,12 +13,12 @@ export class StandingPage extends React.Component {
     }
 
     render() {
-        const { standing, topScorers, isSearching } = this.props;
+        const { standing, topScorers, searchPending } = this.props;
 
         return (
             <div>
                 <StandingFilters />
-                {(standing.length > 0 && !isSearching) ?
+                {(standing.length > 0 && !searchPending) ?
                     <div className='content-container standing-page'>
                         <StandingTable standing={this.props.standing} />
                         {topScorers ?
@@ -44,7 +44,7 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => ({
     topScorers: state.topScorers[state.standingResult.competitionId],
     standing: state.standingResult.result,
-    isSearching: state.standingResult.isSearching,
+    searchPending: state.standingResult.pending,
 })
 
 export default connect(
