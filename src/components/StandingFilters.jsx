@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
 	setStandingCompetitionFilter,
@@ -14,13 +15,9 @@ import {
 	standingYears,
 } from '../settings';
 
-export class StandingFilters extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
+class StandingFilters extends React.Component {
 	onCompetitionOptionChange = (option) => {
-		this.props.setStandingCompetitionFilter(option.value);
+		this.props.setStandingCompetitionFilter(Number(option.value));
 		this.props.startSearchStanding();
 	}
 
@@ -34,12 +31,10 @@ export class StandingFilters extends React.Component {
 		this.props.startSearchStanding();
 	}
 
-	getOption = (optionId, optionSource) => {
-		return {
-			label: optionSource[optionId],
-			value: optionId,
-		};
-	}
+	getOption = (optionId, optionSource) => ({
+		label: optionSource[optionId],
+		value: optionId,
+	})
 
 	getOptions = (source) => {
 		const options = Object.keys(source)
@@ -92,6 +87,20 @@ export class StandingFilters extends React.Component {
 		);
 	}
 }
+
+export const MockStandingFilters = StandingFilters;
+
+StandingFilters.propTypes = {
+	filters: PropTypes.shape({
+		competition: PropTypes.number,
+		scoreType: PropTypes.string,
+		year: PropTypes.string,
+	}).isRequired,
+	setStandingCompetitionFilter: PropTypes.func.isRequired,
+	setStandingYear: PropTypes.func.isRequired,
+	setStandingScoreType: PropTypes.func.isRequired,
+	startSearchStanding: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => ({
 	filters: state.standingFilters,

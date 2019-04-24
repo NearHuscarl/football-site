@@ -3963,10 +3963,10 @@ font-awesome@^4.7.0:
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
   integrity sha1-j6jPBBGhoxr9B7BtKQK7n8gVoTM=
 
-footballdata-api-v2@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/footballdata-api-v2/-/footballdata-api-v2-1.0.1.tgz#2644d980e08a77d8c5e95faab49ff1d2e419e610"
-  integrity sha512-nHVnfqN1Qp8qD/FMvLsobyGleo/bsZ9Aei8jw7qrApGrYh/Dw4Q1DKkItL3KYn8F70IJ6Y2JTg/zTh/MZYJSoA==
+footballdata-api-v2@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/footballdata-api-v2/-/footballdata-api-v2-2.1.0.tgz#0ee0b609e77bc0bb1fc2ffb2c5457fb301c8669c"
+  integrity sha512-BMd1YiF1QKE63DuE41nhEgAHHawkrPlTV2bowfE4iFuTwf++hPgf0IEkwHb+ZvgOvhCucJL3tSnJLlQv2SYqJA==
   dependencies:
     node-fetch "^2.3.0"
 

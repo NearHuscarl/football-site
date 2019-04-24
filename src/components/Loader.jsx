@@ -2,19 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Loader = (props) => (
-    <div className='loader' style={{ height: props.height }}>
-        <div className={props.type}></div>
-    </div>
+	<div className='loader' style={{ height: props.height }}>
+		<div className={props.type} />
+	</div>
 );
 
 Loader.propTypes = {
-    type: PropTypes.string,
-    height: PropTypes.string,
+	type: PropTypes.string,
+	height: PropTypes.string,
 };
 
 Loader.defaultProps = {
-    type: 'dot-bricks',
-    height: '6rem',
+	type: 'dot-bricks',
+	height: '6rem',
 };
 
 export default Loader;

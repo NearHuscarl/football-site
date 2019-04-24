@@ -1,145 +1,155 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import { Portal } from 'react-portal';
+import has from 'lodash/has';
 import store from '../store/configureStore';
 
 class Tooltip extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isVisible: false,
-            mouseInTooltipText: false,
-            left: 0,
-            top: 0,
-        };
-    }
+	constructor(props) {
+		super(props);
+		this.state = {
+			isVisible: false,
+			mouseInTooltipText: false,
+			left: 0,
+			top: 0,
+		};
+	}
 
-    onMouseEnterTooltip = (e) => {
-        const x = e.pageX - 5;
-        const y = e.pageY - 250;
-        this.setState(() => ({
-            isVisible: true,
-            left: x,
-            top: y,
-        }));
-    }
-    onMouseLeaveTooltip = (e) => {
-        setTimeout(() => {
-            if (!this.state.mouseInTooltipText) {
-                this.setState(() => ({ isVisible: false }));
-            }
-        }, 150);
-    }
+	onMouseEnterTooltip = (e) => {
+		const x = e.pageX - 5;
+		const y = e.pageY - 250;
+		this.setState(() => ({
+			isVisible: true,
+			left: x,
+			top: y,
+		}));
+	}
 
-    onMouseEnterTooltipText = (e) => {
-        this.setState(() => ({ mouseInTooltipText: true }));
-    }
-    onMouseLeaveTooltipText = (e) => {
-        this.setState(() => ({
-            mouseInTooltipText: false,
-            isVisible: false,
-        }));
-    }
+	onMouseLeaveTooltip = () => {
+		setTimeout(() => {
+			if (!this.state.mouseInTooltipText) {
+				this.setState(() => ({ isVisible: false }));
+			}
+		}, 150);
+	}
 
-    getTeam = () => {
-        const teamId = this.props.id;
-        const { teams } = store.getState();
-        const competitionIds = Object.keys(teams);
+	onMouseEnterTooltipText = () => {
+		this.setState(() => ({ mouseInTooltipText: true }));
+	}
 
-        for (const competitionId of competitionIds) {
-            if (teams[competitionId].hasOwnProperty(teamId)) {
-                return teams[competitionId][teamId];
-            }
-        }
-        return null;
-    }
+	onMouseLeaveTooltipText = () => {
+		this.setState(() => ({
+			mouseInTooltipText: false,
+			isVisible: false,
+		}));
+	}
 
-    renderTooltipText = () => {
-        const { isVisible } = this.state;
-        const team = this.getTeam();
-        const tooltipStyle = {
-            position: 'absolute',
-            left: this.state.left,
-            top: this.state.top,
-        };
+	getTeam = () => {
+		const teamId = this.props.id;
+		const { teams } = store.getState();
+		const competitionIds = Object.keys(teams);
 
-        return (
-            <CSSTransition
-                mountOnEnter
-                unmountOnExit
-                classNames='tooltip' in={isVisible} timeout={500}>
-                {
-                    team ?
-                    <Portal>
-                        <div className='tooltip' style={tooltipStyle}
-                            onMouseEnter={this.onMouseEnterTooltipText}
-                            onMouseLeave={this.onMouseLeaveTooltipText}>
-                            <div className='tooltip-team__image'>
-                                {
-                                    <img alt='team logo' src={team.crestUrl} />
-                                }
-                            </div>
-                            <div className='tooltip-team__text'>
-                                <div>
-                                    <span className='bold'>Code:</span>{' '}
-                                    {team.tla}
-                                </div>
-                                <div>
-                                    <span className='bold'>Area:</span>{' '}
-                                    {team.area.name}
-                                </div>
-                                <div>
-                                    <span className='bold'>Club color:</span>{' '}
-                                    {team.clubColors}
-                                </div>
-                                <div>
-                                    <span className='bold'>Founded:</span>{' '}
-                                    {team.founded}
-                                </div>
-                                <div>
-                                    <span className='bold'>Venue:</span>{' '}
-                                    {team.venue}
-                                </div>
-                                <div>
-                                    <span className='bold'>Email:</span>{' '}
-                                    {team.email}
-                                </div>
-                                <div>
-                                    <span className='bold'>Address:</span>{' '}
-                                    {team.address}
-                                </div>
-                                <div>
-                                    <span className='bold'>Website:</span>{' '}
-                                    <a href={team.website} target='_blank'>{team.website}</a>
-                                </div>
-                            </div>
-                        </div>
-                    </Portal>
-                    :
-                    <div></div>
-                }
-            </CSSTransition>
-        );
-    }
+		for (let i = 0; i < competitionIds.length; i+=1) {
+			const competitionId = competitionIds[i];
+			
+			if (has(teams[competitionId], teamId)) {
+				return teams[competitionId][teamId];
+			}
+		}
+		return null;
+	}
 
-    render() {
-        // TODO: split into TeamTooltip
-        const { props } = this;
+	renderTooltipText = () => {
+		const { isVisible } = this.state;
+		const team = this.getTeam();
+		const tooltipStyle = {
+			position: 'absolute',
+			left: this.state.left,
+			top: this.state.top,
+		};
 
-        return (
-            <React.Fragment>
-                <strong
-                    onMouseEnter={this.onMouseEnterTooltip}
-                    onMouseLeave={this.onMouseLeaveTooltip}
-                    className={'tooltip-trigger ' + props.className}>
-                    {props.children}
-                </strong>
-                {
-                    this.renderTooltipText()
-                }
-            </React.Fragment>
-        );
-    }
+		return (
+			<CSSTransition
+				mountOnEnter
+				unmountOnExit
+				classNames='tooltip' in={isVisible} timeout={500}>
+				{
+					team ?
+						<Portal>
+							<div className='tooltip' style={tooltipStyle}
+								onMouseEnter={this.onMouseEnterTooltipText}
+								onMouseLeave={this.onMouseLeaveTooltipText}>
+								<div className='tooltip-team__image'>
+									{
+										<img alt='team logo' src={team.crestUrl} />
+									}
+								</div>
+								<div className='tooltip-team__text'>
+									<div>
+										<span className='bold'>Code:</span>{' '}
+										{team.tla}
+									</div>
+									<div>
+										<span className='bold'>Area:</span>{' '}
+										{team.area.name}
+									</div>
+									<div>
+										<span className='bold'>Club color:</span>{' '}
+										{team.clubColors}
+									</div>
+									<div>
+										<span className='bold'>Founded:</span>{' '}
+										{team.founded}
+									</div>
+									<div>
+										<span className='bold'>Venue:</span>{' '}
+										{team.venue}
+									</div>
+									<div>
+										<span className='bold'>Email:</span>{' '}
+										{team.email}
+									</div>
+									<div>
+										<span className='bold'>Address:</span>{' '}
+										{team.address}
+									</div>
+									<div>
+										<span className='bold'>Website:</span>{' '}
+										<a href={team.website} target='_blank' rel='noreferrer noopener'>{team.website}</a>
+									</div>
+								</div>
+							</div>
+						</Portal>
+						:
+						<span/>
+				}
+			</CSSTransition>
+		);
+	}
+
+	render() {
+		// TODO: split into TeamTooltip
+		const { props } = this;
+
+		return (
+			<React.Fragment>
+				<strong
+					onMouseEnter={this.onMouseEnterTooltip}
+					onMouseLeave={this.onMouseLeaveTooltip}
+					className={'tooltip-trigger ' + props.className}>
+					{props.children}
+				</strong>
+				{
+					this.renderTooltipText()
+				}
+			</React.Fragment>
+		);
+	}
 }
+
+Tooltip.propTypes = {
+	id: PropTypes.number.isRequired,
+};
 
 export default Tooltip;

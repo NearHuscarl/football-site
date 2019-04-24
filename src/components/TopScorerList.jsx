@@ -1,48 +1,48 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import take from 'lodash/take';
 
 class TopScorerList extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+	renderScorerItem = (scorer) => (
+		<div key={scorer.player.name} className='top-scorer-item'>
+			<div className='top-scorer-item__name'>
+				<span className='bold'>Name:</span>{' '}
+				{scorer.player.name}
+			</div>
+			<div className='top-scorer-item__info'>
+				<span className='bold'>Position:</span>{' '}
+				{scorer.player.position}
+			</div>
+			<div className='top-scorer-item__name'>
+				<span className='bold'>Team:</span>{' '}
+				{scorer.team.name}
+			</div>
+			<div className='top-scorer-item__name'>
+				<span className='bold'>Goals:</span>{' '}
+				{scorer.numberOfGoals}
+			</div>
+		</div>
+	)
 
-    renderScorerItem = (scorer) => {
-        return (
-            <div key={scorer.player.name} className='top-scorer-item'>
-                <div className='top-scorer-item__name'>
-                    <span className='bold'>Name:</span>{' '}
-                    {scorer.player.name}
-                </div>
-                <div className='top-scorer-item__info'>
-                    <span className='bold'>Position:</span>{' '}
-                    {scorer.player.position}
-                </div>
-                <div className='top-scorer-item__name'>
-                    <span className='bold'>Team:</span>{' '}
-                    {scorer.team.name}
-                </div>
-                <div className='top-scorer-item__name'>
-                    <span className='bold'>Goals:</span>{' '}
-                    {scorer.numberOfGoals}
-                </div>
-            </div>
-        );
-    }
-    
-    render() {
-        const { scorers, competition } = this.props;
+	render() {
+		const { scorers, competition } = this.props;
 
-        return (
-            <div className='top-scorer-list'>
-                <div className='top-scorer__header'>
-                    {`Top Scorers - ${competition}`}
-                </div>
-               {
-                   take(scorers, 4).map((scorer) => this.renderScorerItem(scorer))
-               }
-            </div>
-        );
-    }
+		return (
+			<div className='top-scorer-list'>
+				<div className='top-scorer__header'>
+					{`Top Scorers - ${competition}`}
+				</div>
+				{
+					take(scorers, 4).map((scorer) => this.renderScorerItem(scorer))
+				}
+			</div>
+		);
+	}
 }
+
+TopScorerList.propTypes = {
+	scorers: PropTypes.arrayOf(PropTypes.object).isRequired,
+	competition: PropTypes.string.isRequired,
+};
 
 export default TopScorerList;

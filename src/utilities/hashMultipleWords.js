@@ -12,23 +12,23 @@
  * @param keywords Multiple words seperated by whitespaces in string
  */
 const hashMultipleWords = (keywords, info) => {
-    let wordHashes = {};
-    let wordHashesVal = wordHashes;
-    const words = keywords.split(' ');
+	const wordHashes = {};
+	let wordHashesVal = wordHashes;
+	const words = keywords.split(' ');
 
-    words.forEach((word, index) => {
-        if (index === words.length - 1) {
-            wordHashesVal[word] = {
-                leaf: true,
-                ...info,
-            };
-        } else {
-            wordHashesVal[word] = {};
-        }
-        wordHashesVal = wordHashesVal[word];
-    });
+	words.forEach((word, index) => {
+		if (index === words.length - 1) {
+			wordHashesVal[word] = {
+				leaf: true,
+				...info,
+			};
+		} else {
+			wordHashesVal[word] = {};
+		}
+		wordHashesVal = wordHashesVal[word];
+	});
 
-    return wordHashes;
+	return wordHashes;
 }
 
 export default hashMultipleWords;

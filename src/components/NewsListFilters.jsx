@@ -1,5 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import SearchBar from './SearchBar';
 import {
 	setNewsSearchQuery,
@@ -13,14 +15,10 @@ import DateRange from './DateRange';
 import { newsSources } from '../settings';
 import PageHeader from './PageHeader';
 
-export class NewsListFilters extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
+class NewsListFilters extends React.Component {
 	onDatesChange = ({ startDate, endDate }) => {
-		this.props.setNewsStartDate(startDate);
-		this.props.setNewsEndDate(endDate);
+		this.props.setNewsStartDate(startDate.format());
+		this.props.setNewsEndDate(endDate.format());
 	};
 
 	onSourceChange = (options) => {
@@ -31,27 +29,24 @@ export class NewsListFilters extends React.Component {
 		const { sources } = this.props.filters;
 
 		return Object.keys(newsSources)
-		.filter((sourceId) => {
-			return sources.includes(sourceId);
-		})
-		.map((sourceId) => {
-			const sourceName = newsSources[sourceId];
-			return {
-				label: sourceName,
-				value: sourceId,
-			};
-		});
+			.filter((sourceId) => sources.includes(sourceId))
+			.map((sourceId) => {
+				const sourceName = newsSources[sourceId];
+				return {
+					label: sourceName,
+					value: sourceId,
+				};
+			});
 	}
 
-	getSourceOptions = () => {
-		return Object.keys(newsSources).map((sourceId) => {
+	getSourceOptions = () =>
+		Object.keys(newsSources).map((sourceId) => {
 			const sourceName = newsSources[sourceId];
 			return {
 				label: sourceName,
 				value: sourceId,
 			};
 		});
-	}
 
 	onSubmit = (query) => {
 		this.props.setNewsSearchQuery(query);
@@ -59,6 +54,7 @@ export class NewsListFilters extends React.Component {
 	}
 
 	render() {
+		const { startDate, endDate } = this.props.filters;
 		return (
 			<PageHeader>
 				<div className="input-group">
@@ -80,8 +76,8 @@ export class NewsListFilters extends React.Component {
 					</div>
 					<div className="input-group__item">
 						<DateRange
-							startDate={this.props.filters.startDate}
-							endDate={this.props.filters.endDate}
+							startDate={moment(startDate)}
+							endDate={moment(endDate)}
 							onDatesChange={this.onDatesChange}
 						/>
 					</div>
@@ -90,6 +86,22 @@ export class NewsListFilters extends React.Component {
 		);
 	}
 }
+
+export const MockNewsListFilters = NewsListFilters;
+
+NewsListFilters.propTypes = {
+	filters: PropTypes.shape({
+		query: PropTypes.string,
+		startDate: PropTypes.string,
+		endDate: PropTypes.string,
+		sources: PropTypes.arrayOf(PropTypes.string),
+	}).isRequired,
+	setNewsSearchQuery: PropTypes.func.isRequired,
+	setNewsSourcesFilter: PropTypes.func.isRequired,
+	setNewsStartDate: PropTypes.func.isRequired,
+	setNewsEndDate: PropTypes.func.isRequired,
+	startSearchNews: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => ({
 	filters: state.newsFilters,

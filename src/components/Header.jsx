@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import HeadRoom from 'react-headroom';
@@ -14,32 +15,35 @@ const onSelectTab = (e) => {
 	history.push('/' + tabName.toLowerCase());
 }
 
-export const Header = (props) => {
-	return (
-		<HeadRoom>
-			<div className="content-container">
-				<div className="header__content">
-					<div className="header__navbar">
-						<Link className="header__title" to="/">
-							<img alt='website logo' src={logo} width="120"></img>
-							<h1>Football365</h1>
-						</Link>
-						<NavBar onSelectTab={onSelectTab} />
-					</div>
-					<SearchBar
-						placeholder='Search news'
-						onSubmit={(query) => {
-							props.setNewsSearchQuery(query.trim());
-							props.startSearchNews();
-							history.push('search');
-						}} />
+const Header = (props) => (
+	<HeadRoom>
+		<div className="content-container">
+			<div className="header__content">
+				<div className="header__navbar">
+					<Link className="header__title" to="/">
+						<img alt='website logo' src={logo} width="120" />
+						<h1>Football365</h1>
+					</Link>
+					<NavBar onSelectTab={onSelectTab} />
 				</div>
+				<SearchBar
+					placeholder='Search news'
+					onSubmit={(query) => {
+						props.setNewsSearchQuery(query.trim());
+						props.startSearchNews();
+						history.push('search');
+					}} />
 			</div>
-		</HeadRoom>
-	);
-};
+		</div>
+	</HeadRoom>
+);
 
 export const MockHeader = Header;
+
+Header.propTypes = {
+	setNewsSearchQuery: PropTypes.func.isRequired,
+	startSearchNews: PropTypes.func.isRequired,
+};
 
 const mapDispatchToProps = (dispatch) => ({
 	setNewsSearchQuery: (query) => dispatch(setNewsSearchQuery(query)),

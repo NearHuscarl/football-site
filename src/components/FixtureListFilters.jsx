@@ -1,16 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import {
 	setMatchCompetitionFilter,
 	setMatchDate,
 } from '../actions/matchFilters';
-import { startSearchMatches } from '../actions/matchResults';
+import startSearchMatches from '../actions/matchResults';
 import PageHeader from './PageHeader';
 import SelectOptions from './SelectOptions';
 import Date from './Date';
 import { competitionNames } from '../settings';
 
-export class FixtureListFilters extends React.Component {
+class FixtureListFilters extends React.Component {
 	constructor(props) {
 		super(props);
 		this.allOption = {
@@ -20,7 +22,7 @@ export class FixtureListFilters extends React.Component {
 	}
 
 	onDateChange = (date) => {
-		this.props.setMatchDate(date);
+		this.props.setMatchDate(date.format());
 		this.props.startSearchMatches();
 	};
 
@@ -55,6 +57,8 @@ export class FixtureListFilters extends React.Component {
 	}
 
 	render() {
+		const { date } = this.props.filters;
+
 		return (
 			<PageHeader title='Fixture'>
 				<div className="input-group">
@@ -69,7 +73,7 @@ export class FixtureListFilters extends React.Component {
 					</div>
 					<div className="input-group__item">
 						<Date
-							date={this.props.filters.date}
+							date={moment(date)}
 							onDateChange={this.onDateChange} />
 					</div>
 				</div>
@@ -77,6 +81,18 @@ export class FixtureListFilters extends React.Component {
 		);
 	}
 }
+
+export const MockFixtureListFilters = FixtureListFilters;
+
+FixtureListFilters.propTypes = {
+	filters: PropTypes.shape({
+		competition: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		date: PropTypes.string,
+	}).isRequired,
+	setMatchCompetitionFilter: PropTypes.func.isRequired,
+	setMatchDate: PropTypes.func.isRequired,
+	startSearchMatches: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => ({
 	filters: state.matchFilters,

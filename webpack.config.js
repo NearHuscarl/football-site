@@ -87,7 +87,7 @@ module.exports = (env) => {
 			],
 		},
 		plugins: [
-			// new BundleAnalyzerPlugin(),
+			new BundleAnalyzerPlugin(),
 			new HtmlWebpackPlugin({
 				filename: 'index.html',
 				template: 'public/index.html',

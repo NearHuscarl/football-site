@@ -10,15 +10,18 @@ const standingFiltersDefaultState = {
 
 const standingFiltersReducer = (state = standingFiltersDefaultState, action) => {
 	switch (action.type) {
-		case 'SET_STANDING_COMPETITION_FILTER':
+		case 'SET_STANDING_COMPETITION_FILTER': {
 			const { competition } = action.payload;
 			return { ...state, competition };
-		case 'SET_STANDING_YEAR':
+		}
+		case 'SET_STANDING_YEAR': {
 			const { year } = action.payload;
 			return { ...state, year };
-		case 'SET_STANDING_SCORE_TYPE':
+		}
+		case 'SET_STANDING_SCORE_TYPE': {
 			const { scoreType } = action.payload;
 			return { ...state, scoreType };
+		}
 		default:
 			return state;
 	}

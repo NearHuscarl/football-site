@@ -1,25 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const PageHeader = ({ title, children }) => {
-    return (
-        <div className='page-header'>
-            <div className="content-container">
-                {
-                    title && <div className='page-header__title'>{title}</div>
-                }
-                {children}
-            </div>
-        </div>
-    );
-}
+const PageHeader = ({ title, children }) => (
+	<div className='page-header'>
+		<div className="content-container">
+			{
+				title && <div className='page-header__title'>{title}</div>
+			}
+			{children}
+		</div>
+	</div>
+)
 
 PageHeader.propTypes = {
-    title: PropTypes.string,
+	title: PropTypes.string,
+	children: PropTypes.element,
 };
 
 PageHeader.defaultProps = {
-    title: '',
+	title: '',
+	children: null,
 };
 
 export default PageHeader;
