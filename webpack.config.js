@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const dotenv = require('dotenv');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -25,7 +25,7 @@ module.exports = (env) => {
 			path: path.join(__dirname, 'dist'),
 			filename: isProduction ? 'js/[name].[chunkhash:8].chunk.js' : 'js/[name].chunk.js',
 			chunkFilename: isProduction ? 'js/[name].[chunkhash:8].chunk.js' : 'js/[name].chunk.js',
-			// publicPath: 'public/',
+			publicPath: '/',
 		},
 		module: {
 			rules: [
@@ -67,7 +67,6 @@ module.exports = (env) => {
 							options: {
 								name: '[name].[ext]',
 								outputPath: 'fonts/',
-								publicPath: '../fonts/',
 							},
 						},
 					],
@@ -86,8 +85,8 @@ module.exports = (env) => {
 				},
 			],
 		},
-		plugins: [
-			new BundleAnalyzerPlugin(),
+		plugins: (isProduction ? [] : [new BundleAnalyzerPlugin()]).concat([
+			// new BundleAnalyzerPlugin(),
 			new HtmlWebpackPlugin({
 				filename: 'index.html',
 				template: 'public/index.html',
@@ -122,7 +121,7 @@ module.exports = (env) => {
 					process.env.FIREBASE_MESSAGING_ID,
 				),
 			}),
-		],
+		]),
 		devtool: isProduction ? 'source-map' : 'inline-source-map',
 		devServer: {
 			// contentBase: path.join(__dirname, 'dist'),

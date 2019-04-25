@@ -10,7 +10,7 @@ const Image = ({ alt, defaultImage, ...props }) => (
 			}
 		}}
 		alt={alt}
-		{ ...props } />
+		{...props} />
 );
 
 Image.propTypes = {

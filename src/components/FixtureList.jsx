@@ -1,24 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import FixtureListItem from './FixtureListItem';
 import Loader from './Loader';
-import startSearchMatches from '../actions/matchResults';
 import { competitions } from '../settings';
 
-// TODO: convert into presentation props (move connect upward)
 class FixtureList extends React.Component {
-	constructor(props) {
-		super(props);
-		this.props.startSearchMatches();
-	}
-
-	renderFixtureItem = (fixture) => {
+	renderFixtureItem = (match) => {
 		const { teams } = this.props;
-		const competitionId = fixture.competition.id;
-		const homeId = fixture.homeTeam.id;
-		const awayId = fixture.awayTeam.id;
+		const competitionId = match.competition.id;
+		const homeId = match.homeTeam.id;
+		const awayId = match.awayTeam.id;
 		if (isEmpty(teams[competitionId])) {
 			return null;
 		}
@@ -27,15 +19,15 @@ class FixtureList extends React.Component {
 
 		return (
 			<FixtureListItem
-				key={fixture.id}
-				fixture={fixture}
+				key={match.id}
+				fixture={match}
 				homeTeam={homeTeam}
 				awayTeam={awayTeam} />
 		);
 	}
 
-	renderFixtureGroup = (fixtures) => {
-		const competitionName = fixtures[0].competition.name;
+	renderFixtureGroup = (matches) => {
+		const competitionName = matches[0].competition.name;
 
 		return (
 			<div key={competitionName}>
@@ -43,7 +35,7 @@ class FixtureList extends React.Component {
 					{competitionName}
 				</div>
 				{
-					fixtures.map((fixture) => this.renderFixtureItem(fixture))
+					matches.map((match) => this.renderFixtureItem(match))
 				}
 			</div>
 		);
@@ -56,21 +48,21 @@ class FixtureList extends React.Component {
 	}
 
 	renderFixtures = () => {
-		const { fixtures } = this.props;
-		const fixturesByCompetition = {};
+		const { matches } = this.props;
+		const matchesByCompetition = {};
 
-		fixtures.forEach((fixture) => {
-			const competitionId = fixture.competition.id;
+		matches.forEach((match) => {
+			const competitionId = match.competition.id;
 
-			if (isEmpty(fixturesByCompetition[competitionId])) {
-				fixturesByCompetition[competitionId] = [];
+			if (isEmpty(matchesByCompetition[competitionId])) {
+				matchesByCompetition[competitionId] = [];
 			}
 
-			fixturesByCompetition[competitionId].push(fixture);
+			matchesByCompetition[competitionId].push(match);
 		});
 
-		return Object.keys(fixturesByCompetition).map((competitionId) =>
-			this.renderFixtureGroup(fixturesByCompetition[competitionId]));
+		return Object.keys(matchesByCompetition).map((competitionId) =>
+			this.renderFixtureGroup(matchesByCompetition[competitionId]));
 	}
 
 	render() {
@@ -87,21 +79,8 @@ class FixtureList extends React.Component {
 }
 
 FixtureList.propTypes = {
-	fixtures: PropTypes.arrayOf(PropTypes.object).isRequired,
+	matches: PropTypes.arrayOf(PropTypes.object).isRequired,
 	teams: PropTypes.objectOf(PropTypes.object).isRequired,
-	startSearchMatches: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-	fixtures: state.matchResults.results,
-	teams: state.teams,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-	startSearchMatches: () => dispatch(startSearchMatches()),
-})
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(FixtureList);
+export default FixtureList;
