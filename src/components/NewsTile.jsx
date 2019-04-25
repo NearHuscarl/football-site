@@ -53,7 +53,7 @@ const getArticlesThatAreNotHeadlines = (news, headlines) => {
 	if (currentIndex === -1) {
 		return []
 	};
-	const articles = news.articles[currentIndex];
+	const articles = news.models[currentIndex];
 	const headlineUrls = headlines.map((headline) => headline.url);
 
 	return articles.filter((article) => !headlineUrls.includes(article.url));

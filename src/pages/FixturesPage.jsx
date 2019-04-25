@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import FixtureListFilters from '../components/FixtureListFilters';
 import FixtureList from '../components/FixtureList';
 import startSearchMatches from '../actions/matchResults';
+import Loader from '../components/Loader';
 
 class FixturePage extends React.Component {
 	constructor(props) {
@@ -12,14 +13,18 @@ class FixturePage extends React.Component {
 	}
 
 	render() {
-		const { matches, teams } = this.props;
+		const { matches, teams, teamsPending } = this.props;
 
 		return (
 			<div>
 				<FixtureListFilters />
-				<FixtureList
-					matches={matches}
-					teams={teams} />
+				{teamsPending ?
+					<Loader height='40vh' />
+					:					
+					<FixtureList
+						matches={matches}
+						teams={teams} />
+				}
 			</div>
 		)
 	}
@@ -29,11 +34,13 @@ FixturePage.propTypes = {
 	matches: PropTypes.arrayOf(PropTypes.object).isRequired,
 	teams: PropTypes.objectOf(PropTypes.object).isRequired,
 	startSearchMatches: PropTypes.func.isRequired,
+	teamsPending: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	matches: state.matchResults.results,
-	teams: state.teams,
+	teams: state.teams.models,
+	teamsPending: state.teams.pending.getTeamsPending,
 });
 
 const mapDispatchToProps = (dispatch) => ({

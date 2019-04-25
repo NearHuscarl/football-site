@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 import FixtureListItem from './FixtureListItem';
-import Loader from './Loader';
-import { competitions } from '../settings';
 
 class FixtureList extends React.Component {
 	renderFixtureItem = (match) => {
@@ -41,12 +39,6 @@ class FixtureList extends React.Component {
 		);
 	}
 
-	isDataReady = () => {
-		const { teams } = this.props;
-		return Object.values(competitions)
-			.every((competitionId) => !isEmpty(teams[competitionId]));
-	}
-
 	renderFixtures = () => {
 		const { matches } = this.props;
 		const matchesByCompetition = {};
@@ -68,10 +60,8 @@ class FixtureList extends React.Component {
 	render() {
 		return (
 			<div className='content-container'>
-				{this.isDataReady() ?
+				{
 					this.renderFixtures()
-					:
-					<Loader height='40vh' />
 				}
 			</div>
 		);

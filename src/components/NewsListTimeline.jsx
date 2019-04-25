@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import NewsList from './NewsList';
 import Loader from './Loader';
-import { startSetNewsAtIndex } from '../actions/news';
+import { startFetchNewsAtIndex } from '../actions/news';
 import settings from '../settings';
 
 class NewsListTimeline extends React.Component {
@@ -51,7 +51,7 @@ class NewsListTimeline extends React.Component {
 			return Promise.resolve(0);
 		}
 
-		return this.props.startSetNewsAtIndex(newIndex)
+		return this.props.startFetchNewsAtIndex(newIndex)
 			.then(() => {
 				this.setState((state) => ({
 					currentIndex: newIndex,
@@ -121,16 +121,16 @@ export const MockNewsListTimeline = NewsListTimeline;
 NewsListTimeline.propTypes = {
 	articles: PropTypes.arrayOf(PropTypes.object).isRequired,
 	lastIndex: PropTypes.number.isRequired,
-	startSetNewsAtIndex: PropTypes.func.isRequired,
+	startFetchNewsAtIndex: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-	articles: getAllArticles(state.news.articles),
+	articles: getAllArticles(state.news.models),
 	lastIndex: state.news.meta.currentIndex,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	startSetNewsAtIndex: (index) => dispatch(startSetNewsAtIndex(index)),
+	startFetchNewsAtIndex: (index) => dispatch(startFetchNewsAtIndex(index)),
 });
 
 export default connect(

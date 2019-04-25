@@ -150,8 +150,8 @@ FixtureTile.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-	fixtures: getMatchesByCompetition(state.matches),
-	teams: state.teams,
+	fixtures: getMatchesByCompetition(state.matches.models),
+	teams: state.teams.models,
 })
 
 export default connect(

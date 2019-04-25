@@ -19,8 +19,19 @@ const defaultParams = {
 	dateTo: matchEndDate.format('YYYY-MM-DD'), // maximum is 10-day difference
 }
 
-export const updateMatch = (matches) => ({
-	type: 'UPDATE_MATCH',
+export const setMatches = (matches) => ({
+	type: 'SET_MATCHES',
+	payload: {
+		matches,
+	},
+});
+
+export const fetchMatchesPending = () => ({
+	type: 'FETCH_MATCHES_PENDING',
+});
+
+export const fetchMatchesCompleted = (matches) => ({
+	type: 'FETCH_MATCHES_COMPLETED',
 	payload: {
 		matches,
 	},
@@ -114,36 +125,40 @@ export const getDateRangeToUpdate = (dates) => {
 	}));
 }
 
-export const startUpdateMatch = () =>
-	(dispatch) => checkCacheTimeExpired('matches')
-		.then((result) => {
-			const { expired } = result;
-			const dates = getDateRange(matchStartDate, matchEndDate);
+export const startFetchMatch = () =>
+	(dispatch) => {
+		dispatch(fetchMatchesPending());
 
-			if (expired) {
-				return getDateRangeToUpdate(dates)
-					.then((dateRangeToUpdate) => refreshMatch({
-						competitionIds: defaultParams.competitionIds,
-						...dateRangeToUpdate,
-					}));
-			}
-			const matchData = {};
-			const promises = [];
+		return checkCacheTimeExpired('matches')
+			.then((result) => {
+				const { expired } = result;
+				const dates = getDateRange(matchStartDate, matchEndDate);
 
-			dates.forEach((date) => {
-				promises.push(database
-					.ref(`cachedData/matches/data/${date}/matches`)
-					.once('value')
-					.then((snapshot) => {
+				if (expired) {
+					return getDateRangeToUpdate(dates)
+						.then((dateRangeToUpdate) => refreshMatch({
+							competitionIds: defaultParams.competitionIds,
+							...dateRangeToUpdate,
+						}));
+				}
+				const matchData = {};
+				const promises = [];
 
-						matchData[date] = [];
-						snapshot.forEach((childSnapshot) => {
-							matchData[date].push(childSnapshot.val());
-						});
-					}));
-			});
-			return Promise.all(promises).then(() => matchData);
-		})
-		.then((matches) => {
-			dispatch(updateMatch(matches));
-		})
+				dates.forEach((date) => {
+					promises.push(database
+						.ref(`cachedData/matches/data/${date}/matches`)
+						.once('value')
+						.then((snapshot) => {
+
+							matchData[date] = [];
+							snapshot.forEach((childSnapshot) => {
+								matchData[date].push(childSnapshot.val());
+							});
+						}));
+				});
+				return Promise.all(promises).then(() => matchData);
+			})
+			.then((matches) => {
+				dispatch(fetchMatchesCompleted(matches));
+			})
+	}

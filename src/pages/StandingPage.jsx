@@ -52,15 +52,15 @@ StandingPage.defaultProps = {
 	topScorers: undefined,
 }
 
+const mapStateToProps = (state) => ({
+	topScorers: state.topScorers.models[state.standingResult.competitionId],
+	standing: state.standingResult.result,
+	searchPending: state.standingResult.pending,
+});
+
 const mapDispatchToProps = (dispatch) => ({
 	startSearchStanding: () => dispatch(startSearchStanding()),
 });
-
-const mapStateToProps = (state) => ({
-	topScorers: state.topScorers[state.standingResult.competitionId],
-	standing: state.standingResult.result,
-	searchPending: state.standingResult.pending,
-})
 
 export default connect(
 	mapStateToProps,

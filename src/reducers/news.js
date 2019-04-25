@@ -3,24 +3,37 @@ const newsDefaultState = {
 		lastUpdated: 0, // 1970
 		currentIndex: -1,
 	},
-	articles: {
-		0: [], // articles
-	},
+	pending: false,
+	models: {},
 	headlines: [], // List of headline urls
 };
 
 const newsReducer = (state = newsDefaultState, action) => {
 	switch (action.type) {
-		case 'SET_NEWS': {
-			const { news } = action.payload;
-			return { ...state, ...news };
+		case 'FETCH_NEWS_PENDING': {
+			return { ...state, pending: true };
 		}
-		case 'SET_NEWS_AT_INDEX': {
-			const { index, articles } = action.payload;
-			const newState = {
-				articles: { ...state.articles, [index]: articles },
+		case 'FETCH_NEWS_COMPLETED': {
+			const { meta, articles } = action.payload;
+			return {
+				...state,
+				meta,
+				models: {
+					...state.models,
+					[meta.currentIndex]: articles,
+				},
+				pending: false,
 			};
-			return { ...state, ...newState };
+		}
+		case 'FETCH_NEWS_AT_INDEX_COMPLETED': {
+			const { index, articles } = action.payload;
+			return {
+				...state,
+				models: {
+					...state.models,
+					[index]: articles
+				},
+			};
 		}
 		case 'SET_HEADLINES': {
 			const { headlines } = action.payload;

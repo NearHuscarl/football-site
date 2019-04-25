@@ -1,6 +1,6 @@
 import moment from 'moment';
 import database from '../firebase/firebase';
-import { refreshMatch, updateMatch, getDateRangeToUpdate } from './matches';
+import { refreshMatch, setMatches, getDateRangeToUpdate } from './matches';
 import { competitionNames } from '../settings';
 import getDateRange from '../utilities/getDateRange';
 import Log from '../utilities/log';
@@ -34,7 +34,7 @@ const startSearchMatches = () => (dispatch, getState) => {
 	dispatch(searchMatchesPending());
 	const filters = getState().matchFilters;
 	const date = moment(filters.date).format('YYYY-MM-DD');
-	const { matches } = getState();
+	const matches = getState().matches.models;
 
 	const updateSearchResults = (results = []) => {
 		const filteredResults = results.filter((match) =>
@@ -82,7 +82,7 @@ const startSearchMatches = () => (dispatch, getState) => {
 			return results.matches;
 		}).then((m) => {
 			updateSearchResults(m);
-			dispatch(updateMatch({ [date]: m }));
+			dispatch(setMatches({ [date]: m }));
 		});
 }
 

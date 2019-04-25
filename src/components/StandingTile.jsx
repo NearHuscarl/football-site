@@ -75,7 +75,7 @@ StandingTile.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-	standings: state.standings,
+	standings: state.standings.models,
 })
 
 export default connect(

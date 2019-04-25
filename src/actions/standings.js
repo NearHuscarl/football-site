@@ -3,8 +3,15 @@ import database from '../firebase/firebase';
 import { checkCacheTimeExpired, updateCacheTime } from './util';
 import Log from '../utilities/log'
 
-const updateStanding = (competitionId, standing) => ({
-	type: 'UPDATE_STANDING',
+const fetchStandingPending = (competitionId) => ({
+	type: 'FETCH_STANDING_PENDING',
+	payload: {
+		competitionId,
+	},
+});
+
+const fetchStandingCompleted = (competitionId, standing) => ({
+	type: 'FETCH_STANDING_COMPLETED',
 	payload: {
 		competitionId,
 		standing,
@@ -34,24 +41,28 @@ const refreshStanding = (competitionId) => {
 		});
 }
 
-const startUpdateStanding = (competitionId) =>
-	(dispatch) => checkCacheTimeExpired(`standings/${competitionId}`)
-		.then((result) => {
-			const { expired } = result;
-			let promise = Promise.resolve(null);
+const startFetchStanding = (competitionId) =>
+	(dispatch) => {
+		dispatch(fetchStandingPending(competitionId));
 
-			if (expired) {
-				promise = refreshStanding(competitionId);
-			} else {
-				promise = database
-					.ref(`cachedData/standings/${competitionId}/data`)
-					.once('value')
-					.then((snapshot) => snapshot.val());
-			}
-			return promise;
-		})
-		.then((standing) => {
-			dispatch(updateStanding(competitionId, standing));
-		})
+		return checkCacheTimeExpired(`standings/${competitionId}`)
+			.then((result) => {
+				const { expired } = result;
+				let promise = Promise.resolve(null);
 
-export default startUpdateStanding;
+				if (expired) {
+					promise = refreshStanding(competitionId);
+				} else {
+					promise = database
+						.ref(`cachedData/standings/${competitionId}/data`)
+						.once('value')
+						.then((snapshot) => snapshot.val());
+				}
+				return promise;
+			})
+			.then((standing) => {
+				dispatch(fetchStandingCompleted(competitionId, standing));
+			})
+	}
+
+export default startFetchStanding;

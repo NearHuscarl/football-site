@@ -3,16 +3,23 @@ import database from '../firebase/firebase';
 import { checkCacheTimeExpired, updateCacheTime } from './util';
 import Log from '../utilities/log'
 
-export const updateTeam = (competitionId, team) => ({
-	type: 'UPDATE_SPECIFIC_TEAM',
+export const setTeamsAtCompetition = (teams, competitionId) => ({
+	type: 'SET_TEAMS_AT_COMPETITION',
 	payload: {
+		teams,
 		competitionId,
-		team,
 	},
 });
 
-const updateTeams = (competitionId, teams) => ({
-	type: 'UPDATE_TEAMS',
+export const fetchTeamsPending = (competitionId) => ({
+	type: 'FETCH_TEAMS_PENDING',
+	payload: {
+		competitionId,
+	},
+});
+
+const fetchTeamsCompleted = (competitionId, teams) => ({
+	type: 'FETCH_TEAMS_COMPLETED',
 	payload: {
 		competitionId,
 		teams,
@@ -46,22 +53,26 @@ const refreshTeam = (competitionId) => {
 		});
 }
 
-export const startUpdateTeams = (competitionId) =>
-	(dispatch) => checkCacheTimeExpired(`teams/${competitionId}`)
-		.then((result) => {
-			const { expired } = result;
-			let promise = Promise.resolve(null);
+export const startFetchTeams = (competitionId) =>
+	(dispatch) => {
+		dispatch(fetchTeamsPending(competitionId));
 
-			if (expired) {
-				promise = refreshTeam(competitionId)
-			} else {
-				promise = database
-					.ref(`cachedData/teams/${competitionId}/data`)
-					.once('value')
-					.then((snapshot) => snapshot.val());
-			}
-			return promise;
-		})
-		.then((teams) => {
-			dispatch(updateTeams(competitionId, teams));
-		});
+		return checkCacheTimeExpired(`teams/${competitionId}`)
+			.then((result) => {
+				const { expired } = result;
+				let promise = Promise.resolve(null);
+
+				if (expired) {
+					promise = refreshTeam(competitionId)
+				} else {
+					promise = database
+						.ref(`cachedData/teams/${competitionId}/data`)
+						.once('value')
+						.then((snapshot) => snapshot.val());
+				}
+				return promise;
+			})
+			.then((teams) => {
+				dispatch(fetchTeamsCompleted(competitionId, teams));
+			})
+	}

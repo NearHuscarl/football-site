@@ -11,15 +11,15 @@ export const setHeadlines = (headlines) => ({
 	},
 });
 
-const setNewsAtIndex = ({ articles, index }) => ({
-	type: 'SET_NEWS_AT_INDEX',
+const fetchNewsAtIndexCompleted = (articles, index) => ({
+	type: 'FETCH_NEWS_AT_INDEX_COMPLETED',
 	payload: {
 		articles,
 		index,
 	},
 });
 
-export const startSetNewsAtIndex = (index) =>
+export const startFetchNewsAtIndex = (index) =>
 	(dispatch) => database
 		.ref(`cachedData/news/data/${index}/articles`)
 		.once('value')
@@ -28,13 +28,18 @@ export const startSetNewsAtIndex = (index) =>
 			snapshot.forEach((childSnapshot) => {
 				articles.push(childSnapshot.val());
 			});
-			dispatch(setNewsAtIndex({ index, articles }));
+			dispatch(fetchNewsAtIndexCompleted(articles, index));
 		});
 
-const setNews = (news) => ({
-	type: 'SET_NEWS',
+export const fetchNewsPending = () => ({
+	type: 'FETCH_NEWS_PENDING',
+});
+
+const fetchNewsCompleted = ({ meta, articles }) => ({
+	type: 'FETCH_NEWS_COMPLETED',
 	payload: {
-		news,
+		meta,
+		articles,
 	},
 });
 
@@ -106,39 +111,33 @@ const refreshNews = (oldIndex) => {
 		});
 }
 
-export const startSetNews = () =>
-	(dispatch) => checkCacheTimeExpired('news')
-		.then((result) => {
-			const { expired, meta } = result;
-			let promise = Promise.resolve(null);
+export const startFetchNews = () =>
+	(dispatch) => {
+		dispatch(fetchNewsPending());
 
-			if (expired) {
-				promise = refreshNews(meta.currentIndex)
-					.then((newsList) => ({
-						meta,
-						articles: {
-							[meta.currentIndex]: newsList,
-						},
-					}));
-			} else {
-				promise = database
-					.ref(`cachedData/news/data/${meta.currentIndex}/articles`)
-					.once('value')
-					.then((snapshot) => {
-						const newsList = [];
-						snapshot.forEach((childSnapshot) => {
-							newsList.push(childSnapshot.val());
-						});
-						return {
-							meta,
-							articles: {
-								[meta.currentIndex]: newsList,
-							},
-						};
-					})
-			}
-			return promise;
-		})
-		.then((news) => {
-			dispatch(setNews(news));
-		})
+		return checkCacheTimeExpired('news')
+			.then((result) => {
+				const { expired, meta } = result;
+				let promise = Promise.resolve(null);
+
+				if (expired) {
+					promise = refreshNews(meta.currentIndex)
+						.then((articles) => ({ meta, articles }));
+				} else {
+					promise = database
+						.ref(`cachedData/news/data/${meta.currentIndex}/articles`)
+						.once('value')
+						.then((snapshot) => {
+							const articles = [];
+							snapshot.forEach((childSnapshot) => {
+								articles.push(childSnapshot.val());
+							});
+							return { meta, articles };
+						})
+				}
+				return promise;
+			})
+			.then((result) => {
+				dispatch(fetchNewsCompleted(result));
+			});
+	}

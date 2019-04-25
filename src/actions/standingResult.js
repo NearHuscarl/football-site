@@ -1,6 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
-import startUpdateStanding from './standings';
-import startUpdateTopScorers from './topScorers';
+import startFetchStanding from './standings';
+import startFetchTopScorers from './topScorers';
 
 export const searchStandingPending = () => ({
 	type: 'SEARCH_STANDING_PENDING',
@@ -19,7 +19,8 @@ export const startSearchStanding = () =>
 		dispatch(searchStandingPending());
 
 		const filters = getState().standingFilters;
-		const { standings, topScorers } = getState();
+		const standings = getState().standings.models;
+		const topScorers = getState().topScorers.models;
 		const competitionId = filters.competition;
 
 		const getResults = (standingResults = {}) => {
@@ -30,7 +31,7 @@ export const startSearchStanding = () =>
 
 			dispatch(searchStandingCompleted(table, competitionId));
 			if (!topScorers[competitionId]) {
-				dispatch(startUpdateTopScorers(competitionId));
+				dispatch(startFetchTopScorers(competitionId));
 			}
 		}
 
@@ -39,8 +40,8 @@ export const startSearchStanding = () =>
 			return Promise.resolve(null);
 		}
 
-		return dispatch(startUpdateStanding(competitionId)).then(() => {
-			getResults(getState().standings);
+		return dispatch(startFetchStanding(competitionId)).then(() => {
+			getResults(getState().standings.models);
 			return Promise.resolve(null);
 		});
 	}
