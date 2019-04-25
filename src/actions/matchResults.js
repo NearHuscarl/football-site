@@ -58,23 +58,27 @@ const startSearchMatches = () => (dispatch, getState) => {
 				matchData.push(childSnapshot.val());
 			});
 			return {
+				meta: snapshot.child('meta').val(),
 				noMatches: snapshot.child('meta').child('noMatches').val(),
 				matches: matchData,
 			};
 		})
 		.then((results) => {
-			if (results.noMatches) { // no matches on that day
-				return [];
-			}
-			if (results.noMatches === null) { // data not available on firebase, start calling API
-				const competitions = Object.keys(competitionNames).toString();
+			// data not available on firebase or some matches need updating, start calling API
+			if (results.meta === null || (results.meta.onGoing && moment(date).isBefore(moment(), 'day'))) {
+				const competitionIds = Object.keys(competitionNames).toString();
 				return getDateRangeToCacheMatches(date)
 					.then((datesUpdate) => refreshMatch({
-						competitions,
+						competitionIds,
 						...datesUpdate,
 					}))
 					.then((m) => m[date]);
 			}
+
+			if (results.meta.noMatches) { // no matches on that day
+				return [];
+			}
+			
 			return results.matches;
 		}).then((m) => {
 			updateSearchResults(m);

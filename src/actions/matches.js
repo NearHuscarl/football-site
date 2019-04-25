@@ -42,7 +42,6 @@ export const refreshMatch = (params = defaultParams) => {
 			const datesWithMatches = [];
 			// dates which have at least one match which is not in FINISHED status
 			const datesOngoing = {};
-			console.log('data', data);
 			const { matches } = data;
 
 			matches.forEach((match) => {
@@ -124,7 +123,7 @@ export const startUpdateMatch = () =>
 			if (expired) {
 				return getDateRangeToUpdate(dates)
 					.then((dateRangeToUpdate) => refreshMatch({
-						competitions: defaultParams.competitions,
+						competitionIds: defaultParams.competitionIds,
 						...dateRangeToUpdate,
 					}));
 			}

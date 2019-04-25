@@ -36,18 +36,14 @@ class StandingFilters extends React.Component {
 		value: optionId,
 	})
 
-	getOptions = (source) => {
-		const options = Object.keys(source)
-			.map((sourceId) => {
-				const sourceName = source[sourceId];
-				return {
-					label: sourceName,
-					value: sourceId,
-				};
-			});
-
-		return options;
-	}
+	getOptions = (source) => Object.keys(source)
+		.map((sourceId) => {
+			const sourceName = source[sourceId];
+			return {
+				label: sourceName,
+				value: sourceId,
+			};
+		})
 
 	render() {
 		const { filters } = this.props;
