@@ -4,6 +4,8 @@ import { CSSTransition } from 'react-transition-group';
 import { Portal } from 'react-portal';
 import has from 'lodash/has';
 import store from '../store/configureStore';
+import Image from './Image';
+import defaultLogo from '../../public/images/Default_Team_Logo.png';
 
 class Tooltip extends React.Component {
 	constructor(props) {
@@ -82,7 +84,7 @@ class Tooltip extends React.Component {
 								onMouseLeave={this.onMouseLeaveTooltipText}>
 								<div className='tooltip-team__image'>
 									{
-										<img alt='team logo' src={team.crestUrl} />
+										<Image alt='team logo' src={team.crestUrl} defaultImage={defaultLogo} />
 									}
 								</div>
 								<div className='tooltip-team__text'>

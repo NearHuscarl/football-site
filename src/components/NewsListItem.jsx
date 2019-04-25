@@ -5,7 +5,9 @@ import moment from 'moment';
 import has from 'lodash/has';
 import hashMultipleWords from '../utilities/hashMultipleWords';
 import teamNames from '../utilities/teamNames';
+import Image from './Image';
 import Tooltip from './Tooltip';
+import defaultArticleImage from '../../public/images/Default_Article_Image.jpg';
 
 const compareHashes = (wordHashes, wordArray, startIndex = 0) => {
 	let wordHashesVal = wordHashes;
@@ -132,7 +134,7 @@ const NewsListItem = (props) => {
 	return (
 		<a className='news-list-item' href={props.url} target='_blank' rel='noreferrer noopener'>
 			<div className='news-list-item__image'>
-				<img alt='article' src={props.urlToImage} />
+				<Image alt='article' src={props.urlToImage} defaultImage={defaultArticleImage} />
 			</div>
 			<div className='news-list-item__text'>
 				<span className='news-list-item__source'>{props.source.name}</span>

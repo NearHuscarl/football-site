@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import Image from './Image';
+import defaultLogo from '../../public/images/Default_Team_Logo.png';
 
 const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 	const date = moment.utc(fixture.utcDate).format('HH:mm');
@@ -8,7 +10,7 @@ const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 	return (
 		<div className='fixturelist-item' key={fixture.id}>
 			<div className='fixture-item__logo' >
-				<img alt='home team' src={homeTeam.crestUrl} />
+				<Image alt='home team' src={homeTeam.crestUrl} defaultImage={defaultLogo} />
 			</div>
 			<div className='fixture-item__info'>
 				<span className='fixture-item__team-home'>
@@ -27,7 +29,7 @@ const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 				</span>
 			</div>
 			<div className='fixture-item__logo' >
-				<img alt='away team' src={awayTeam.crestUrl} />
+				<Image alt='away team' src={awayTeam.crestUrl} defaultImage={defaultLogo} />
 			</div>
 		</div>
 	);

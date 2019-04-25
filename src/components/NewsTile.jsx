@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Carousel } from 'react-responsive-carousel';
 import '../styles/components/_carousel.scss';
+import Image from './Image';
 import Loader from './Loader';
+import defaultArticleImage from '../../public/images/Default_Article_Image.jpg';
 
 class NewsTile extends React.Component {
 	onClickNews = (index) => {
@@ -33,7 +35,7 @@ class NewsTile extends React.Component {
 						{
 							articles.map((article) => (
 								<div className='tile-imageitem' key={article.publishedAt}>
-									<img alt='news' src={article.urlToImage} />
+									<Image alt='news' src={article.urlToImage} defaultImage={defaultArticleImage} />
 									<p className='tile-text'>{article.title}</p>
 								</div>
 							))

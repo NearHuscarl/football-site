@@ -9,7 +9,9 @@ import take from 'lodash/take';
 import shuffle from 'lodash/shuffle';
 import moment from 'moment';
 import { competitions } from '../settings';
+import Image from './Image';
 import Loader from './Loader';
+import defaultLogo from '../../public/images/Default_Team_Logo.png';
 
 class FixtureTile extends React.Component {
 	constructor(props) {
@@ -53,7 +55,7 @@ class FixtureTile extends React.Component {
 		return (
 			<div className='fixture-body' key={fixture.id}>
 				<div className='fixture__logo' >
-					<img alt='home team' src={homeTeam.crestUrl} />
+					<Image alt='home team' src={homeTeam.crestUrl} defaultImage={defaultLogo} />
 				</div>
 				<div className='fixture__info'>
 					<div className='fixture__team'>
@@ -70,7 +72,7 @@ class FixtureTile extends React.Component {
 					</div>
 				</div>
 				<div className='fixture__logo' >
-					<img alt='away team' src={awayTeam.crestUrl} />
+					<Image alt='away team' src={awayTeam.crestUrl} defaultImage={defaultLogo} />
 				</div>
 			</div>
 		);

@@ -6,8 +6,10 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import moment from 'moment';
 import truncate from 'lodash/truncate';
 import '../styles/components/_carousel.scss';
+import Image from './Image';
 import Loader from './Loader';
 import PageHeader from './PageHeader';
+import defaultArticleImage from '../../public/images/Default_Article_Image.jpg';
 
 // TODO: convert into presentation component
 class Headlines extends React.Component {
@@ -38,7 +40,7 @@ class Headlines extends React.Component {
 
 		return (
 			<div key={article.publishedAt}>
-				<img alt='headline' src={article.urlToImage} />
+				<Image alt='headline' src={article.urlToImage} defaultImage={defaultArticleImage} />
 				<div className='legend'>
 					<p className='headline__title'>{article.title}</p>
 					<p className='headline__description'>{description}</p>
