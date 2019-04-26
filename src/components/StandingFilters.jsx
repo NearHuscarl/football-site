@@ -10,7 +10,7 @@ import { startSearchStanding } from '../actions/standingResult';
 import PageHeader from './PageHeader';
 import SelectOptions from './SelectOptions';
 import {
-	competitionNames,
+	competitions,
 	standingScores,
 	standingYears,
 } from '../settings';
@@ -54,9 +54,9 @@ class StandingFilters extends React.Component {
 					<div className="input-group__item">
 						<SelectOptions
 							width='18rem'
-							defaultValue={this.getOption(filters.competition, competitionNames)}
+							defaultValue={this.getOption(filters.competition, competitions)}
 							onChange={this.onCompetitionOptionChange}
-							options={this.getOptions(competitionNames)}
+							options={this.getOptions(competitions)}
 							placeholder='Select competition...'
 						/>
 					</div>

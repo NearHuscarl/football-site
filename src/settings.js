@@ -1,5 +1,5 @@
 // Name - ID mappings
-export const competitions = {
+export const competitionIds = {
 	bundesliga: 2002,
 	premierLeague: 2021,
 	championship: 2016,
@@ -10,15 +10,58 @@ export const competitions = {
 	primeiraLiga: 2017, // Portugal
 }
 
-export const competitionNames = {
-	[competitions.premierLeague]: 'Premier League',
-	[competitions.primeraDivision]: 'La Liga',
-	[competitions.bundesliga]: 'Bundesliga',
-	[competitions.serieA]: 'Serie A',
-	[competitions.ligue1]: 'Ligue 1',
-	[competitions.championship]: 'Championship',
-	[competitions.eredivisie]: 'Eredivisie',
-	[competitions.primeiraLiga]: 'Primeira Liga',
+export const competitionInfo = {
+	[competitionIds.premierLeague]: {
+		championLeagueRanks: [1, 4], // Top 4 have a place in CL next season
+		// There are 2 EL places. But one place is reserved for the team that win FA Cup, if the FA winner
+		// also finished in the top five places, then this place reverts to the team that finished sixth.
+		eroupeLeagueRanks: 5,
+		relegationRanks: [18, 20],
+	},
+	[competitionIds.primeraDivision]: {
+		championLeagueRanks: [1, 4],
+		eroupeLeagueRanks: [5, 6],
+		relegationRanks: [18, 20],
+	},
+	[competitionIds.bundesliga]: {
+		championLeagueRanks: [1, 4],
+		eroupeLeagueRanks: [5, 6],
+		relegationRanks: [16, 18],
+	},
+	[competitionIds.serieA]: {
+		championLeagueRanks: [1, 4],
+		eroupeLeagueRanks: [5, 6],
+		relegationRanks: [18, 20],
+	},
+	[competitionIds.ligue1]: {
+		championLeagueRanks: [1, 2],
+		eroupeLeagueRanks: [3, 4],
+		relegationRanks: [18, 20],
+	},
+	[competitionIds.championship]: {
+		relegationRanks: [22, 24],
+	},
+	[competitionIds.eredivisie]: {
+		championLeagueRanks: [1, 2],
+		eroupeLeagueRanks: [3, 7],
+		relegationRanks: [16, 18],
+	},
+	[competitionIds.primeiraLiga]: {
+		championLeagueRanks: [1, 2],
+		eroupeLeagueRanks: [3, 4],
+		relegationRanks: [16, 18],
+	},
+}
+
+export const competitions = {
+	[competitionIds.premierLeague]: 'Premier League',
+	[competitionIds.primeraDivision]: 'La Liga',
+	[competitionIds.bundesliga]: 'Bundesliga',
+	[competitionIds.serieA]: 'Serie A',
+	[competitionIds.ligue1]: 'Ligue 1',
+	[competitionIds.championship]: 'Championship',
+	[competitionIds.eredivisie]: 'Eredivisie',
+	[competitionIds.primeiraLiga]: 'Primeira Liga',
 }
 
 // http://www.football-data.org/documentation/quickstart#filtering

@@ -10,7 +10,7 @@ import startSearchMatches from '../actions/matchResults';
 import PageHeader from './PageHeader';
 import SelectOptions from './SelectOptions';
 import Date from './Date';
-import { competitionNames } from '../settings';
+import { competitions } from '../settings';
 
 class FixtureListFilters extends React.Component {
 	constructor(props) {
@@ -37,15 +37,15 @@ class FixtureListFilters extends React.Component {
 			return this.allOption;
 		}
 		return {
-			label: competitionNames[competition],
+			label: competitions[competition],
 			value: competition,
 		};
 	}
 
 	getCompetitionOptions = () => {
-		const options = Object.keys(competitionNames)
+		const options = Object.keys(competitions)
 			.map((competitionId) => {
-				const competitionName = competitionNames[competitionId];
+				const competitionName = competitions[competitionId];
 				return {
 					label: competitionName,
 					value: Number(competitionId),

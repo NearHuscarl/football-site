@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Carousel } from 'react-responsive-carousel';
 import has from 'lodash/has';
-import { competitions } from '../settings';
-import '../styles/components/_carousel.scss';
+import { competitionIds } from '../settings';
 import { history } from '../routers/AppRouter';
 import StandingTableSmall from './StandingTableSmall';
 import Loader from './Loader';
@@ -12,24 +11,24 @@ import Loader from './Loader';
 class StandingTile extends React.Component {
 	constructor(props) {
 		super(props);
-		this.competitionIds = [
-			competitions.premierLeague,
-			competitions.primeraDivision,
-			competitions.bundesliga,
-			competitions.serieA,
+		this.competitions = [
+			competitionIds.premierLeague,
+			competitionIds.primeraDivision,
+			competitionIds.bundesliga,
+			competitionIds.serieA,
 		];
 	}
 
 	onClickStandingTable = (index) => {
-		const { competitionIds } = this;
-		history.push(`/standings/${competitionIds[index]}`);
+		const { competitions } = this;
+		history.push(`/standings/${competitions[index]}`);
 	}
 
 	// Avoid rerendering multiple table components when data are not ready
 	isDataReady = () => {
 		const { standings } = this.props;
 
-		return this.competitionIds.every((competitionId) => {
+		return this.competitions.every((competitionId) => {
 			if (!has(standings, competitionId)) {
 				return false;
 			}
@@ -38,7 +37,7 @@ class StandingTile extends React.Component {
 	}
 
 	render() {
-		const { competitionIds, props } = this;
+		const { competitions, props } = this;
 
 		return (
 			this.isDataReady() ?
@@ -55,7 +54,7 @@ class StandingTile extends React.Component {
 						showStatus={false}
 						onClickItem={this.onClickStandingTable}>
 						{
-							competitionIds.map((competitionId) => {
+							competitions.map((competitionId) => {
 								const standing = props.standings[competitionId];
 								return <StandingTableSmall className='tile-imageitem' key={competitionId} standing={standing} />
 							})

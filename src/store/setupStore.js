@@ -5,14 +5,14 @@ import { startFetchNews, setHeadlines } from '../actions/news';
 import { startFetchMatch } from '../actions/matches';
 import { startFetchTeams, setTeamsAtCompetition } from '../actions/teams';
 import startFetchStanding from '../actions/standings';
-import { competitions } from '../settings';
+import { competitionIds } from '../settings';
 import teamLogos from '../utilities/teamLogos';
 
-const competitionIds = [
-	competitions.premierLeague,
-	competitions.primeraDivision,
-	competitions.bundesliga,
-	competitions.serieA,
+const topCompetitions = [
+	competitionIds.premierLeague,
+	competitionIds.primeraDivision,
+	competitionIds.bundesliga,
+	competitionIds.serieA,
 ];
 
 const setupStore = (store) => {
@@ -24,11 +24,11 @@ const setupStore = (store) => {
 			store.dispatch(setHeadlines(headlines));
 		});
 
-	competitionIds.forEach((competitionId) => {
+	topCompetitions.forEach((competitionId) => {
 		store.dispatch(startFetchStanding(competitionId));
 	});
 
-	Object.values(competitions).forEach((competitionId) => {
+	Object.values(competitionIds).forEach((competitionId) => {
 		store.dispatch(startFetchTeams(competitionId)).then(() => {
 			// Update obsolute logo urls
 			const teams = store.getState().teams.models[competitionId];

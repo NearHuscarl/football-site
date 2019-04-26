@@ -1,7 +1,7 @@
 import moment from 'moment';
 import database from '../firebase/firebase';
 import { refreshMatch, setMatches, getDateRangeToUpdate } from './matches';
-import { competitionNames } from '../settings';
+import { competitions } from '../settings';
 import getDateRange from '../utilities/getDateRange';
 import Log from '../utilities/log';
 
@@ -66,7 +66,7 @@ const startSearchMatches = () => (dispatch, getState) => {
 		.then((results) => {
 			// data not available on firebase or some matches need updating, start calling API
 			if (results.meta === null || (results.meta.onGoing && moment(date).isBefore(moment(), 'day'))) {
-				const competitionIds = Object.keys(competitionNames).toString();
+				const competitionIds = Object.keys(competitions).toString();
 				return getDateRangeToCacheMatches(date)
 					.then((datesUpdate) => refreshMatch({
 						competitionIds,

@@ -5,7 +5,6 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import moment from 'moment';
 import truncate from 'lodash/truncate';
-import '../styles/components/_carousel.scss';
 import Image from './Image';
 import Loader from './Loader';
 import PageHeader from './PageHeader';

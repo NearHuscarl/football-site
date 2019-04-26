@@ -1,6 +1,6 @@
 const resultsDefaultState = {
 	result: [],
-	competitionId: null,
+	competitionId: -1,
 	pending: false,
 };
 

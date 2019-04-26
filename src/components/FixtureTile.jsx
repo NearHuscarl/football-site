@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Carousel } from 'react-responsive-carousel';
-import '../styles/components/_carousel.scss';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
 import take from 'lodash/take';
 import shuffle from 'lodash/shuffle';
 import moment from 'moment';
-import { competitions } from '../settings';
+import { competitionIds } from '../settings';
+import { history } from '../routers/AppRouter';
 import Image from './Image';
 import Loader from './Loader';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
@@ -18,10 +18,10 @@ class FixtureTile extends React.Component {
 		super(props);
 
 		this.competitionIds = [
-			competitions.premierLeague,
-			competitions.primeraDivision,
-			competitions.bundesliga,
-			competitions.serieA,
+			competitionIds.premierLeague,
+			competitionIds.primeraDivision,
+			competitionIds.bundesliga,
+			competitionIds.serieA,
 		];
 	}
 
@@ -111,7 +111,8 @@ class FixtureTile extends React.Component {
 					transitionTime={600}
 					showIndicators={false}
 					showThumbs={false}
-					showStatus={false}>
+					showStatus={false}
+					onClickItem={() => history.push('/fixtures')}>
 					{
 						this.competitionIds
 							.map((competitionId) => this.renderFixtures(competitionId))

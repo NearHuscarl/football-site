@@ -1,110 +1,120 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { AgGridReact } from 'ag-grid-react';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import { AgGridReact, AgGridColumn } from 'ag-grid-react';
+import isArray from 'lodash/isArray';
+import { competitionInfo } from '../settings';
+import Image from './Image';
+import defaultLogo from '../../public/images/Default_Team_Logo.png';
 
 class StandingTable extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			columnDefs: [
-				{
-					headerName: '#',
-					field: 'position',
-					sortable: true,
-					width: 45,
-					cellStyle: { textAlign: 'left' },
-				},
-				{
-					headerName: 'Team',
-					field: 'team.name',
-					sortable: true,
-					width: 225,
-					cellStyle: {
-						textAlign: 'left',
-						fontFamily: 'Quicksand-Medium',
-						fontSize: '1.6rem',
-					},
-				},
-				{
-					headerName: 'P',
-					field: 'playedGames',
-					sortable: true,
-					width: 45,
-				},
-				{
-					headerName: 'W',
-					field: 'won',
-					sortable: true,
-					width: 45,
-				},
-				{
-					headerName: 'D',
-					field: 'draw',
-					sortable: true,
-					width: 45,
-				},
-				{
-					headerName: 'L',
-					field: 'lost',
-					sortable: true,
-					width: 45,
-				},
-				{
-					headerName: 'F',
-					field: 'goalsFor',
-					sortable: true,
-					width: 45,
-				},
-				{
-					headerName: 'A',
-					field: 'goalsAgainst',
-					sortable: true,
-					width: 45,
-				},
-				{
-					headerName: '+/-',
-					field: 'goalDifference',
-					sortable: true,
-					width: 55,
-				},
-				{
-					headerName: 'PTS',
-					field: 'points',
-					sortable: true,
-					width: 45,
-				}
-			],
+		this.rowHeight = '35px';
+		this.baseCellStyle = {
+			lineHeight: this.rowHeight,
 		};
-
-		this.rowStyle = {
-			margin: '5px',
-		}
 	}
 
 	onGridReady = (params) => {
 		this.gridApi = params.api;
-		this.gridApi.setDomLayout('print'); // Remove both horizontal and vertical scrollbars
+	}
+
+	getTeamCellStyle = () => ({
+		...this.baseCellStyle,
+		textAlign: 'left',
+		fontFamily: 'Quicksand-Medium',
+		fontSize: '1.6rem',
+	});
+
+	getRankCellStyle = () => ({
+		...this.baseCellStyle,
+		textAlign: 'center',
+	});
+
+	isRankInRange = (rank, range) => {
+		if (typeof range === 'number') {
+			return rank === range;
+		}
+		if (isArray(range)) {
+			return (range[0] <= rank && rank <= range[1]);
+		}
+		return false;
+	}
+
+	getRankCellClass = (params) => {
+		const rank = params.value;
+		const { competitionId } = this.props;
+
+		const { championLeagueRanks } = competitionInfo[competitionId];
+		if (this.isRankInRange(rank, championLeagueRanks)) {
+			return 'champion-league-rank';
+		}
+		const { eroupeLeagueRanks } = competitionInfo[competitionId];
+		if (this.isRankInRange(rank, eroupeLeagueRanks)) {
+			return 'europe-league-rank';
+		}
+		const { relegationRanks } = competitionInfo[competitionId];
+		if (this.isRankInRange(rank, relegationRanks)) {
+			return 'delegation-rank';
+		}
+		return '';
+	}
+
+	teamNameRenderer = (params) => {
+		const { name, crestUrl } = params.value;
+		const src = (crestUrl || defaultLogo);
+
+		return (
+			<span className='table__team'>
+				<div className='table__team-logo'>
+					<Image alt='team logo' src={src} defaultImage={defaultLogo} />
+				</div>
+				{name}
+			</span>
+		);
 	}
 
 	render() {
-		const { columnDefs } = this.state;
 		const { standing } = this.props;
 
 		return (
 			<div className='ag-theme-balham table-wrapper'>
 				<AgGridReact
-					columnDefs={columnDefs}
+					defaultColDef={{
+						sortable: true,
+						width: 45,
+						cellStyle: this.baseCellStyle,
+					}}
+					frameworkComponents={{
+						teamName: this.teamNameRenderer,
+					}}
 					rowData={standing}
 					onGridReady={this.onGridReady}
-					rowStyle={this.rowStyle} />
+					rowHeight={parseInt(this.rowHeight, 10)}
+					domLayout='print' // Remove both horizontal and vertical scrollbars
+				>
+					<AgGridColumn headerName='#' field='position'
+						cellStyle={this.getRankCellStyle}
+						cellClass={this.getRankCellClass} />
+					<AgGridColumn headerName='Team' field='team' width={250}
+						cellRenderer='teamName'
+						cellStyle={this.getTeamCellStyle()} />
+					<AgGridColumn headerName='P' field='playedGames' />
+					<AgGridColumn headerName='W' field='won' />
+					<AgGridColumn headerName='D' field='draw' />
+					<AgGridColumn headerName='L' field='lost' />
+					<AgGridColumn headerName='F' field='goalsFor' />
+					<AgGridColumn headerName='A' field='goalsAgainst' />
+					<AgGridColumn headerName='+/-' field='goalDifference' width={55} />
+					<AgGridColumn headerName='PTS' field='points' />
+				</AgGridReact>
 			</div>
 		);
 	}
 }
 
 StandingTable.propTypes = {
+	competitionId: PropTypes.number.isRequired,
 	standing: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

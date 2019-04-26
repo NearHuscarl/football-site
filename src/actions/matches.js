@@ -3,7 +3,7 @@ import has from 'lodash/has';
 import FootballData from 'footballdata-api-v2';
 import database from '../firebase/firebase';
 import { checkCacheTimeExpired, updateCacheTime } from './util';
-import { competitions } from '../settings';
+import { competitionIds } from '../settings';
 import getDateRange from '../utilities/getDateRange';
 import Log from '../utilities/log'
 import min from '../utilities/min'
@@ -14,7 +14,7 @@ const matchStartDate = moment();
 const matchEndDate = moment(matchStartDate).add(10, 'days');
 
 const defaultParams = {
-	competitionIds: Object.values(competitions),
+	competitionIds: Object.values(competitionIds),
 	dateFrom: matchStartDate.format('YYYY-MM-DD'),
 	dateTo: matchEndDate.format('YYYY-MM-DD'), // maximum is 10-day difference
 }

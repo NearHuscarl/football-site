@@ -1,8 +1,8 @@
 import moment from 'moment';
-import { competitions } from '../settings';
+import { competitionIds } from '../settings';
 
 const standingFiltersDefaultState = {
-	competition: competitions.premierLeague,
+	competition: competitionIds.premierLeague,
 	scoreType: 'TOTAL', // HOME AWAY
 	// Standing 2018/19 so starting year is 2018
 	year: moment().subtract(1, 'year').format('YYYY'),
