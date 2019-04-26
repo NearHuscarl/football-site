@@ -13,16 +13,16 @@ class FixturePage extends React.Component {
 	}
 
 	render() {
-		const { matches, teams, teamsPending } = this.props;
+		const { matchResults, teams, teamsPending } = this.props;
 
 		return (
 			<div>
 				<FixtureListFilters />
-				{teamsPending ?
+				{(teamsPending || matchResults.pending) ?
 					<Loader height='40vh' />
 					:					
 					<FixtureList
-						matches={matches}
+						matches={matchResults.results}
 						teams={teams} />
 				}
 			</div>
@@ -31,14 +31,17 @@ class FixturePage extends React.Component {
 }
 
 FixturePage.propTypes = {
-	matches: PropTypes.arrayOf(PropTypes.object).isRequired,
+	matchResults: PropTypes.shape({
+		results: PropTypes.arrayOf(PropTypes.object).isRequired,
+		pending: PropTypes.bool,
+	}).isRequired,
 	teams: PropTypes.objectOf(PropTypes.object).isRequired,
 	startSearchMatches: PropTypes.func.isRequired,
 	teamsPending: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-	matches: state.matchResults.results,
+	matchResults: state.matchResults,
 	teams: state.teams.models,
 	teamsPending: state.teams.pending.getTeamsPending,
 });

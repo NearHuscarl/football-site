@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { Portal } from 'react-portal';
 import has from 'lodash/has';
 import store from '../store/configureStore';
 import Image from './Image';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
+import { setTooltipActive, setTooltipInactive } from '../actions/tooltip';
 
 class Tooltip extends React.Component {
 	constructor(props) {
@@ -16,24 +18,42 @@ class Tooltip extends React.Component {
 			left: 0,
 			top: 0,
 		};
+		this.estimatedWidth = 450;
+		this.estimatedHeight = 200;
 	}
 
 	onMouseEnterTooltip = (e) => {
-		const x = e.pageX - 5;
-		const y = e.pageY - 250;
-		this.setState(() => ({
-			isVisible: true,
-			left: x,
-			top: y,
-		}));
+		if (this.props.otherTooltipActive) return;
+		
+		let offsetX = -5;
+		let offsetY = -250;
+		if (e.clientX + this.estimatedWidth > window.innerWidth) {
+			offsetX = -this.estimatedWidth;
+		}
+		if (e.clientY - this.estimatedHeight < 0) {
+			offsetY = 5;
+		}
+		const x = e.pageX + offsetX;
+		const y = e.pageY + offsetY;
+		this.setState(() => {
+			this.props.setTooltipActive();
+			return {
+				isVisible: true,
+				left: x,
+				top: y,
+			};
+		});
 	}
 
 	onMouseLeaveTooltip = () => {
 		setTimeout(() => {
 			if (!this.state.mouseInTooltipText) {
-				this.setState(() => ({ isVisible: false }));
+				this.setState(() => {
+					this.props.setTooltipInactive();
+					return { isVisible: false };
+				});
 			}
-		}, 150);
+		}, 125);
 	}
 
 	onMouseEnterTooltipText = () => {
@@ -41,10 +61,13 @@ class Tooltip extends React.Component {
 	}
 
 	onMouseLeaveTooltipText = () => {
-		this.setState(() => ({
-			mouseInTooltipText: false,
-			isVisible: false,
-		}));
+		this.setState(() => {
+			this.props.setTooltipInactive();
+			return {
+				mouseInTooltipText: false,
+				isVisible: false,
+			};
+		});
 	}
 
 	getTeam = () => {
@@ -133,13 +156,17 @@ class Tooltip extends React.Component {
 	render() {
 		// TODO: split into TeamTooltip
 		const { props } = this;
+		let className = 'tooltip-trigger';
+		if (props.className) {
+			className += ` ${props.className}`;
+		}
 
 		return (
 			<React.Fragment>
 				<strong
 					onMouseEnter={this.onMouseEnterTooltip}
 					onMouseLeave={this.onMouseLeaveTooltip}
-					className={'tooltip-trigger ' + props.className}>
+					className={className}>
 					{props.children}
 				</strong>
 				{
@@ -152,6 +179,21 @@ class Tooltip extends React.Component {
 
 Tooltip.propTypes = {
 	id: PropTypes.number.isRequired,
+	otherTooltipActive: PropTypes.bool.isRequired,
+	setTooltipActive: PropTypes.func.isRequired,
+	setTooltipInactive: PropTypes.func.isRequired,
 };
 
-export default Tooltip;
+const mapStateToProps = (state) => ({
+	otherTooltipActive: state.tooltip.active,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+	setTooltipActive: () => dispatch(setTooltipActive()),
+	setTooltipInactive: () => dispatch(setTooltipInactive()),
+});
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(Tooltip);

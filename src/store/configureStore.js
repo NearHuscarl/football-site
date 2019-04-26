@@ -12,6 +12,7 @@ import matchResultsReducer from '../reducers/matchResults';
 import standingFiltersReducer from '../reducers/standingFilters';
 import standingResultReducer from '../reducers/standingResult';
 import topScorersReducer from '../reducers/topScorers';
+import tooltipReducer from '../reducers/tooltip';
 
 const store = createStore(
 	combineReducers({
@@ -26,6 +27,7 @@ const store = createStore(
 		standingFilters: standingFiltersReducer,
 		standingResult: standingResultReducer,
 		topScorers: topScorersReducer,
+		tooltip: tooltipReducer,
 	}),
 	composeWithDevTools(applyMiddleware(thunk)),
 );

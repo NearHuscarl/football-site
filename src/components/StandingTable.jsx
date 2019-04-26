@@ -4,6 +4,7 @@ import { AgGridReact, AgGridColumn } from 'ag-grid-react';
 import isArray from 'lodash/isArray';
 import { competitionInfo } from '../settings';
 import Image from './Image';
+import Tooltip from './Tooltip';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
 
 class StandingTable extends React.Component {
@@ -61,14 +62,16 @@ class StandingTable extends React.Component {
 	}
 
 	teamNameRenderer = (params) => {
-		const { name, crestUrl } = params.value;
+		const { id, name, crestUrl } = params.value;
 		const src = (crestUrl || defaultLogo);
 
 		return (
 			<span className='table__team'>
-				<div className='table__team-logo'>
-					<Image alt='team logo' src={src} defaultImage={defaultLogo} />
-				</div>
+				<Tooltip id={id}>
+					<div className='table__team-logo'>
+						<Image alt='team logo' src={src} defaultImage={defaultLogo} />
+					</div>
+				</Tooltip>
 				{name}
 			</span>
 		);
@@ -83,7 +86,7 @@ class StandingTable extends React.Component {
 					defaultColDef={{
 						sortable: true,
 						width: 45,
-						cellStyle: this.baseCellStyle,
+						cellStyle: { ...this.baseCellStyle, textAlign: 'center' },
 					}}
 					frameworkComponents={{
 						teamName: this.teamNameRenderer,

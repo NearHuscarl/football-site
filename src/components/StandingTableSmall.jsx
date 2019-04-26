@@ -10,9 +10,7 @@ class StandingTableSmall extends React.Component {
 		this.gridApi = params.api;
 	}
 
-	getRowData = () => {
-		const { standing } = this.props;
-
+	getRowData = (standing) => {
 		if (isEmpty(standing)) {
 			return undefined;
 		}
@@ -57,8 +55,8 @@ class StandingTableSmall extends React.Component {
 	}
 
 	render() {
-		const { className } = this.props;
-		const rowData = this.getRowData();
+		const { className, standing, ...rest } = this.props;
+		const rowData = this.getRowData(standing);
 
 		return (
 			<div className={`ag-theme-balham table-wrapper ${className}`}>
@@ -68,7 +66,8 @@ class StandingTableSmall extends React.Component {
 					}}
 					rowData={rowData}
 					onGridReady={this.onGridReady}
-					domLayout='print'>
+					domLayout='print'
+					{...rest}>
 					    <AgGridColumn headerName='#' field='position' width={36} cellStyle={{ textAlign: 'center' }} cellClass={this.getRankCellClass} />
 					    <AgGridColumn headerName='Team' field='team.name' width={177} cellStyle={{ textAlign: 'left' }} />
 					    <AgGridColumn headerName='P' field='playedGames' width={39} />
