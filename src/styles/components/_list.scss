@@ -1,13 +1,3 @@
-@mixin list-header() {
-	background: lighten($color: $dark-blue, $amount: 12%);
-    color: $off-white;
-    cursor: default;
-    padding: $m-size;
-    text-align: center;
-    font-family: 'Quicksand-Medium';
-    font-size: $font-size-large;
-}
-
 .list-body {
 	margin-bottom: $m-size;
 	@media (min-width: $desktop-breakpoint) {

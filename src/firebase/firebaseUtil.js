@@ -2,6 +2,7 @@ import FootballData from 'footballdata-api-v2';
 import defaultsDeep from 'lodash/defaultsDeep';
 import database from './firebase';
 import hashMultipleWords from '../utilities/hashMultipleWords'
+import trimTeamName from '../utilities/trimTeamName';
 
 const footballDataAPI = new FootballData(process.env.FOOTBALL_DATA_API_KEY);
 
@@ -82,7 +83,7 @@ class FirebaseUtil {
 					const id = Number(teamId);
 					const team = teams[id];
 					const { shortName } = team;
-					const name = team.name.replace(/\s*(FC|CF|AFC)\s*/i, '');
+					const name = trimTeamName(team.name);
 
 					teamNames.shortName.push(shortName);
 					teamNames.name.push(name);

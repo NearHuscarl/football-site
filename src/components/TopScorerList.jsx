@@ -25,12 +25,12 @@ class TopScorerList extends React.Component {
 	)
 
 	render() {
-		const { scorers, competition } = this.props;
+		const { scorers } = this.props;
 
 		return (
 			<div className='top-scorer-list'>
-				<div className='top-scorer__header'>
-					{`Top Scorers - ${competition}`}
+				<div className='header'>
+					Top Scorers
 				</div>
 				{
 					take(scorers, 4).map((scorer) => this.renderScorerItem(scorer))
@@ -42,7 +42,6 @@ class TopScorerList extends React.Component {
 
 TopScorerList.propTypes = {
 	scorers: PropTypes.arrayOf(PropTypes.object).isRequired,
-	competition: PropTypes.string.isRequired,
 };
 
 export default TopScorerList;

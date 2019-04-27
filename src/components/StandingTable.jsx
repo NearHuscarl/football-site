@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react';
 import isArray from 'lodash/isArray';
-import { competitionInfo } from '../settings';
+import { competitions, competitionInfo } from '../settings';
 import Image from './Image';
 import Tooltip from './Tooltip';
+import Loader from './Loader';
+import StandingTableHeader from './StandingTableHeader';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
 
 class StandingTable extends React.Component {
@@ -16,6 +18,20 @@ class StandingTable extends React.Component {
 		};
 	}
 
+	shouldComponentUpdate(nextProps) {
+		if (this.gridApi) {
+			if (nextProps.loading) {
+				this.gridApi.showLoadingOverlay();
+			} else {
+				this.gridApi.hideOverlay();
+			}
+		}
+		if (nextProps.standing !== this.props.standing) {
+			return true;
+		}
+		return false;
+	}
+
 	onGridReady = (params) => {
 		this.gridApi = params.api;
 	}
@@ -24,13 +40,31 @@ class StandingTable extends React.Component {
 		...this.baseCellStyle,
 		textAlign: 'left',
 		fontFamily: 'Quicksand-Medium',
-		fontSize: '1.6rem',
 	});
 
 	getRankCellStyle = () => ({
 		...this.baseCellStyle,
 		textAlign: 'center',
 	});
+
+	getRowClass = (params) => {
+		const rank = params.data.position;
+		const { competitionId } = this.props;
+
+		const { championLeagueRanks } = competitionInfo[competitionId];
+		if (this.isRankInRange(rank, championLeagueRanks)) {
+			return 'champion-league-row';
+		}
+		const { eroupeLeagueRanks } = competitionInfo[competitionId];
+		if (this.isRankInRange(rank, eroupeLeagueRanks)) {
+			return 'europe-league-row';
+		}
+		const { relegationRanks } = competitionInfo[competitionId];
+		if (this.isRankInRange(rank, relegationRanks)) {
+			return 'delegation-row';
+		}
+		return '';
+	}
 
 	isRankInRange = (rank, range) => {
 		if (typeof range === 'number') {
@@ -77,11 +111,21 @@ class StandingTable extends React.Component {
 		);
 	}
 
+	loadingOverlayComponent = () => (<Loader />);
+
+	teamNameComparer = (team1, team2) => {
+		if (team1.name === team2.name) return 0;
+		return team1.name > team2.name ? 1 : -1;
+	}
+
 	render() {
-		const { standing } = this.props;
+		const { standing, competitionId } = this.props;
 
 		return (
 			<div className='ag-theme-balham table-wrapper'>
+				<div className='header'>
+					{competitions[competitionId] }
+				</div>
 				<AgGridReact
 					defaultColDef={{
 						sortable: true,
@@ -89,18 +133,24 @@ class StandingTable extends React.Component {
 						cellStyle: { ...this.baseCellStyle, textAlign: 'center' },
 					}}
 					frameworkComponents={{
-						teamName: this.teamNameRenderer,
+						teamNameRenderer: this.teamNameRenderer,
+						loadingOverlayComponent: this.loadingOverlayComponent,
+						agColumnHeader: StandingTableHeader,
 					}}
+					loadingOverlayComponent='loadingOverlayComponent'
+					animateRows
 					rowData={standing}
-					onGridReady={this.onGridReady}
+					getRowClass={this.getRowClass}
 					rowHeight={parseInt(this.rowHeight, 10)}
-					domLayout='print' // Remove both horizontal and vertical scrollbars
+					onGridReady={this.onGridReady}
+					domLayout='autoHeight'
 				>
 					<AgGridColumn headerName='#' field='position'
 						cellStyle={this.getRankCellStyle}
 						cellClass={this.getRankCellClass} />
 					<AgGridColumn headerName='Team' field='team' width={250}
-						cellRenderer='teamName'
+						comparator={this.teamNameComparer}
+						cellRenderer='teamNameRenderer'
 						cellStyle={this.getTeamCellStyle()} />
 					<AgGridColumn headerName='P' field='playedGames' />
 					<AgGridColumn headerName='W' field='won' />
@@ -117,8 +167,14 @@ class StandingTable extends React.Component {
 }
 
 StandingTable.propTypes = {
+	loading: PropTypes.bool,
 	competitionId: PropTypes.number.isRequired,
 	standing: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
+
+
+StandingTable.defaultProps = {
+	loading: false,
+}
 
 export default StandingTable;

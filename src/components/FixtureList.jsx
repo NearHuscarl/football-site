@@ -29,7 +29,7 @@ class FixtureList extends React.Component {
 
 		return (
 			<div key={competitionName}>
-				<div className='fixturelist-groupname'>
+				<div className='header'>
 					{competitionName}
 				</div>
 				{

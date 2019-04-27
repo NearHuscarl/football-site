@@ -14,18 +14,17 @@ export class StandingPage extends React.Component {
 	}
 
 	render() {
-		const { competitionId, standing, topScorers, searchPending } = this.props;
+		const { topScorers, standingResult } = this.props;
+		const { competitionId, result, pending } = standingResult;
 
 		return (
 			<div>
 				<StandingFilters />
-				{(standing.length > 0 && !searchPending) ?
+				{(result.length > 0) ?
 					<div className='content-container standing-page'>
-						<StandingTable competitionId={competitionId} standing={this.props.standing} />
+						<StandingTable competitionId={competitionId} standing={result} loading={pending} />
 						{topScorers ?
-							<TopScorerList
-								competition={topScorers.competition.name}
-								scorers={topScorers.scorers} />
+							<TopScorerList scorers={topScorers.scorers} />
 							:
 							<Loader height='40vh' />
 						}
@@ -40,13 +39,15 @@ export class StandingPage extends React.Component {
 
 StandingPage.propTypes = {
 	startSearchStanding: PropTypes.func.isRequired,
-	competitionId: PropTypes.number.isRequired,
-	standing: PropTypes.arrayOf(PropTypes.object).isRequired,
+	standingResult: PropTypes.shape({
+		competitionId: PropTypes.number,
+		result: PropTypes.arrayOf(PropTypes.object),
+		pending: PropTypes.bool,
+	}).isRequired,
 	topScorers: PropTypes.shape({
 		competition: PropTypes.object,
 		scorers: PropTypes.arrayOf(PropTypes.object),
 	}),
-	searchPending: PropTypes.bool.isRequired,
 };
 
 StandingPage.defaultProps = {
@@ -55,9 +56,7 @@ StandingPage.defaultProps = {
 
 const mapStateToProps = (state) => ({
 	topScorers: state.topScorers.models[state.standingResult.competitionId],
-	competitionId: state.standingResult.competitionId,
-	standing: state.standingResult.result,
-	searchPending: state.standingResult.pending,
+	standingResult: state.standingResult,
 });
 
 const mapDispatchToProps = (dispatch) => ({

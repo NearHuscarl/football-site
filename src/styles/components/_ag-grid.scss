@@ -2,8 +2,10 @@
     // border: 1px solid $gray !important;
     font-family: 'Quicksand-Regular' !important;
     font-size: $font-size-small !important;
+    $orange: lighten($color: $red, $amount: 12%);
     
     .ag-root {
+        width: 100% !important;
         border: none !important;
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     }
@@ -45,13 +47,25 @@
 
         .europe-league-rank {
             border: none;
-            border-left: 3px solid lighten($color: $red, $amount: 12%);
+            border-left: 3px solid $orange;
         }
         .delegation-rank {
             border: none;
             border-left: 3px solid $red;
         }
     }
+
+    .ag-row.champion-league-row {
+        background-color: transparentize($color: $blue, $amount: 0.93)
+    }
+
+    .ag-row.europe-league-row {
+        background-color: transparentize($color: $orange, $amount: 0.93)
+    }
+    .ag-row.delegation-row {
+        background-color: transparentize($color: $red, $amount: 0.93)
+    }
+
     .ag-row-last {
         // border-bottom: 1px solid $gray !important;
     }

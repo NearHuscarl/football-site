@@ -1,9 +1,6 @@
 .top-scorer-list {
-    margin-left: $m-size;
-}
-
-.top-scorer__header {
-    @include list-header();
+    margin-left: $l-size;
+    flex: 1 0;
 }
 
 .top-scorer-item {
