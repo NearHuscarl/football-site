@@ -1,7 +1,9 @@
 import FootballData from 'footballdata-api-v2';
+import has from 'lodash/has';
 import database from '../firebase/firebase';
 import { checkCacheTimeExpired, updateCacheTime } from './util';
 import Log from '../utilities/log'
+import teamLogos from '../utilities/teamLogos';
 
 const fetchStandingPending = (competitionId) => ({
 	type: 'FETCH_STANDING_PENDING',
@@ -60,7 +62,18 @@ const startFetchStanding = (competitionId) =>
 				}
 				return promise;
 			})
-			.then((standing) => {
+			.then((result) => {
+				const standing = result;
+
+				// Update obsolete logo urls
+				standing.standings.forEach((s, standingIndex) => {
+					s.table.forEach((rank, tableIndex) => {
+						const teamId = rank.team.id;
+						if (has(teamLogos, teamId)) {
+							standing.standings[standingIndex].table[tableIndex].team.crestUrl = teamLogos[teamId];
+						}
+					});
+				});
 				dispatch(fetchStandingCompleted(competitionId, standing));
 			})
 	}

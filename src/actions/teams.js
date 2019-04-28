@@ -1,7 +1,9 @@
 import FootballData from 'footballdata-api-v2';
+import has from 'lodash/has';
 import database from '../firebase/firebase';
 import { checkCacheTimeExpired, updateCacheTime } from './util';
 import Log from '../utilities/log'
+import teamLogos from '../utilities/teamLogos';
 
 export const setTeamsAtCompetition = (teams, competitionId) => ({
 	type: 'SET_TEAMS_AT_COMPETITION',
@@ -72,7 +74,15 @@ export const startFetchTeams = (competitionId) =>
 				}
 				return promise;
 			})
-			.then((teams) => {
+			.then((result) => {
+				const teams = result;
+				
+				// Update obsolete logo urls
+				Object.keys(teams).forEach((teamId) => {
+					if (has(teamLogos, teamId)) {
+						teams[teamId].crestUrl = teamLogos[teamId];
+					}
+				});
 				dispatch(fetchTeamsCompleted(competitionId, teams));
 			})
 	}

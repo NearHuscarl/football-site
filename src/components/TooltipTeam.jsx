@@ -81,11 +81,12 @@ class TooltipTeam extends React.Component {
 	}
 
 	render() {
-		const { children } = this.props;
+		const { children, className } = this.props;
 		const { team } = this.state;
 
 		return (
 			<Tooltip
+				className={className}
 				onMouseEnter={this.onMouseEnter}
 				component={team ? () => this.renderTeamInfo(team) : 'span'}>{
 					children
@@ -98,6 +99,11 @@ class TooltipTeam extends React.Component {
 TooltipTeam.propTypes = {
 	id: PropTypes.number.isRequired,
 	children: PropTypes.node.isRequired,
+	className: PropTypes.string,
+};
+
+TooltipTeam.defaultProps = {
+	className: '',
 };
 
 export default TooltipTeam;

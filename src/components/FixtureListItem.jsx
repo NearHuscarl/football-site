@@ -10,11 +10,9 @@ const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 
 	return (
 		<div className='fixturelist-item' key={fixture.id}>
-			<div className='fixture-item__logo' >
-				<TooltipTeam id={homeTeam.id}>
-					<Image alt='home team' src={homeTeam.crestUrl} defaultImage={defaultLogo} />
-				</TooltipTeam>
-			</div>
+			<TooltipTeam className='fixture-item__logo' id={homeTeam.id}>
+				<Image alt='home team' src={homeTeam.crestUrl} defaultImage={defaultLogo} />
+			</TooltipTeam>
 			<div className='fixture-item__info'>
 				<span className='fixture-item__team-home'>
 					{homeTeam.name}
@@ -31,11 +29,9 @@ const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 					{awayTeam.name}
 				</span>
 			</div>
-			<div className='fixture-item__logo' >
-				<TooltipTeam id={awayTeam.id}>
-					<Image alt='away team' src={awayTeam.crestUrl} defaultImage={defaultLogo} />
-				</TooltipTeam>
-			</div>
+			<TooltipTeam className='fixture-item__logo' id={awayTeam.id}>
+				<Image alt='away team' src={awayTeam.crestUrl} defaultImage={defaultLogo} />
+			</TooltipTeam>
 		</div>
 	);
 }

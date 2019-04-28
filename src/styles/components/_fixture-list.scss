@@ -42,17 +42,18 @@
 
     $logo-size: 66px;
     .fixture-item__logo {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+
         width: $logo-size;
         height: $logo-size;
-        margin: $s-size;
-        margin-top: 0;
-        text-align: center;
+        margin: 0 $s-size;
 
         img {
+            object-fit: contain;
             max-width: $logo-size;
             max-height: $logo-size;
-            width: auto;
-            height: auto;
         }
     }
 }
