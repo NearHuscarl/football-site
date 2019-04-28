@@ -57,6 +57,14 @@ input {
     font-size: $font-size-large;
 }
 
+.code {
+	background: $light-gray;
+	border: 1px solid $light-gray;
+	border-radius: 3px;
+	color: $dark-gray;
+    font-family: 'Quicksand-Medium';
+}
+
 .m-0 { margin: 0 !important; }
 .mr-s { margin-right: $s-size !important; }
 .mr-m { margin-right: $m-size !important; }

@@ -4,13 +4,13 @@ import moment from 'moment';
 import hashMultipleWords from '../utilities/hashMultipleWords';
 import teamNames from '../utilities/teamNames';
 import Image from './Image';
-import Tooltip from './Tooltip';
+import TooltipTeam from './TooltipTeam';
 import defaultArticleImage from '../../public/images/Default_Article_Image.jpg';
 import wrapWordIntoComponent from '../utilities/wrapWordIntoComponent';
 
 const highlightWordInContent = (content, keyword) => {
 	const params = [{
-		component: Tooltip,
+		component: TooltipTeam,
 		props: { className: 'hint-text' },
 		keyword: teamNames,
 	}];

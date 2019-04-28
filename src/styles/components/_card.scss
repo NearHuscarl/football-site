@@ -1,9 +1,13 @@
-@mixin card {
+@mixin card-base {
     background-color: $off-white;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     cursor: pointer;
     transition: 0.3s;
     padding: 2px 16px;
+}
+
+@mixin card {
+    @include card-base();
 
     &.card--selected, &:hover {
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);

@@ -35,6 +35,25 @@ class StandingTableSmall extends React.Component {
 		return false;
 	}
 
+	getRowClass = (params) => {
+		const rank = params.data.position;
+		const competitionId = this.props.standing.competition.id;
+
+		const { championLeagueRanks } = competitionInfo[competitionId];
+		if (this.isRankInRange(rank, championLeagueRanks)) {
+			return 'champion-league-row';
+		}
+		const { eroupeLeagueRanks } = competitionInfo[competitionId];
+		if (this.isRankInRange(rank, eroupeLeagueRanks)) {
+			return 'europe-league-row';
+		}
+		const { relegationRanks } = competitionInfo[competitionId];
+		if (this.isRankInRange(rank, relegationRanks)) {
+			return 'delegation-row';
+		}
+		return '';
+	}
+
 	getRankCellClass = (params) => {
 		const rank = params.value;
 		const competitionId = this.props.standing.competition.id;
@@ -65,6 +84,7 @@ class StandingTableSmall extends React.Component {
 						sortable: true,
 					}}
 					rowData={rowData}
+					getRowClass={this.getRowClass}
 					onGridReady={this.onGridReady}
 					domLayout='print'
 					{...rest}>

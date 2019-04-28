@@ -30,9 +30,10 @@ export const startSearchStanding = () =>
 				.find((standing) => standing.type === filters.scoreType);
 
 			dispatch(searchStandingCompleted(table, competitionId));
-			if (!topScorers[competitionId]) {
-				dispatch(startFetchTopScorers(competitionId));
-			}
+		}
+		
+		if (!topScorers[competitionId]) {
+			dispatch(startFetchTopScorers(competitionId));
 		}
 
 		if (standings[competitionId]) {

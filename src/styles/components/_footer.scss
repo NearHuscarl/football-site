@@ -19,8 +19,12 @@
         justify-content: flex-end;
 
         button {
-            color: $dark-gray;
+            color: $gray;
             font-size: $font-size-medium;
+
+            &:hover {
+                color: $dark-gray;
+            }
         }
     }
 }

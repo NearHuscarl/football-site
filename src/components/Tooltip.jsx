@@ -3,11 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { Portal } from 'react-portal';
-import has from 'lodash/has';
-import store from '../store/configureStore';
-import Image from './Image';
-import defaultLogo from '../../public/images/Default_Team_Logo.png';
 import { setTooltipActive, setTooltipInactive } from '../actions/tooltip';
+import store from '../store/configureStore';
 
 class Tooltip extends React.Component {
 	constructor(props) {
@@ -23,15 +20,16 @@ class Tooltip extends React.Component {
 	}
 
 	onMouseEnterTooltip = (e) => {
-		if (this.props.otherTooltipActive) return;
+		const otherTooltipActive = store.getState().tooltip.active;
+		if (otherTooltipActive) return;
 		
 		let offsetX = -5;
-		let offsetY = -250;
+		let offsetY = -this.estimatedHeight - 25;
 		if (e.clientX + this.estimatedWidth > window.innerWidth) {
 			offsetX = -this.estimatedWidth;
 		}
 		if (e.clientY - this.estimatedHeight < 0) {
-			offsetY = 5;
+			offsetY = 25;
 		}
 		const x = e.pageX + offsetX;
 		const y = e.pageY + offsetY;
@@ -43,6 +41,10 @@ class Tooltip extends React.Component {
 				top: y,
 			};
 		});
+
+		if (this.props.onMouseEnter) {
+			this.props.onMouseEnter();
+		}
 	}
 
 	onMouseLeaveTooltip = () => {
@@ -54,6 +56,10 @@ class Tooltip extends React.Component {
 				});
 			}
 		}, 125);
+
+		if (this.props.onMouseLeave) {
+			this.props.onMouseLeave();
+		}
 	}
 
 	onMouseEnterTooltipText = () => {
@@ -70,24 +76,9 @@ class Tooltip extends React.Component {
 		});
 	}
 
-	getTeam = () => {
-		const teamId = this.props.id;
-		const teams = store.getState().teams.models;
-		const competitionIds = Object.keys(teams);
-
-		for (let i = 0; i < competitionIds.length; i+=1) {
-			const competitionId = competitionIds[i];
-			
-			if (has(teams[competitionId], teamId)) {
-				return teams[competitionId][teamId];
-			}
-		}
-		return null;
-	}
-
 	renderTooltipText = () => {
 		const { isVisible } = this.state;
-		const team = this.getTeam();
+		const TooltipText = this.props.component;
 		const tooltipStyle = {
 			position: 'absolute',
 			left: this.state.left,
@@ -100,65 +91,23 @@ class Tooltip extends React.Component {
 				unmountOnExit
 				classNames='tooltip' in={isVisible} timeout={500}>
 				{
-					team ?
-						<Portal>
-							<div className='tooltip' style={tooltipStyle}
-								onMouseEnter={this.onMouseEnterTooltipText}
-								onMouseLeave={this.onMouseLeaveTooltipText}>
-								<div className='tooltip-team__image'>
-									{
-										<Image alt='team logo' src={team.crestUrl} defaultImage={defaultLogo} />
-									}
-								</div>
-								<div className='tooltip-team__text'>
-									<div>
-										<span className='bold'>Code:</span>{' '}
-										{team.tla}
-									</div>
-									<div>
-										<span className='bold'>Area:</span>{' '}
-										{team.area.name}
-									</div>
-									<div>
-										<span className='bold'>Club color:</span>{' '}
-										{team.clubColors}
-									</div>
-									<div>
-										<span className='bold'>Founded:</span>{' '}
-										{team.founded}
-									</div>
-									<div>
-										<span className='bold'>Venue:</span>{' '}
-										{team.venue}
-									</div>
-									<div>
-										<span className='bold'>Email:</span>{' '}
-										{team.email}
-									</div>
-									<div>
-										<span className='bold'>Address:</span>{' '}
-										{team.address}
-									</div>
-									<div>
-										<span className='bold'>Website:</span>{' '}
-										<a href={team.website} target='_blank' rel='noreferrer noopener'>{team.website}</a>
-									</div>
-								</div>
-							</div>
-						</Portal>
-						:
-						<span/>
+					<Portal>
+						<div className='tooltip' style={tooltipStyle}
+							onMouseEnter={this.onMouseEnterTooltipText}
+							onMouseLeave={this.onMouseLeaveTooltipText}>
+							<TooltipText />
+						</div>
+					</Portal>
 				}
 			</CSSTransition>
 		);
 	}
 
 	render() {
-		// TODO: split into TeamTooltip
-		const { props } = this;
-		let className = 'tooltip-trigger';
-		if (props.className) {
-			className += ` ${props.className}`;
+		const { className, children } = this.props;
+		let cls = 'tooltip-trigger';
+		if (className.length > 0) {
+			cls += ` ${className}`;
 		}
 
 		return (
@@ -166,8 +115,8 @@ class Tooltip extends React.Component {
 				<strong
 					onMouseEnter={this.onMouseEnterTooltip}
 					onMouseLeave={this.onMouseLeaveTooltip}
-					className={className}>
-					{props.children}
+					className={cls}>
+					{children}
 				</strong>
 				{
 					this.renderTooltipText()
@@ -178,15 +127,20 @@ class Tooltip extends React.Component {
 }
 
 Tooltip.propTypes = {
-	id: PropTypes.number.isRequired,
-	otherTooltipActive: PropTypes.bool.isRequired,
+	children: PropTypes.node.isRequired,
+	component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+	className: PropTypes.string,
 	setTooltipActive: PropTypes.func.isRequired,
 	setTooltipInactive: PropTypes.func.isRequired,
+	onMouseEnter: PropTypes.func,
+	onMouseLeave: PropTypes.func,
 };
 
-const mapStateToProps = (state) => ({
-	otherTooltipActive: state.tooltip.active,
-});
+Tooltip.defaultProps = {
+	className: '',
+	onMouseEnter: null,
+	onMouseLeave: null,
+};
 
 const mapDispatchToProps = (dispatch) => ({
 	setTooltipActive: () => dispatch(setTooltipActive()),
@@ -194,6 +148,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(
-	mapStateToProps,
+	undefined,
 	mapDispatchToProps,
 )(Tooltip);

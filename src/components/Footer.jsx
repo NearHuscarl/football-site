@@ -16,7 +16,7 @@ class Footer extends React.Component {
 							type='button'
 							className='button button--link'
 							onClick={this.onClickSauce}>
-							<i className='fa fa-github fa-fw fa-lg' />
+							<i className='fa fa-github fa-fw fa-lg' />{' '}
 							Source code
 						</button>
 					</div>

@@ -12,18 +12,23 @@ hr.list-item-top-border {
 	border-top: 1px solid darken($off-white, 7%);
 }
 
-@mixin list-item {
+@mixin list-item-base {
 	border: 1px solid darken($off-white, 7%);
 	border-top: none;
 	color: $dark-gray;
-	display: flex;
-	flex-direction: column;
 	padding: $s-size;
 	text-decoration: none;
 	transition: background 0.3s ease;
 	&:hover {
 		background: $off-white;
 	}
+}
+
+@mixin list-item {
+	@include list-item-base();
+	display: flex;
+	flex-direction: column;
+	padding: $s-size;
 	@media (min-width: $desktop-breakpoint) {
 		align-items: center;
 		flex-direction: row;

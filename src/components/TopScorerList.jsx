@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import take from 'lodash/take';
+import TooltipTeam from './TooltipTeam';
 
 class TopScorerList extends React.Component {
 	renderScorerItem = (scorer) => (
@@ -13,11 +13,13 @@ class TopScorerList extends React.Component {
 				<span className='bold'>Position:</span>{' '}
 				{scorer.player.position}
 			</div>
-			<div className='top-scorer-item__name'>
+			<div className='top-scorer-item__info'>
 				<span className='bold'>Team:</span>{' '}
-				{scorer.team.name}
+				<TooltipTeam id={scorer.team.id}>
+					{scorer.team.name}
+				</TooltipTeam>
 			</div>
-			<div className='top-scorer-item__name'>
+			<div className='top-scorer-item__info'>
 				<span className='bold'>Goals:</span>{' '}
 				{scorer.numberOfGoals}
 			</div>
@@ -28,13 +30,16 @@ class TopScorerList extends React.Component {
 		const { scorers } = this.props;
 
 		return (
-			<div className='top-scorer-list'>
+			<div className='top-scorer'>
 				<div className='header'>
 					Top Scorers
 				</div>
-				{
-					take(scorers, 4).map((scorer) => this.renderScorerItem(scorer))
-				}
+				<div className='top-scorer-body'>
+					<div className='top-scorer-list'>{
+						scorers.map((scorer) => this.renderScorerItem(scorer))
+					}
+					</div>
+				</div>
 			</div>
 		);
 	}

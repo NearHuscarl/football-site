@@ -28,9 +28,6 @@
     font-size: $font-size-small;
     z-index: 1001;
 
-    // opacity: 0;
-    // transition: opacity 0.3s;
-
     .tooltip-team__image {
         align-self: center;
         padding: $s-size;
@@ -42,5 +39,16 @@
     
     .tooltip-team__text {
         padding: $s-size;
+    }
+
+    .tooltip-team__email {
+        color: inherit;
+        font-family: 'Quicksand-Regular';
+        font-size: inherit;
+        font-weight: inherit;
+        padding: inherit;
+        &:hover {
+            color: $red;
+        }
     }
 }

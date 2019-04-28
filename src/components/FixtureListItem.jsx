@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Image from './Image';
-import Tooltip from './Tooltip';
+import TooltipTeam from './TooltipTeam';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
 
 const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
@@ -11,9 +11,9 @@ const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 	return (
 		<div className='fixturelist-item' key={fixture.id}>
 			<div className='fixture-item__logo' >
-				<Tooltip id={homeTeam.id}>
+				<TooltipTeam id={homeTeam.id}>
 					<Image alt='home team' src={homeTeam.crestUrl} defaultImage={defaultLogo} />
-				</Tooltip>
+				</TooltipTeam>
 			</div>
 			<div className='fixture-item__info'>
 				<span className='fixture-item__team-home'>
@@ -32,9 +32,9 @@ const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 				</span>
 			</div>
 			<div className='fixture-item__logo' >
-				<Tooltip id={awayTeam.id}>
+				<TooltipTeam id={awayTeam.id}>
 					<Image alt='away team' src={awayTeam.crestUrl} defaultImage={defaultLogo} />
-				</Tooltip>
+				</TooltipTeam>
 			</div>
 		</div>
 	);

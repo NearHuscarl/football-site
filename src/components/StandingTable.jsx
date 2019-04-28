@@ -4,7 +4,7 @@ import { AgGridReact, AgGridColumn } from 'ag-grid-react';
 import isArray from 'lodash/isArray';
 import { competitions, competitionInfo } from '../settings';
 import Image from './Image';
-import Tooltip from './Tooltip';
+import TooltipTeam from './TooltipTeam';
 import Loader from './Loader';
 import StandingTableHeader from './StandingTableHeader';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
@@ -101,11 +101,11 @@ class StandingTable extends React.Component {
 
 		return (
 			<span className='table__team'>
-				<Tooltip id={id}>
+				<TooltipTeam id={id}>
 					<div className='table__team-logo'>
 						<Image alt='team logo' src={src} defaultImage={defaultLogo} />
 					</div>
-				</Tooltip>
+				</TooltipTeam>
 				{name}
 			</span>
 		);
@@ -124,7 +124,7 @@ class StandingTable extends React.Component {
 		return (
 			<div className='ag-theme-balham table-wrapper'>
 				<div className='header'>
-					{competitions[competitionId] }
+					{ competitions[competitionId] }
 				</div>
 				<AgGridReact
 					defaultColDef={{

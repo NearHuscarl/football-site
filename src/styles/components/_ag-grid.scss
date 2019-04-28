@@ -56,14 +56,26 @@
     }
 
     .ag-row.champion-league-row {
-        background-color: transparentize($color: $blue, $amount: 0.93)
+        background-color: transparentize($color: $blue, $amount: 0.93);
+
+        &:hover {
+           background-color: transparentize($color: $blue, $amount: 0.83);
+        }
     }
 
     .ag-row.europe-league-row {
-        background-color: transparentize($color: $orange, $amount: 0.93)
+        background-color: transparentize($color: $orange, $amount: 0.93);
+        
+        &:hover {
+            background-color: transparentize($color: $orange, $amount: 0.83);
+        }
     }
     .ag-row.delegation-row {
-        background-color: transparentize($color: $red, $amount: 0.93)
+        background-color: transparentize($color: $red, $amount: 0.93);
+        
+        &:hover {
+            background-color: transparentize($color: $red, $amount: 0.83);
+        }
     }
 
     .ag-row-last {

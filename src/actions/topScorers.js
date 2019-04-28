@@ -59,7 +59,7 @@ const startFetchTopScorers = (competitionId) =>
 			})
 			.then((topScorers) => {
 				dispatch(fetchTopScorersCompleted(competitionId, topScorers));
-			})
+			});
 	}
 
 export default startFetchTopScorers;

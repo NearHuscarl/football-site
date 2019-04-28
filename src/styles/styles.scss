@@ -20,9 +20,6 @@ $root: './../../';
 @import './components/footer';
 @import './components/tile';
 @import './components/list';
-@import './components/news-list';
-@import './components/fixture-list';
-@import './components/top-scorer-list';
 @import './components/loader';
 @import './components/modal';
 @import './components/mainmenu';
@@ -30,6 +27,10 @@ $root: './../../';
 @import './components/scrollbar';
 @import './components/tooltip';
 @import './components/visibility';
+
+@import './components/news-list';
+@import './components/fixture-list';
+@import './components/top-scorer-list';
 
 // Sections/Pages
 @import './sections/page-header';
