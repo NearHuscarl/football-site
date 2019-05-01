@@ -9,11 +9,7 @@ const matchResultsReducer = (state = resultsDefaultState, action) => {
 			return { ...state, pending: true };
 		case 'SEARCH_MATCHES_COMPLETED': {
 			const { results } = action.payload;
-			return {
-				...state,
-				results,
-				pending: false,
-			};
+			return { results, pending: false };
 		}
 		default:
 			return state;

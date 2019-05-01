@@ -5,7 +5,6 @@ import { Carousel } from 'react-responsive-carousel';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
 import take from 'lodash/take';
-import shuffle from 'lodash/shuffle';
 import moment from 'moment';
 import { competitionIds } from '../settings';
 import { history } from '../routers/AppRouter';
@@ -45,11 +44,9 @@ class FixtureTile extends React.Component {
 
 	renderFixture = (fixture) => {
 		const { teams } = this.props;
-		const competitionId = fixture.competition.id;
-		const homeId = fixture.homeTeam.id;
-		const awayId = fixture.awayTeam.id;
-		const homeTeam = teams[competitionId][homeId];
-		const awayTeam = teams[competitionId][awayId];
+		const { competitionId, homeTeamId, awayTeamId } = fixture;
+		const homeTeam = teams[competitionId][homeTeamId];
+		const awayTeam = teams[competitionId][awayTeamId];
 		const date = moment.utc(fixture.utcDate).format('HH:mm ddd DD MMM');
 
 		return (
@@ -80,21 +77,24 @@ class FixtureTile extends React.Component {
 
 	renderFixtures = (competitionId) => {
 		const { fixtures } = this.props;
-		const randomFixtures = take(shuffle(fixtures[competitionId]), 5);
-		let competitionName = '';
-		let matchday = '';
+		const latestFixtures = take(fixtures[competitionId], 5); // matches are already sorted by utcDate (asc)
+		const matchdays = [];
+		const { competitionName } = latestFixtures[0];
 
-		if (randomFixtures.length > 0) {
-			competitionName = randomFixtures[0].competition.name;
-			matchday = randomFixtures[0].season.currentMatchday;
-		}
+		latestFixtures.forEach((fixture) => {
+			const { matchday } = fixture;
+			if (matchdays.indexOf(matchday) === -1) {
+				matchdays.push(matchday);
+			}
+		});
+		matchdays.sort();
 
 		return (
 			<div className='tile-imageitem' key={competitionId}>
 				<div className='fixture-title'>
-					{`${competitionName} | Matchday ${matchday}`}
+					{`${competitionName} | Matchday ${matchdays.join('/')}`}
 				</div>
-				{randomFixtures.map((fixture) => this.renderFixture(fixture))}
+				{latestFixtures.map((fixture) => this.renderFixture(fixture))}
 			</div>
 		);
 	}
@@ -125,24 +125,19 @@ class FixtureTile extends React.Component {
 	}
 }
 
-const getMatchesByCompetition = (matchData) => {
-	if (isEmpty(matchData)) {
-		return {};
-	}
-	const result = {};
+const getMatchesByCompetition = (matches) => {
+	const matchesByCompetition = {};
 
-	Object.keys(matchData).forEach((date) => {
-		matchData[date].forEach((match) => {
-			const competitionId = match.competition.id;
+	matches.forEach((match) => {
+		const { competitionId } = match;
 
-			if (!has(result, competitionId)) {
-				result[competitionId] = [];
-			}
-			result[competitionId].push(match);
-		});
+		if (!has(matchesByCompetition, competitionId)) {
+			matchesByCompetition[competitionId] = [];
+		}
+		matchesByCompetition[competitionId].push(match);
 	});
 
-	return result;
+	return matchesByCompetition;
 }
 
 FixtureTile.propTypes = {

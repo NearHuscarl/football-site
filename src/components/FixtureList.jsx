@@ -2,18 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 import FixtureListItem from './FixtureListItem';
+import { competitionIds as competitionIdSet } from '../settings';
 
 class FixtureList extends React.Component {
 	renderFixtureItem = (match) => {
 		const { teams } = this.props;
-		const competitionId = match.competition.id;
-		const homeId = match.homeTeam.id;
-		const awayId = match.awayTeam.id;
+		const { competitionId, homeTeamId, awayTeamId } = match;
 		if (isEmpty(teams[competitionId])) {
 			return null;
 		}
-		const homeTeam = teams[competitionId][homeId];
-		const awayTeam = teams[competitionId][awayId];
+		const homeTeam = teams[competitionId][homeTeamId];
+		const awayTeam = teams[competitionId][awayTeamId];
 
 		return (
 			<FixtureListItem
@@ -25,7 +24,7 @@ class FixtureList extends React.Component {
 	}
 
 	renderFixtureGroup = (matches) => {
-		const competitionName = matches[0].competition.name;
+		const { competitionName } = matches[0];
 
 		return (
 			<div key={competitionName}>
@@ -42,9 +41,11 @@ class FixtureList extends React.Component {
 	renderFixtures = () => {
 		const { matches } = this.props;
 		const matchesByCompetition = {};
+		const competitionIds = Object.values(competitionIdSet);
 
 		matches.forEach((match) => {
-			const competitionId = match.competition.id;
+			const { competitionId } = match;
+			if (competitionIds.indexOf(competitionId) === -1) return;
 
 			if (isEmpty(matchesByCompetition[competitionId])) {
 				matchesByCompetition[competitionId] = [];

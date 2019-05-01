@@ -26,7 +26,15 @@ const renderApp = () => {
 }
 
 renderApp();
+
 // import FirebaseUtil from './firebase/firebaseUtil';
+// import database from './firebase/firebase';
+
 // FirebaseUtil.getAllTeamNameHashes().then((teamNames) => {
 // 	console.log(teamNames);
 // });
+// FirebaseUtil.logMatchDates('2019-04-01', '2019-06-01');
+// FirebaseUtil.logMatches('2019-04-01', '2019-06-01');
+
+// import startSearchMatches from './actions/matchResults';
+// store.dispatch(startSearchMatches());

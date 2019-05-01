@@ -1,6 +1,6 @@
 const matchesDefaultState = {
 	pending: false,
-	models: {},
+	models: [],
 };
 
 const matchesReducer = (state = matchesDefaultState, action) => {
@@ -11,21 +11,8 @@ const matchesReducer = (state = matchesDefaultState, action) => {
 		case 'FETCH_MATCHES_COMPLETED': {
 			const { matches } = action.payload;
 			return {
-				models: {
-					...state.models,
-					...matches
-				},
+				models: matches,
 				pending: false,
-			};
-		}
-		case 'SET_MATCHES': {
-			const { matches } = action.payload;
-			return {
-				models: {
-					...state.models,
-					...matches,
-				},
-				pending: state.pending,
 			};
 		}
 		default:

@@ -3,6 +3,7 @@ import take from 'lodash/take';
 import { startFetchNews, setHeadlines } from '../actions/news';
 import { startFetchMatch } from '../actions/matches';
 import { startFetchTeams } from '../actions/teams';
+import startFetchCompetitions from '../actions/competitions';
 import startFetchStanding from '../actions/standings';
 import { competitionIds } from '../settings';
 
@@ -14,6 +15,9 @@ const topCompetitions = [
 ];
 
 const setupStore = (store) => {
+	// Not needed now
+	// store.dispatch(startFetchCompetitions());
+
 	store.dispatch(startFetchNews())
 		.then(() => {
 			const { meta } = store.getState().news;
@@ -25,7 +29,7 @@ const setupStore = (store) => {
 	topCompetitions.forEach((competitionId) => {
 		store.dispatch(startFetchStanding(competitionId));
 	});
-
+	
 	Object.values(competitionIds).forEach((competitionId) => {
 		store.dispatch(startFetchTeams(competitionId));
 	});

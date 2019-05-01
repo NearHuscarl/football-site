@@ -96,6 +96,7 @@ const settings = {
 		standings: 1,
 		topScorers: 24,
 		teams: 24 * 15,
+		competitions: 24, // matchday update
 		default: 2, // safe net
 	},
 };

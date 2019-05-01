@@ -19,7 +19,7 @@ const isExpired = (timeLeft, cacheTime) => {
 export const checkCacheTimeExpired = (dataType) => {
 	let meta = {
 		lastUpdated: 0,
-	}
+	};
 
 	return database
 		.ref(`cachedData/${dataType}/meta`)
@@ -65,3 +65,75 @@ export const updateCacheTime = (dataType, otherMetaInfo = {}) => {
 		.ref(`cachedData/${dataType}/meta`)
 		.set(meta);
 }
+
+/**
+ * 
+ * @param {string} orderBy child property to query 
+ * @param {object} query
+ * 
+ * ```js
+ * query: {
+	* 		startAt?: string | number | boolean,
+	* 		endAt?: string | number | boolean,
+	* 		equalTo?: string | number | boolean,
+	* 		limitToFirst?: number,
+	* 		limitToLast?: number,
+	 * }
+	 * ``` 
+	 */
+export const filterRef = (ref, type, query) => {
+	let dbQuery = ref.orderByChild(type);
+
+	if (has(query, 'startAt')) {
+		dbQuery = dbQuery.startAt(query.startAt);
+	}
+	if (has(query, 'endAt')) {
+		dbQuery = dbQuery.endAt(query.endAt);
+	}
+	if (has(query, 'equalTo')) {
+		dbQuery = dbQuery.equalTo(query.equalTo);
+	}
+	if (has(query, 'limitToFirst')) {
+		dbQuery = dbQuery.limitToFirst(query.limitToFirst);
+	}
+	if (has(query, 'limitToLast')) {
+		dbQuery = dbQuery.limitToLast(query.limitToLast);
+	}
+
+	return dbQuery.once('value').then((snapshot) => {
+		const results = [];
+		snapshot.forEach((childSnapshot) => {
+			results.push(childSnapshot.val());
+		});
+		return results;
+	});
+}
+
+export const renewCacheTime = (type) =>
+	database.ref(`cacheTime/${type}`).set(moment().valueOf());
+
+export const checkCacheTime = (type) =>
+	database
+		.ref(`cacheTime/${type}`)
+		.once('value')
+		.then((snapshot) => {
+			const lastUpdated = snapshot.val() || 0;
+			const now = moment();
+			const cacheTimeUntilNow = moment.duration(now.diff(lastUpdated));
+			const typeExist = has(settings.cacheTime, type);
+			if (!typeExist) {
+				Log.info(`'${type}' cache time not exists. Fall back to default cache time (${settings.cacheTime.default})`);
+			}
+
+			const cacheTime = settings.cacheTime[typeExist ? type : 'default'];
+			const timeLeft = (cacheTime - cacheTimeUntilNow.asHours()).toFixed(2);
+			const expired = isExpired(timeLeft, cacheTime);
+
+			if (!expired) {
+				Log.debug(`${timeLeft} hour(s) left before refreshing ${type}`);
+			}
+			return expired;
+		})
+		.catch((err) => {
+			Log.error(`checkCacheTime: ${err}`);
+		})

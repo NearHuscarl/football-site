@@ -2,29 +2,10 @@ import moment from 'moment';
 import has from 'lodash/has';
 import FootballData from 'footballdata-api-v2';
 import database from '../firebase/firebase';
-import { checkCacheTimeExpired, updateCacheTime } from './util';
+import { checkCacheTime, renewCacheTime, filterRef } from './util'
 import { competitionIds } from '../settings';
 import getDateRange from '../utilities/getDateRange';
 import Log from '../utilities/log'
-import min from '../utilities/min'
-import max from '../utilities/max'
-
-const matchStartDate = moment();
-// const matchEndDate = moment();
-const matchEndDate = moment(matchStartDate).add(10, 'days');
-
-const defaultParams = {
-	competitionIds: Object.values(competitionIds),
-	dateFrom: matchStartDate.format('YYYY-MM-DD'),
-	dateTo: matchEndDate.format('YYYY-MM-DD'), // maximum is 10-day difference
-}
-
-export const setMatches = (matches) => ({
-	type: 'SET_MATCHES',
-	payload: {
-		matches,
-	},
-});
 
 export const fetchMatchesPending = () => ({
 	type: 'FETCH_MATCHES_PENDING',
@@ -37,128 +18,103 @@ export const fetchMatchesCompleted = (matches) => ({
 	},
 });
 
-export const refreshMatch = (params = defaultParams) => {
-	const matchData = {};
-	const footballData = new FootballData(process.env.FOOTBALL_DATA_API_KEY);
+const defaultParams = {
+	competitionIds: Object.values(competitionIds),
+	dateFrom: moment().format('YYYY-MM-DD'),
+	dateTo: moment().add(10, 'days').format('YYYY-MM-DD'), // maximum is 10-day difference
+}
 
+const flattenMatchData = (match) => {
+	const result = match;
+	
+	result.competitionId = match.competition.id;
+	result.competitionName = match.competition.name;
+	result.awayTeamId = match.awayTeam.id;
+	result.awayTeamName = match.awayTeam.name;
+	result.homeTeamId = match.homeTeam.id;
+	result.homeTeamName = match.homeTeam.name;
+	
+	delete result.competition;
+	delete result.homeTeam;
+	delete result.awayTeam;
+	
+	return result;
+}
+
+export const refreshMatch = (params = defaultParams) => {
+	const footballData = new FootballData(process.env.FOOTBALL_DATA_API_KEY);
 	Log.warning(`start getting matches: competitionIds=${params.competitionIds} dateFrom=${params.dateFrom} dateTo=${params.dateTo}`);
+
 	return footballData.getMatches({
 		status: 'SCHEDULED,LIVE,FINISHED',
 		...params,
-	})
-		.then((data) => {
-			updateCacheTime('matches');
+	}).then((data) => {
+		const { matches } = data;
+		const matchDate = {};
+		const matchResults = [];
 
-			const promises = []
-			const datesWithMatches = [];
-			// dates which have at least one match which is not in FINISHED status
-			const datesOngoing = {};
-			const { matches } = data;
+		matches.forEach((m) => {
+			const match = flattenMatchData(m);
+			const date = moment.utc(match.utcDate).format('YYYY-MM-DD');
 
-			matches.forEach((match) => {
-				const date = moment.utc(match.utcDate).format('YYYY-MM-DD');
-				let removeOldDate = Promise.resolve(null);
-
-				if (!has(matchData, date)) {
-					matchData[date] = [];
-				}
-				if (match.status !== 'FINISHED' && !datesOngoing[date]) {
-					datesOngoing[date] = true;
-				}
-				if (!datesWithMatches.includes(date)) {
-					removeOldDate = database
-						.ref(`cachedData/matches/data/${date}/matches`)
-						.remove();
-
-					datesWithMatches.push(date);
-				}
-
-				removeOldDate.then(() => {
-					matchData[date].push(match);
-					promises.push(database
-						.ref(`cachedData/matches/data/${date}/matches`)
-						.push(match));
-				});
-			});
-
-			const matchDates = getDateRange(moment(params.dateFrom), moment(params.dateTo));
-			matchDates.forEach((date) => {
-				const noMatches = !datesWithMatches.includes(date);
-				const isOnGoing = !!datesOngoing[date];
-
-				database
-					.ref(`cachedData/matches/data/${date}/meta`)
-					.set({
-						'noMatches': noMatches,
-						'onGoing': isOnGoing,
-					});
-			});
-
-			return Promise.all(promises);
-		})
-		.then(() => matchData)
-		.catch((err) => {
-			Log.error(`refreshMatch: ${err}`);
-			return matchData;
+			if (!has(matchDate, date)) matchDate[date] = {};
+			if (!matchDate[date][match.status]) matchDate[date][match.status] = 0;
+			matchDate[date][match.status] += 1;
+			
+			matchResults.push(match);
+			database.ref('matches')
+				.orderByChild('id')
+				.equalTo(match.id)
+				.once('value').then((snapshot) => {
+					if (snapshot.val()) {
+						snapshot.forEach((childSnapshot) => {
+							childSnapshot.ref.set(match);
+						});
+					} else {
+						database.ref('matches').push(match);
+					}
+				})
 		});
-}
 
-export const getDateRangeToUpdate = (dates) => {
-	const promises = [];
-	const datesToUpdate = [];
+		const dateRange = getDateRange(moment(params.dateFrom), moment(params.dateTo));
+		dateRange.forEach((date) => {
+			const matchDatePayload = { date, ...matchDate[date] };
 
-	dates.forEach((date) => {
-		promises.push(database
-			.ref(`cachedData/matches/data/${date}`)
-			.once('value')
-			.then((snapshot) => {
-				const meta = snapshot.child('meta').val();
-				if (meta === null || meta.onGoing) {
-					datesToUpdate.push(date);
-				}
-			}));
+			database.ref('matchDates')
+				.orderByChild('date')
+				.equalTo(date)
+				.once('value').then((snapshot) => {
+					if (snapshot.val()) {
+						snapshot.forEach((childSnapshot) => {
+							childSnapshot.ref.set(matchDatePayload);
+						});
+					} else {
+						database.ref('matchDates').push(matchDatePayload);
+					}
+				});
+		});
+
+		renewCacheTime('matches');
+		return matchResults;
 	});
-
-	return Promise.all(promises).then(() => ({
-		dateFrom: min(datesToUpdate),
-		dateTo: max(datesToUpdate),
-	}));
 }
 
 export const startFetchMatch = () =>
 	(dispatch) => {
 		dispatch(fetchMatchesPending());
 
-		return checkCacheTimeExpired('matches')
-			.then((result) => {
-				const { expired } = result;
-				const dates = getDateRange(matchStartDate, matchEndDate);
-
+		return checkCacheTime('matches')
+			.then((expired) => {
 				if (expired) {
-					return getDateRangeToUpdate(dates)
-						.then((dateRangeToUpdate) => refreshMatch({
-							competitionIds: defaultParams.competitionIds,
-							...dateRangeToUpdate,
-						}));
+					return refreshMatch();
 				}
-				const matchData = {};
-				const promises = [];
 
-				dates.forEach((date) => {
-					promises.push(database
-						.ref(`cachedData/matches/data/${date}/matches`)
-						.once('value')
-						.then((snapshot) => {
-
-							matchData[date] = [];
-							snapshot.forEach((childSnapshot) => {
-								matchData[date].push(childSnapshot.val());
-							});
-						}));
-				});
-				return Promise.all(promises).then(() => matchData);
+				return filterRef(database.ref('matches'), 'utcDate', {
+					startAt: moment().format('YYYY-MM-DD'),
+					endAt: moment().add(11, 'days').format('YYYY-MM-DD'),
+				})
 			})
 			.then((matches) => {
 				dispatch(fetchMatchesCompleted(matches));
-			})
+			});
 	}
