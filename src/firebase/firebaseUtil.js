@@ -1,12 +1,9 @@
-import FootballData from 'footballdata-api-v2';
 import defaultsDeep from 'lodash/defaultsDeep';
 import has from 'lodash/has';
 import moment from 'moment';
 import database from './firebase';
 import hashMultipleWords from '../utilities/hashMultipleWords'
 import trimTeamName from '../utilities/trimTeamName';
-
-const footballDataAPI = new FootballData(process.env.FOOTBALL_DATA_API_KEY);
 
 class FirebaseUtil {
 

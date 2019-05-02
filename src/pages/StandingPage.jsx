@@ -45,7 +45,6 @@ StandingPage.propTypes = {
 		pending: PropTypes.bool,
 	}).isRequired,
 	topScorers: PropTypes.shape({
-		competition: PropTypes.object,
 		scorers: PropTypes.arrayOf(PropTypes.object),
 	}),
 };

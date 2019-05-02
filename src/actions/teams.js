@@ -1,7 +1,7 @@
 import FootballData from 'footballdata-api-v2';
 import has from 'lodash/has';
 import database from '../firebase/firebase';
-import { checkCacheTimeExpired, updateCacheTime } from './util';
+import { checkCacheTime, renewCacheTime, updateChildRef } from './util';
 import Log from '../utilities/log'
 import teamLogos from '../utilities/teamLogos';
 
@@ -28,55 +28,65 @@ const fetchTeamsCompleted = (competitionId, teams) => ({
 	},
 });
 
+const flattenTeamData = (team, competition) => {
+	const result = team;
+	
+	result.competitionId = competition.id;
+	result.competitionName = competition.name;
+	result.areaId = team.area.id;
+	result.areaName = team.area.name;
+
+	delete result.area;
+	return result;
+}
+
 const refreshTeam = (competitionId) => {
-	const teamData = {};
 	const footballData = new FootballData(process.env.FOOTBALL_DATA_API_KEY);
 
 	Log.warning(`start getting teams: competitionId=${competitionId}`);
 	return footballData.getTeamsFromCompetition({
 		competitionId,
-	})
-		.then((data) => {
-			updateCacheTime(`teams/${competitionId}`);
+	}).then((data) => {
+		const teamResults = {};
+		const { teams } = data;
 
-			const { teams } = data;
-			teams.forEach((team) => {
-				teamData[team.id] = team;
-			});
-
-			return database
-				.ref(`cachedData/teams/${competitionId}/data`)
-				.set(teamData);
-		})
-		.then(() => teamData)
-		.catch((err) => {
-			Log.error(`refreshTeam: ${err}`)
-			return teamData;
+		teams.forEach((t) => {
+			const team = flattenTeamData(t, data.competition)
+			teamResults[team.id] = team;
+			updateChildRef(database.ref('teams'), 'id', { equalTo: team.id }, team);
 		});
+		renewCacheTime('teams', competitionId);
+		return teamResults;
+	}).catch((err) => {
+		Log.error(`refreshTeam: ${err}`)
+	});
 }
 
 export const startFetchTeams = (competitionId) =>
 	(dispatch) => {
 		dispatch(fetchTeamsPending(competitionId));
 
-		return checkCacheTimeExpired(`teams/${competitionId}`)
-			.then((result) => {
-				const { expired } = result;
-				let promise = Promise.resolve(null);
-
+		return checkCacheTime('teams', competitionId)
+			.then((expired) => {
 				if (expired) {
-					promise = refreshTeam(competitionId)
-				} else {
-					promise = database
-						.ref(`cachedData/teams/${competitionId}/data`)
-						.once('value')
-						.then((snapshot) => snapshot.val());
+					return refreshTeam(competitionId)
 				}
-				return promise;
+
+				return database.ref('teams')
+					.orderByChild('competitionId')
+					.equalTo(competitionId)
+					.once('value').then((snapshot) => {
+						const teams = {};
+						snapshot.forEach((childSnapshot) => {
+							const team = childSnapshot.val();
+							teams[team.id] = team;
+						});
+						return teams;
+					});
 			})
 			.then((result) => {
 				const teams = result;
-				
+
 				// Update obsolete logo urls
 				Object.keys(teams).forEach((teamId) => {
 					if (has(teamLogos, teamId)) {

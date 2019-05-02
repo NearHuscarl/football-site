@@ -41,7 +41,7 @@ class TooltipTeam extends React.Component {
 				</div>
 				<div>
 					<span className='bold'>Area:</span>{' '}
-					{team.area.name}
+					{team.areaName}
 				</div>
 				<div>
 					<span className='bold'>Club color:</span>{' '}

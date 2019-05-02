@@ -1,6 +1,6 @@
 import FootballData from 'footballdata-api-v2';
 import database from '../firebase/firebase';
-import { checkCacheTimeExpired, updateCacheTime } from './util';
+import { checkCacheTime, renewCacheTime } from './util';
 import Log from '../utilities/log'
 
 export const fetchTopScorersPending = () => ({
@@ -15,47 +15,57 @@ const fetchTopScorersCompleted = (competitionId, scorers) => ({
 	},
 });
 
+const flattenTopScorersData = (topScorers) => {
+	const result = topScorers;
+	
+	result.competitionId = topScorers.competition.id;
+	result.competitionName = topScorers.competition.name;
+	result.areaId = topScorers.competition.area.id;
+	result.areaName = topScorers.competition.area.name;
+	result.seasonId = topScorers.season.id;
+	result.startDate = topScorers.season.startDate;
+	result.endDate = topScorers.season.endDate;
+	result.currentMatchday = topScorers.season.currentMatchday;
+	
+	delete result.competition;
+	delete result.season;
+	delete result.filters;
+	
+	return result;
+}
+
 const refreshTopScorer = (competitionId) => {
-	let topScorerData = {};
 	const footballData = new FootballData(process.env.FOOTBALL_DATA_API_KEY);
 
 	Log.warning(`start getting top scorers: competitionId=${competitionId}`);
 	return footballData.getScorersFromCompetition({
 		competitionId,
-	})
-		.then((data) => {
-			updateCacheTime(`topScorers/${competitionId}`);
-			topScorerData = data;
+	}).then((data) => {
+		const topScorers = flattenTopScorersData(data);
 
-			return database
-				.ref(`cachedData/topScorers/${competitionId}/data`)
-				.set(topScorerData);
-		})
-		.then(() => topScorerData)
-		.catch((err) => {
-			Log.error(`refreshTopScorer: ${err}`);
-			return topScorerData;
-		});
+		database
+			.ref(`topScorers/${competitionId}`)
+			.set(topScorers)
+			.then(() => renewCacheTime('topScorers', competitionId));
+		return topScorers;
+	}).catch((err) => {
+		Log.error(`refreshTopScorer: ${err}`);
+	});
 }
 
 const startFetchTopScorers = (competitionId) =>
 	(dispatch) => {
 		dispatch(fetchTopScorersPending());
 
-		return checkCacheTimeExpired(`topScorers/${competitionId}`)
-			.then((result) => {
-				const { expired } = result;
-				let promise = Promise.resolve(null);
-
+		return checkCacheTime('topScorers', competitionId)
+			.then((expired) => {
 				if (expired) {
-					promise = refreshTopScorer(competitionId)
-				} else {
-					promise = database
-						.ref(`cachedData/topScorers/${competitionId}/data`)
-						.once('value')
-						.then((snapshot) => snapshot.val());
+					return refreshTopScorer(competitionId)
 				}
-				return promise;
+				return database
+					.ref(`topScorers/${competitionId}`)
+					.once('value')
+					.then((snapshot) => snapshot.val());
 			})
 			.then((topScorers) => {
 				dispatch(fetchTopScorersCompleted(competitionId, topScorers));
