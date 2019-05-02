@@ -2,7 +2,7 @@ import moment from 'moment';
 import has from 'lodash/has';
 import FootballData from 'footballdata-api-v2';
 import database from '../firebase/firebase';
-import { checkCacheTime, renewCacheTime, filterRef } from './util'
+import { checkCacheTime, renewCacheTime, filterRef, updateChildRef } from './util'
 import { competitionIds } from '../settings';
 import getDateRange from '../utilities/getDateRange';
 import Log from '../utilities/log'
@@ -62,36 +62,13 @@ export const refreshMatch = (params = defaultParams) => {
 			matchDate[date][match.status] += 1;
 			
 			matchResults.push(match);
-			database.ref('matches')
-				.orderByChild('id')
-				.equalTo(match.id)
-				.once('value').then((snapshot) => {
-					if (snapshot.val()) {
-						snapshot.forEach((childSnapshot) => {
-							childSnapshot.ref.set(match);
-						});
-					} else {
-						database.ref('matches').push(match);
-					}
-				})
+			updateChildRef(database.ref('matches'), 'id', { equalTo: match.id }, match);
 		});
 
 		const dateRange = getDateRange(moment(params.dateFrom), moment(params.dateTo));
 		dateRange.forEach((date) => {
 			const matchDatePayload = { date, ...matchDate[date] };
-
-			database.ref('matchDates')
-				.orderByChild('date')
-				.equalTo(date)
-				.once('value').then((snapshot) => {
-					if (snapshot.val()) {
-						snapshot.forEach((childSnapshot) => {
-							childSnapshot.ref.set(matchDatePayload);
-						});
-					} else {
-						database.ref('matchDates').push(matchDatePayload);
-					}
-				});
+			updateChildRef(database.ref('matchDates'), 'date', { equalTo: date }, matchDatePayload);
 		});
 
 		renewCacheTime('matches');

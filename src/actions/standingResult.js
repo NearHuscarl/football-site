@@ -25,10 +25,7 @@ export const startSearchStanding = () =>
 
 		const getResults = (standingResults = {}) => {
 			if (isEmpty(standingResults)) return;
-			const { table } = standingResults[competitionId]
-				.standings
-				.find((standing) => standing.type === filters.scoreType);
-
+			const table = standingResults[competitionId][filters.scoreType.toLowerCase()];
 			dispatch(searchStandingCompleted(table, competitionId));
 		}
 		

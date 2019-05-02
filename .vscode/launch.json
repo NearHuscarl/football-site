@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "attach",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost:8080",
+            "url": "http://localhost:8080/*",
             "webRoot": "${workspaceFolder}",
             // https://stackoverflow.com/a/53319718/9449426
             "port": 9222,

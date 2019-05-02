@@ -61,7 +61,8 @@ class StandingTile extends React.Component {
 								return <StandingTableSmall
 									className='tile-imageitem'
 									key={competitionId}
-									standing={standing}
+									competitionId={competitionId}
+									standing={standing.total}
 									rowStyle={{ cursor: 'pointer' }} />
 							})
 						}

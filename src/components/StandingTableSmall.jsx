@@ -1,30 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react';
-import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
 import { competitionInfo } from '../settings';
+import trimTeamName from '../utilities/trimTeamName';
 
 class StandingTableSmall extends React.Component {
-	onGridReady = (params) => {
-		this.gridApi = params.api;
-	}
-
-	getRowData = (standing) => {
-		if (isEmpty(standing)) {
-			return undefined;
-		}
-		const totalStanding = standing.standings
-			.find((s) => s.type === 'TOTAL');
-
-		return totalStanding.table.map((row) => {
-			const newRow = row;
-			newRow.team.name = row.team.name.replace(/\s*(FC|CF)$/, '');
-			return newRow;
-		});
-	}
-
-	
 	isRankInRange = (rank, range) => {
 		if (typeof range === 'number') {
 			return rank === range;
@@ -37,7 +18,7 @@ class StandingTableSmall extends React.Component {
 
 	getRowClass = (params) => {
 		const rank = params.data.position;
-		const competitionId = this.props.standing.competition.id;
+		const { competitionId } = this.props;
 
 		const { championLeagueRanks } = competitionInfo[competitionId];
 		if (this.isRankInRange(rank, championLeagueRanks)) {
@@ -56,7 +37,7 @@ class StandingTableSmall extends React.Component {
 
 	getRankCellClass = (params) => {
 		const rank = params.value;
-		const competitionId = this.props.standing.competition.id;
+		const { competitionId } = this.props;
 
 		const { championLeagueRanks } = competitionInfo[competitionId];
 		if (this.isRankInRange(rank, championLeagueRanks)) {
@@ -73,6 +54,12 @@ class StandingTableSmall extends React.Component {
 		return '';
 	}
 
+	getRowData = (standing) => standing.map((row) => {
+		const newRow = row;
+		newRow.team.name = trimTeamName(row.team.name);
+		return newRow;
+	})
+
 	render() {
 		const { className, standing, ...rest } = this.props;
 		const rowData = this.getRowData(standing);
@@ -85,7 +72,6 @@ class StandingTableSmall extends React.Component {
 					}}
 					rowData={rowData}
 					getRowClass={this.getRowClass}
-					onGridReady={this.onGridReady}
 					domLayout='print'
 					{...rest}>
 					    <AgGridColumn headerName='#' field='position' width={36} cellStyle={{ textAlign: 'center' }} cellClass={this.getRankCellClass} />
@@ -101,10 +87,8 @@ class StandingTableSmall extends React.Component {
 
 StandingTableSmall.propTypes = {
 	className: PropTypes.string,
-	standing: PropTypes.shape({
-		competition: PropTypes.object,
-		standings: PropTypes.arrayOf(PropTypes.object),
-	}).isRequired,
+	standing: PropTypes.arrayOf(PropTypes.object).isRequired,
+	competitionId: PropTypes.number.isRequired,
 };
 
 StandingTableSmall.defaultProps = {

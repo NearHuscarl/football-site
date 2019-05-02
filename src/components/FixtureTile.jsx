@@ -59,7 +59,7 @@ class FixtureTile extends React.Component {
 						<span className='fixture__team-name'>
 							{homeTeam.shortName}
 						</span>
-						<span className='fixture__team-score'>V</span>
+						<span className='fixture__team-score'>-</span>
 						<span className='fixture__team-name'>
 							{awayTeam.shortName}
 						</span>

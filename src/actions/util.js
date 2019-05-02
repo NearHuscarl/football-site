@@ -68,21 +68,18 @@ export const updateCacheTime = (dataType, otherMetaInfo = {}) => {
 
 /**
  * 
- * @param {string} orderBy child property to query 
- * @param {object} query
- * 
- * ```js
- * query: {
-	* 		startAt?: string | number | boolean,
-	* 		endAt?: string | number | boolean,
-	* 		equalTo?: string | number | boolean,
-	* 		limitToFirst?: number,
-	* 		limitToLast?: number,
-	 * }
-	 * ``` 
-	 */
-export const filterRef = (ref, type, query) => {
-	let dbQuery = ref.orderByChild(type);
+ * @param {firebase.database.Reference} ref 
+ * @param {string} field 
+ * @param {{
+ * 	  startAt?: string | number | boolean,
+ *    endAt?: string | number | boolean,
+ *    equalTo?: string | number | boolean,
+ *    limitToFirst?: number,
+ *    limitToLast?: number,
+ *  }} query 
+ */
+export const applyQueries = (ref, field, query) => {
+	let dbQuery = ref.orderByChild(field);
 
 	if (has(query, 'startAt')) {
 		dbQuery = dbQuery.startAt(query.startAt);
@@ -100,21 +97,64 @@ export const filterRef = (ref, type, query) => {
 		dbQuery = dbQuery.limitToLast(query.limitToLast);
 	}
 
-	return dbQuery.once('value').then((snapshot) => {
+	return dbQuery;
+}
+
+/**
+ *
+ * @param {firebase.database.Reference} ref 
+ * @param {string} field
+ * @param {{
+ * 	  startAt?: string | number | boolean,
+ *    endAt?: string | number | boolean,
+ *    equalTo?: string | number | boolean,
+ *    limitToFirst?: number,
+ *    limitToLast?: number,
+ *  }} query
+ *
+ */
+export const filterRef = (ref, field, query) => applyQueries(ref, field, query)
+	.once('value')
+	.then((snapshot) => {
 		const results = [];
 		snapshot.forEach((childSnapshot) => {
 			results.push(childSnapshot.val());
 		});
 		return results;
 	});
-}
 
-export const renewCacheTime = (type) =>
-	database.ref(`cacheTime/${type}`).set(moment().valueOf());
+/**
+ * 
+ * @param {firebase.database.Reference} parentRef 
+ * @param {string} field 
+ * @param {{
+ * 	  startAt?: string | number | boolean,
+ *    endAt?: string | number | boolean,
+ *    equalTo?: string | number | boolean,
+ *    limitToFirst?: number,
+ *    limitToLast?: number,
+ *  }} query
+ * @param {any} updateData 
+ * 
+ */
+export const updateChildRef = (parentRef, field, query, updateData) =>
+	applyQueries(parentRef, field, query)
+		.once('value').then((snapshot) => {
+			if (snapshot.val()) {
+				snapshot.forEach((childSnapshot) => {
+					childSnapshot.ref.set(updateData);
+				});
+			} else {
+				parentRef.push(updateData);
+			}
+		})
 
-export const checkCacheTime = (type) =>
+export const renewCacheTime = (type, identify = '') =>
+	database.ref(`cacheTime/${type}/${identify}`).set(moment().valueOf());
+
+export const checkCacheTime = (type, identify = '') =>
 	database
-		.ref(`cacheTime/${type}`)
+		.ref(`cacheTime/${type}/${identify}`)
 		.once('value')
 		.then((snapshot) => {
 			const lastUpdated = snapshot.val() || 0;

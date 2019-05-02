@@ -40,7 +40,13 @@
         background-color: transparent;
         
         .tile-imageitem {
+            display: flex;
+            flex-direction: column;
             height: 31rem;
+
+            .tile-text {
+                overflow-y: hidden;
+            }
         }
     }
 
@@ -70,20 +76,32 @@
             font-size: $s-size;
             
             .fixture__team {
-                font-family: 'Quicksand-Medium';
+                $team-text-height: 2rem;
+                height: $team-text-height;
         
                 .fixture__team-name {
                     background-color: darken($color: $off-white, $amount: 10%);
                     display: inline-block;
-                    width: 40%;
+                    font-family: 'Quicksand-Medium';
+                    
+                    line-height: $team-text-height;
                     margin: 0 auto;
                     padding: 0 2px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    width: 42%;
                 }
 
                 .fixture__team-score {
+                    color: darken($color: $off-white, $amount: 30%);
                     display: inline-block;
-                    width: 20%;
+                    font-family: 'Quicksand-Bold';
+                    font-size: $font-size-large;
+                    line-height: $team-text-height;
                     margin: 0 auto;
+                    overflow: hidden;
+                    width: 15%;
                 }
             }
 
