@@ -34,6 +34,7 @@ const NewsListItem = (props) => {
 	const t0 = performance.now();
 	const title = highlightWordInContent(props.title, hashedQuery);
 	const description = highlightWordInContent(props.description, hashedQuery);
+	const image = props.urlToImage ? props.urlToImage : defaultArticleImage;
 	const content = props.content && highlightWordInContent(props.content.replace(/\[.*\]$/, ''), hashedQuery);
 	const t1 = performance.now();
 	console.log("Call took " + (t1 - t0) + " milliseconds.");
@@ -43,10 +44,10 @@ const NewsListItem = (props) => {
 	return (
 		<a className='news-list-item' href={props.url} target='_blank' rel='noreferrer noopener'>
 			<div className='news-list-item__image'>
-				<Image alt='article' src={props.urlToImage} defaultImage={defaultArticleImage} />
+				<Image alt='article' src={image} defaultImage={defaultArticleImage} />
 			</div>
 			<div className='news-list-item__text'>
-				<span className='news-list-item__source'>{props.source.name}</span>
+				<span className='news-list-item__source'>{props.sourceName}</span>
 				<span className='news-list-item__date'>{publishedAt}</span>
 				<h2>{title}</h2>
 				<h3>{description}</h3>
@@ -62,16 +63,15 @@ NewsListItem.propTypes = {
 	content: PropTypes.string,
 	publishedAt: PropTypes.string.isRequired,
 	url: PropTypes.string.isRequired,
-	urlToImage: PropTypes.string.isRequired,
-	source: PropTypes.shape({
-		name: PropTypes.string,
-	}).isRequired,
+	urlToImage: PropTypes.string,
+	sourceName: PropTypes.string.isRequired,
 	highlightedWords: PropTypes.string,
 };
 
 NewsListItem.defaultProps = {
 	highlightedWords: '',
 	content: '',
+	urlToImage: '',
 };
 
 export default NewsListItem;

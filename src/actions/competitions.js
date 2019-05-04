@@ -1,5 +1,5 @@
 import database from '../firebase/firebase';
-import { checkCacheTime, renewCacheTime } from './util';
+import { checkCacheTime, updateCacheTime } from './util';
 import Log from '../utilities/log'
 import { competitionIds as competitionIdSet } from '../settings';
 
@@ -35,7 +35,7 @@ const refreshCompetitions = () => {
 		});
 
 		database.ref('competitions').set(results);
-		renewCacheTime('competitions');
+		updateCacheTime('competitions');
 		return results;
 	});
 }

@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import SearchBar from './SearchBar';
 import {
-	setNewsSearchQuery,
-	setNewsSourcesFilter,
-	setNewsStartDate,
-	setNewsEndDate,
-} from '../actions/newsFilters';
-import { startSearchNews } from '../actions/newsResults';
+	setArticleSearchQuery,
+	setArticleSourcesFilter,
+	setArticleStartDate,
+	setArticleEndDate,
+} from '../actions/articleFilters';
+import startSearchArticles from '../actions/articleResults';
 import SelectOptions from './SelectOptions';
 import DateRange from './DateRange';
 import { newsSources } from '../settings';
@@ -17,12 +17,12 @@ import PageHeader from './PageHeader';
 
 class NewsListFilters extends React.Component {
 	onDatesChange = ({ startDate, endDate }) => {
-		this.props.setNewsStartDate(startDate.format());
-		this.props.setNewsEndDate(endDate.format());
+		this.props.setArticleStartDate(startDate.format());
+		this.props.setArticleEndDate(endDate.format());
 	};
 
 	onSourceChange = (options) => {
-		this.props.setNewsSourcesFilter(options.map((option) => option.value));
+		this.props.setArticleSourcesFilter(options.map((option) => option.value));
 	}
 	
 	getdefaultOptions = () => {
@@ -49,8 +49,8 @@ class NewsListFilters extends React.Component {
 		});
 
 	onSubmit = (query) => {
-		this.props.setNewsSearchQuery(query);
-		this.props.startSearchNews();
+		this.props.setArticleSearchQuery(query);
+		this.props.startSearchArticles();
 	}
 
 	render() {
@@ -96,23 +96,23 @@ NewsListFilters.propTypes = {
 		endDate: PropTypes.string,
 		sources: PropTypes.arrayOf(PropTypes.string),
 	}).isRequired,
-	setNewsSearchQuery: PropTypes.func.isRequired,
-	setNewsSourcesFilter: PropTypes.func.isRequired,
-	setNewsStartDate: PropTypes.func.isRequired,
-	setNewsEndDate: PropTypes.func.isRequired,
-	startSearchNews: PropTypes.func.isRequired,
+	setArticleSearchQuery: PropTypes.func.isRequired,
+	setArticleSourcesFilter: PropTypes.func.isRequired,
+	setArticleStartDate: PropTypes.func.isRequired,
+	setArticleEndDate: PropTypes.func.isRequired,
+	startSearchArticles: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-	filters: state.newsFilters,
+	filters: state.articleFilters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	setNewsSearchQuery: (query) => dispatch(setNewsSearchQuery(query)),
-	setNewsSourcesFilter: (sources) => dispatch(setNewsSourcesFilter(sources)),
-	setNewsStartDate: (startDate) => dispatch(setNewsStartDate(startDate)),
-	setNewsEndDate: (endDate) => dispatch(setNewsEndDate(endDate)),
-	startSearchNews: () => dispatch(startSearchNews()),
+	setArticleSearchQuery: (query) => dispatch(setArticleSearchQuery(query)),
+	setArticleSourcesFilter: (sources) => dispatch(setArticleSourcesFilter(sources)),
+	setArticleStartDate: (startDate) => dispatch(setArticleStartDate(startDate)),
+	setArticleEndDate: (endDate) => dispatch(setArticleEndDate(endDate)),
+	startSearchArticles: () => dispatch(startSearchArticles()),
 });
 
 export default connect(

@@ -1,6 +1,6 @@
 import FootballData from 'footballdata-api-v2';
 import database from '../firebase/firebase';
-import { checkCacheTime, renewCacheTime } from './util';
+import { checkCacheTime, updateCacheTime } from './util';
 import Log from '../utilities/log'
 
 export const fetchTopScorersPending = () => ({
@@ -46,7 +46,7 @@ const refreshTopScorer = (competitionId) => {
 		database
 			.ref(`topScorers/${competitionId}`)
 			.set(topScorers)
-			.then(() => renewCacheTime('topScorers', competitionId));
+			.then(() => updateCacheTime('topScorers', competitionId));
 		return topScorers;
 	}).catch((err) => {
 		Log.error(`refreshTopScorer: ${err}`);

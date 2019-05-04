@@ -1,37 +1,38 @@
 import NewsAPI from 'newsapi';
 // import shuffle from 'lodash/shuffle';
-import { reduceFilters } from '../reducers/newsResults';
+import { reduceFilters } from '../reducers/articleResults';
+import { flattenArticleData } from './articles'
 import Log from '../utilities/log';
 
-export const searchNewsPending = () => ({
-	type: 'SEARCH_NEWS_PENDING',
+const searchArticlePending = () => ({
+	type: 'SEARCH_ARTICLES_PENDING',
 });
 
-export const searchNewsCompleted = (filters, results) => ({
-	type: 'SEARCH_NEWS_COMPLETED',
+const searchArticleCompleted = (filters, results) => ({
+	type: 'SEARCH_ARTICLES_COMPLETED',
 	payload: {
 		filters,
 		results,
 	},
 });
 
-export const startSearchNews = () =>
+const startSearchArticles = () =>
 	(dispatch, getState) => {
-		dispatch(searchNewsPending());
+		dispatch(searchArticlePending());
 
-		const filters = getState().newsFilters;
-		const { newsResults } = getState();
-		const cacheResults = newsResults.cache[reduceFilters(filters)];
+		const filters = getState().articleFilters;
+		const { articleResults } = getState();
+		const cacheResults = articleResults.cache[reduceFilters(filters)];
 
 		if (cacheResults) {
-			dispatch(searchNewsCompleted(filters, cacheResults));
+			dispatch(searchArticleCompleted(filters, cacheResults));
 			return Promise.resolve();
 		}
 
 		Log.warning('start searching for news');
 		const newsapi = new NewsAPI(process.env.NEWS_API_KEY);
 		// setTimeout(() => {
-		//     dispatch(searchNewsCompleted(filters, shuffle(mockArticles)));
+		//     dispatch(searchArticleCompleted(filters, shuffle(mockArticles)));
 		//     return Promise.resolve();
 		// }, 2000);
 
@@ -47,15 +48,13 @@ export const startSearchNews = () =>
 			to,
 			sources,
 			pageSize: 100,
+		}).then((response) => {
+			const results = response.articles.map((article) => flattenArticleData(article));
+			dispatch(searchArticleCompleted(filters, results));
 		})
-			.then((response) => {
-				const results = response.articles;
-				dispatch(searchNewsCompleted(filters, results));
-			})
-			.catch((err) => {
-				Log.error(`startfilterNews: ${err}`);
-			});
 	}
+
+export default startSearchArticles;
 
 // eslint-disable-next-line no-unused-vars
 const mockArticles = [

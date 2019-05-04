@@ -47,14 +47,8 @@ class NewsTile extends React.Component {
 	}
 }
 
-const getArticlesThatAreNotHeadlines = (news, headlines) => {
-	const { currentIndex } = news.meta;
-	if (currentIndex === -1) {
-		return []
-	};
-	const articles = news.models[currentIndex];
+const getArticlesThatAreNotHeadlines = (articles, headlines) => {
 	const headlineUrls = headlines.map((headline) => headline.url);
-
 	return articles.filter((article) => !headlineUrls.includes(article.url));
 }
 
@@ -63,7 +57,7 @@ NewsTile.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-	articles: getArticlesThatAreNotHeadlines(state.news, state.news.headlines),
+	articles: getArticlesThatAreNotHeadlines(state.articles.models, state.articles.headlines),
 })
 
 export default connect(

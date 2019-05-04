@@ -1,7 +1,7 @@
 import FootballData from 'footballdata-api-v2';
 import has from 'lodash/has';
 import database from '../firebase/firebase';
-import { checkCacheTime, renewCacheTime, filterRef, updateChildRef } from './util';
+import { checkCacheTime, updateCacheTime, filterRef, updateChildRef } from './util';
 import Log from '../utilities/log'
 import teamLogos from '../utilities/teamLogos';
 import { standingScores } from '../settings';
@@ -53,7 +53,7 @@ const refreshStanding = (competitionId) => {
 		const standings = flattenStandingData(data);
 		
 		updateChildRef(database.ref('standings'), 'competitionId', { equalTo: competitionId }, standings)
-			.then(() => renewCacheTime('standings', competitionId));
+			.then(() => updateCacheTime('standings', competitionId));
 		return standings;
 	}).catch((err) => {
 		Log.error(`refreshStanding: ${err}`);

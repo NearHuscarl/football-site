@@ -1,6 +1,6 @@
 import shuffle from 'lodash/shuffle';
 import take from 'lodash/take';
-import { startFetchNews, setHeadlines } from '../actions/news';
+import { startFetchArticles, setHeadlines } from '../actions/articles';
 import { startFetchMatch } from '../actions/matches';
 import { startFetchTeams } from '../actions/teams';
 import startFetchCompetitions from '../actions/competitions';
@@ -18,11 +18,10 @@ const setupStore = (store) => {
 	// Not needed now
 	// store.dispatch(startFetchCompetitions());
 
-	store.dispatch(startFetchNews())
+	store.dispatch(startFetchArticles())
 		.then(() => {
-			const { meta } = store.getState().news;
-			const articles = store.getState().news.models;
-			const headlines = take(shuffle(articles[meta.currentIndex]), 4);
+			const articles = store.getState().articles.models;
+			const headlines = take(shuffle(articles), 4);
 			store.dispatch(setHeadlines(headlines));
 		});
 

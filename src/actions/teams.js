@@ -1,7 +1,7 @@
 import FootballData from 'footballdata-api-v2';
 import has from 'lodash/has';
 import database from '../firebase/firebase';
-import { checkCacheTime, renewCacheTime, updateChildRef } from './util';
+import { checkCacheTime, updateCacheTime, updateChildRef } from './util';
 import Log from '../utilities/log'
 import teamLogos from '../utilities/teamLogos';
 
@@ -55,7 +55,7 @@ const refreshTeam = (competitionId) => {
 			teamResults[team.id] = team;
 			updateChildRef(database.ref('teams'), 'id', { equalTo: team.id }, team);
 		});
-		renewCacheTime('teams', competitionId);
+		updateCacheTime('teams', competitionId);
 		return teamResults;
 	}).catch((err) => {
 		Log.error(`refreshTeam: ${err}`)

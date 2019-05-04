@@ -1,5 +1,6 @@
 import defaultsDeep from 'lodash/defaultsDeep';
 import has from 'lodash/has';
+import uniq from 'lodash/uniq';
 import moment from 'moment';
 import database from './firebase';
 import hashMultipleWords from '../utilities/hashMultipleWords'
@@ -12,6 +13,38 @@ class FirebaseUtil {
 		.once('value')
 		.then((snapshot) => !!snapshot.val());
 
+	static logArticles = (startDate, endDate) => {
+		let start = startDate;
+		let end = endDate;
+		if (!startDate) {
+			start = moment().format('YYYY-MM-DD');
+		}
+		if (!endDate) {
+			end = start;
+		}
+		database.ref('articles')
+			.orderByChild('publishedAt')
+			.startAt(start)
+			.endAt(moment(end).add(1, 'days').format('YYYY-MM-DD'))
+			.once('value').then((snapshot) => {
+				const articles = {};
+				const urls = [];
+				snapshot.forEach((childSnapshot) => {
+					const article = childSnapshot.val();
+					const date = moment.utc(article.publishedAt).format('YYYY-MM-DD');
+					if (!has(articles, date)) articles[date] = [];
+					articles[date].push(article);
+					urls.push(article.url);
+				});
+				// eslint-disable-next-line no-console
+				console.log(`articles from ${start} to ${end}`)
+				// eslint-disable-next-line no-console
+				console.log(articles);
+				console.log('urls:', urls);
+				console.log('unique urls', uniq(urls));
+			});
+	}
+	
 	static logMatches = (startDate, endDate) => {
 		let start = startDate;
 		let end = endDate;

@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import HeadRoom from 'react-headroom';
 import NavBar from './NavBar';
 import SearchBar from './SearchBar';
-import { setNewsSearchQuery } from '../actions/newsFilters';
-import { startSearchNews } from '../actions/newsResults';
+import { setArticleSearchQuery } from '../actions/articleFilters';
+import startSearchArticles from '../actions/articleResults';
 import { history } from '../routers/AppRouter';
 import logo from '../../public/images/Logo2.png';
 
@@ -29,8 +29,8 @@ const Header = (props) => (
 				<SearchBar
 					placeholder='Search news'
 					onSubmit={(query) => {
-						props.setNewsSearchQuery(query.trim());
-						props.startSearchNews();
+						props.setArticleSearchQuery(query.trim());
+						props.startSearchArticles();
 						history.push('search');
 					}} />
 			</div>
@@ -41,13 +41,13 @@ const Header = (props) => (
 export const MockHeader = Header;
 
 Header.propTypes = {
-	setNewsSearchQuery: PropTypes.func.isRequired,
-	startSearchNews: PropTypes.func.isRequired,
+	setArticleSearchQuery: PropTypes.func.isRequired,
+	startSearchArticles: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-	setNewsSearchQuery: (query) => dispatch(setNewsSearchQuery(query)),
-	startSearchNews: () => dispatch(startSearchNews()),
+	setArticleSearchQuery: (query) => dispatch(setArticleSearchQuery(query)),
+	startSearchArticles: () => dispatch(startSearchArticles()),
 });
 
 export default connect(

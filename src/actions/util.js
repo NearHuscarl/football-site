@@ -16,56 +16,6 @@ const isExpired = (timeLeft, cacheTime) => {
 	}
 }
 
-export const checkCacheTimeExpired = (dataType) => {
-	let meta = {
-		lastUpdated: 0,
-	};
-
-	return database
-		.ref(`cachedData/${dataType}/meta`)
-		.once('value')
-		.then((snapshot) => {
-			if (snapshot.val()) {
-				meta = snapshot.val();
-			}
-
-			const now = moment();
-			const lastUpdated = moment(meta.lastUpdated);
-			const cacheTimeUntilNow = moment.duration(now.diff(lastUpdated));
-			let cacheTimeType = dataType.replace(/[^a-zA-Z]/g, ''); // remove id number if there are any
-			if (!has(settings.cacheTime, cacheTimeType)) {
-				Log.info(`'${cacheTimeType}' cache time not exists. Fall back to default cache time (${settings.cacheTime.default})`);
-				cacheTimeType = 'default';
-			}
-
-			const cacheTime = settings.cacheTime[cacheTimeType];
-			const timeLeft = (cacheTime - cacheTimeUntilNow.asHours()).toFixed(2);
-			const result = {
-				meta,
-				expired: isExpired(timeLeft, cacheTime),
-			};
-
-			if (!result.expired) {
-				Log.debug(`${timeLeft} hour(s) left before refreshing ${dataType}`);
-			}
-			return result;
-		})
-		.catch((err) => {
-			Log.error(`checkCacheTimeExpired: ${err}`);
-		});
-}
-
-export const updateCacheTime = (dataType, otherMetaInfo = {}) => {
-	const meta = {
-		lastUpdated: moment().valueOf(),
-		...otherMetaInfo,
-	};
-
-	return database
-		.ref(`cachedData/${dataType}/meta`)
-		.set(meta);
-}
-
 /**
  * 
  * @param {firebase.database.Reference} ref 
@@ -137,19 +87,21 @@ export const filterRef = (ref, field, query) => applyQueries(ref, field, query)
  * @param {any} updateData 
  * 
  */
-export const updateChildRef = (parentRef, field, query, updateData) =>
+export const updateChildRef = (parentRef, field, query, updateData, priority = undefined) =>
 	applyQueries(parentRef, field, query)
 		.once('value').then((snapshot) => {
 			if (snapshot.val()) {
 				snapshot.forEach((childSnapshot) => {
 					childSnapshot.ref.set(updateData);
 				});
+			} else if (priority) {
+				parentRef.push().setWithPriority(updateData, priority);
 			} else {
 				parentRef.push(updateData);
 			}
-		})
+		});
 
-export const renewCacheTime = (type, identify = '') =>
+export const updateCacheTime = (type, identify = '') =>
 	database.ref(`cacheTime/${type}/${identify}`).set(moment().valueOf());
 
 export const checkCacheTime = (type, identify = '') =>

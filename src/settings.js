@@ -91,7 +91,7 @@ export const newsSources = {
 const settings = {
 	maxArticlesPerPage: 300,
 	cacheTime: {
-		news: 24, // hours
+		articles: 24, // hours
 		matches: 0.75,
 		standings: 1,
 		topScorers: 24,

@@ -2,7 +2,7 @@ import moment from 'moment';
 import has from 'lodash/has';
 import FootballData from 'footballdata-api-v2';
 import database from '../firebase/firebase';
-import { checkCacheTime, renewCacheTime, filterRef, updateChildRef } from './util'
+import { checkCacheTime, updateCacheTime, filterRef, updateChildRef } from './util'
 import { competitionIds } from '../settings';
 import getDateRange from '../utilities/getDateRange';
 import Log from '../utilities/log'
@@ -71,7 +71,7 @@ export const refreshMatch = (params = defaultParams) => {
 			updateChildRef(database.ref('matchDates'), 'date', { equalTo: date }, matchDatePayload);
 		});
 
-		renewCacheTime('matches');
+		updateCacheTime('matches');
 		return matchResults;
 	});
 }
@@ -89,7 +89,7 @@ export const startFetchMatch = () =>
 				return filterRef(database.ref('matches'), 'utcDate', {
 					startAt: moment().format('YYYY-MM-DD'),
 					endAt: moment().add(11, 'days').format('YYYY-MM-DD'),
-				})
+				});
 			})
 			.then((matches) => {
 				dispatch(fetchMatchesCompleted(matches));

@@ -13,11 +13,11 @@ export const reduceFilters = (filters) => {
 	return `${query}|${startDate}|${endDate}|${sources}`;
 }
 
-const newsResultsReducer = (state = resultsDefaultState, action) => {
+const articleResultsReducer = (state = resultsDefaultState, action) => {
 	switch (action.type) {
-		case 'SEARCH_NEWS_PENDING':
+		case 'SEARCH_ARTICLES_PENDING':
 			return { ...state, pending: true };
-		case 'SEARCH_NEWS_COMPLETED': {
+		case 'SEARCH_ARTICLES_COMPLETED': {
 			const { filters, results } = action.payload;
 			const newState = {
 				...state,
@@ -35,4 +35,4 @@ const newsResultsReducer = (state = resultsDefaultState, action) => {
 	}
 }
 
-export default newsResultsReducer;
+export default articleResultsReducer;

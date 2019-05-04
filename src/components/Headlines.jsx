@@ -129,7 +129,7 @@ Headlines.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-	headlines: state.news.headlines,
+	headlines: state.articles.headlines,
 });
 
 export default connect(

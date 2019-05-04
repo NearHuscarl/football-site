@@ -71,9 +71,9 @@ NewsListSearch.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-	articles: state.newsResults.results,
-	query: state.newsFilters.query,
-	searchPending: state.newsResults.pending,
+	articles: state.articleResults.results,
+	query: state.articleFilters.query,
+	searchPending: state.articleResults.pending,
 });
 
 export default connect(
