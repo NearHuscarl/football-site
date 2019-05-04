@@ -85,6 +85,7 @@ export const filterRef = (ref, field, query) => applyQueries(ref, field, query)
  *    limitToLast?: number,
  *  }} query
  * @param {any} updateData 
+ * @param {string | number} priority 
  * 
  */
 export const updateChildRef = (parentRef, field, query, updateData, priority = undefined) =>

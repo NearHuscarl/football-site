@@ -66,17 +66,19 @@ const refreshArticle = () => {
 	}).then((response) => {
 		return filterArticles(response.articles);
 	}).then((articles) => {
+		const articleResults = [];
+
 		articles.forEach((a) => {
 			const article = flattenArticleData(a);
-			database.ref('articles').push().setWithPriority(article, 0 - Date.now());
 
+			articleResults.push(article);
 			updateChildRef(database.ref('articles'), 'url', {
 				equalTo: article.url
-			}, article, 0 -  moment(article.publishedAt).valueOf());
+			}, article, 0 - moment(article.publishedAt).valueOf());
 		});
 
 		updateCacheTime('articles');
-		return articles;
+		return articleResults;
 	});
 }
 
