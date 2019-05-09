@@ -1,20 +1,13 @@
-@mixin card-base {
-    background-color: $off-white;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    cursor: pointer;
-    transition: 0.3s;
-    padding: 2px 16px;
-}
-
-@mixin card {
-    @include card-base();
-
-    &.card--selected, &:hover {
-        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-        transform: scale(1.03);
-    }
-}
-
 .card {
-    @include card();
+	background-color: $off-white;
+    border: 1px solid $off-white;
+    border-radius: 5px;
+	color: $dark-gray;
+	padding: 1px $s-size;
+	padding-bottom: $xs-size;
+    text-decoration: none;
+}
+
+.card__header {
+	margin: $s-size 0;
 }

@@ -3,3 +3,8 @@
 	padding: 0 $m-size;
 	max-width: 110rem;
 }
+
+.container-between {
+	display: flex;
+	justify-content: space-between;
+}

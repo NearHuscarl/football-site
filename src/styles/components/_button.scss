@@ -18,7 +18,7 @@
 	font-size: $font-size-medium;
 }
 
-// We assume the search button is on the right of input area
+// We assume the search button is on the right of the input area
 .button--search {
 	border-radius: 0 3px 3px 0;
 }
@@ -30,9 +30,35 @@
 @include generate-button-color('dark', $dark-gray);
 @include generate-button-color('secondary', #888888);
 
-.button--link {
+@mixin button--link() {
+	color: inherit;
+	font-family: 'Quicksand-Regular';
+	font-size: inherit;
+	font-weight: inherit;
+	padding: inherit;
+
 	background: none;
 	&:hover {
 		background: none;
+	}
+}
+
+.button--link {
+	@include button--link();
+}
+
+.button--link-red {
+	@include button--link();
+
+	&:hover {
+		color: $red;
+	}
+}
+
+.button--link-cyan {
+	@include button--link();
+
+	&:hover {
+		color: $cyan;
 	}
 }

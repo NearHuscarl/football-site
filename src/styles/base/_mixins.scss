@@ -30,3 +30,29 @@
 		}
 	}
 }
+
+/**
+* Create image frame that vertically and horizontally align image within it
+* Oversize image will be shrinked and keep width/height ratio
+* @param {String} - $width - required
+* @param {String} - $height - required
+*/
+@mixin image-frame($width, $height) {
+    width: $width;
+    height: $height;
+    margin: 0;
+    position: relative;
+
+    img {  
+        max-height: 100%;  
+        max-width: 100%; 
+        width: auto;
+        height: auto;
+        position: absolute;  
+        top: 0;  
+        bottom: 0;  
+        left: 0;  
+        right: 0;  
+        margin: auto;
+    }
+}

@@ -1,0 +1,10 @@
+.kit-container {
+    padding: 0 20px;
+
+    .kit-item {
+        display: inline-block;
+        text-align: center;
+        width: 115px;
+        margin-left: $s-size;
+    }
+}

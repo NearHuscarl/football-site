@@ -4,26 +4,26 @@ import TooltipTeam from './TooltipTeam';
 
 class TopScorerList extends React.Component {
 	renderScorerItem = (scorer) => (
-		<div key={scorer.player.name} className='top-scorer-item'>
-			<div className='top-scorer-item__name'>
+		<ul key={scorer.player.name} className='list-item-base'>
+			<li>
 				<span className='bold'>Name:</span>{' '}
 				{scorer.player.name}
-			</div>
-			<div className='top-scorer-item__info'>
+			</li>
+			<li>
 				<span className='bold'>Position:</span>{' '}
 				{scorer.player.position}
-			</div>
-			<div className='top-scorer-item__info'>
+			</li>
+			<li>
 				<span className='bold'>Team:</span>{' '}
 				<TooltipTeam id={scorer.team.id}>
 					{scorer.team.name}
 				</TooltipTeam>
-			</div>
-			<div className='top-scorer-item__info'>
+			</li>
+			<li>
 				<span className='bold'>Goals:</span>{' '}
 				{scorer.numberOfGoals}
-			</div>
-		</div>
+			</li>
+		</ul>
 	)
 
 	render() {

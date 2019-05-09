@@ -31,14 +31,10 @@ const NewsListItem = (props) => {
 	// TODO: remove
 	// const hashedQuery = hashMultipleWords('has lost');
 
-	const t0 = performance.now();
 	const title = highlightWordInContent(props.title, hashedQuery);
 	const description = highlightWordInContent(props.description, hashedQuery);
 	const image = props.urlToImage ? props.urlToImage : defaultArticleImage;
 	const content = props.content && highlightWordInContent(props.content.replace(/\[.*\]$/, ''), hashedQuery);
-	const t1 = performance.now();
-	console.log("Call took " + (t1 - t0) + " milliseconds.");
-
 	const publishedAt = moment(props.publishedAt).format('HH:mm DD/MM/YYYY');
 
 	return (

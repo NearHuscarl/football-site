@@ -29,16 +29,3 @@
         background-color: lighten($color: $light-gray, $amount: 75%);
     }
 }
-
-.top-scorer-item {
-    @include list-item-base();
-    padding: $s-size;
-
-    .top-scorer-item__name {
-
-    }
-
-    .top-scorer-item__info {
-
-    }
-}

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import NewsListItem from './NewsListItem';
 
 class NewsList extends React.Component {
-	// Render NewsListItem is expensive so we need to limit rendering time to minimal
 	shouldComponentUpdate(nextProps) {
 		if (this.props.articles.length !== nextProps.articles.length) {
 			return true;
@@ -26,31 +25,24 @@ class NewsList extends React.Component {
 		return components;
 	}
 
-	renderSeeMoreButton = () => {
+	render() {
 		const { renderSeeMoreButton, onClickSeeMoreButton } = this.props
 
-		return (renderSeeMoreButton ?
-			<button className='button button--red'
-				type='button'
-				onClick={onClickSeeMoreButton}>
-				See more
-			</button>
-			:
-			<p>End of list</p>
-		);
-	}
-
-	render() {
 		return (
 			<div className='content-container'>
-				<hr className='list-item-top-border' />
-				{
+				<hr className='list-item-top-border' />{
 					this.renderArticles()
 				}
-				<div className='see-more'>
-					{
-						this.renderSeeMoreButton()
-					}
+				<div className='see-more'>{
+					renderSeeMoreButton ?
+						<button className='button button--red'
+							type='button'
+							onClick={onClickSeeMoreButton}>
+							See more
+						</button>
+						:
+						<p>End of list</p>
+				}
 				</div>
 			</div>
 		);

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
+import take from 'lodash/take';
 import NewsList from './NewsList';
 import Loader from './Loader';
 import settings from '../settings';
@@ -22,19 +23,6 @@ class NewsListSearch extends React.Component {
 		}));
 	}
 
-	getRenderedArticles = (articles) => {
-		const { articleCount } = this.state;
-		const renderedArticles = [];
-
-		articles.forEach((article, index) => {
-			if (index < articleCount) {
-				renderedArticles.push(article);
-			}
-		});
-
-		return renderedArticles;
-	}
-
 	renderArticles = () => {
 		const { articleCount } = this.state;
 		const { articles, query } = this.props;
@@ -43,7 +31,7 @@ class NewsListSearch extends React.Component {
 			articles.length > 0 ?
 				<NewsList
 					highlightedWords={query}
-					articles={this.getRenderedArticles(articles)}
+					articles={take(articles, articleCount)}
 					renderSeeMoreButton={articleCount < articles.length && articleCount < settings.maxArticlesPerPage}
 					onClickSeeMoreButton={this.requestMoreResults} />
 				:

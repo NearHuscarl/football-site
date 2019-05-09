@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import has from 'lodash/has';
 import StandingFilters from '../components/StandingFilters';
 import StandingTable from '../components/StandingTable';
 import TopScorerList from '../components/TopScorerList';
 import Loader from '../components/Loader';
 import { startSearchStanding } from '../actions/standingResult';
+import obsoleteFootballDataTeamLogo from '../utilities/teamLogos';
 
 export class StandingPage extends React.Component {
 	constructor(props) {
@@ -14,15 +16,22 @@ export class StandingPage extends React.Component {
 	}
 
 	render() {
-		const { topScorers, standingResult } = this.props;
+		const { topScorers, standingResult, teams, history } = this.props;
 		const { competitionId, result, pending } = standingResult;
+		const table = result.map((rank) => {
+			const { team } = rank;
+			if (has(obsoleteFootballDataTeamLogo, team.id)) {
+				team.crestUrl = teams[competitionId][team.id].crestUrl;
+			}
+			return rank;
+		});
 
 		return (
 			<div>
 				<StandingFilters />
 				{(result.length > 0) ?
-					<div className='content-container standing-page'>
-						<StandingTable competitionId={competitionId} standing={result} loading={pending} />
+					<div className='content-container container-between'>
+						<StandingTable history={history} competitionId={competitionId} standing={table} loading={pending} />
 						{topScorers ?
 							<TopScorerList scorers={topScorers.scorers} />
 							:
@@ -47,6 +56,13 @@ StandingPage.propTypes = {
 	topScorers: PropTypes.shape({
 		scorers: PropTypes.arrayOf(PropTypes.object),
 	}),
+	teams: PropTypes.shape({
+		name: PropTypes.string,
+		crestUrl: PropTypes.string,
+	}).isRequired,
+	history: PropTypes.shape({
+		push: PropTypes.func,
+	}).isRequired,
 };
 
 StandingPage.defaultProps = {
@@ -56,6 +72,7 @@ StandingPage.defaultProps = {
 const mapStateToProps = (state) => ({
 	topScorers: state.topScorers.models[state.standingResult.competitionId],
 	standingResult: state.standingResult,
+	teams: state.teams.models,
 });
 
 const mapDispatchToProps = (dispatch) => ({

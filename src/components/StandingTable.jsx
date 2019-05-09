@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react';
+// import { withRouter } from 'react-router-dom'
 import isArray from 'lodash/isArray';
 import { competitions, competitionInfo } from '../settings';
+import { TooltipTeamHistory } from './TooltipTeam';
 import Image from './Image';
-import TooltipTeam from './TooltipTeam';
 import Loader from './Loader';
 import StandingTableHeader from './StandingTableHeader';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
@@ -101,11 +102,11 @@ class StandingTable extends React.Component {
 
 		return (
 			<span className='table__team'>
-				<TooltipTeam id={id}>
+				<TooltipTeamHistory id={id} history={this.props.history}>
 					<div className='table__team-logo'>
 						<Image alt='team logo' src={src} defaultImage={defaultLogo} />
 					</div>
-				</TooltipTeam>
+				</TooltipTeamHistory>
 				{name}
 			</span>
 		);
@@ -170,6 +171,9 @@ StandingTable.propTypes = {
 	loading: PropTypes.bool,
 	competitionId: PropTypes.number.isRequired,
 	standing: PropTypes.arrayOf(PropTypes.object).isRequired,
+	history: PropTypes.shape({
+		push: PropTypes.func,
+	}).isRequired,
 };
 
 

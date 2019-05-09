@@ -7,11 +7,11 @@ import { competitionIds } from '../settings';
 import getDateRange from '../utilities/getDateRange';
 import Log from '../utilities/log'
 
-export const fetchMatchesPending = () => ({
+const fetchMatchesPending = () => ({
 	type: 'FETCH_MATCHES_PENDING',
 });
 
-export const fetchMatchesCompleted = (matches) => ({
+const fetchMatchesCompleted = (matches) => ({
 	type: 'FETCH_MATCHES_COMPLETED',
 	payload: {
 		matches,
@@ -76,7 +76,7 @@ export const refreshMatch = (params = defaultParams) => {
 	});
 }
 
-export const startFetchMatch = () =>
+const startFetchMatches = () =>
 	(dispatch) => {
 		dispatch(fetchMatchesPending());
 
@@ -95,3 +95,5 @@ export const startFetchMatch = () =>
 				dispatch(fetchMatchesCompleted(matches));
 			});
 	}
+
+export default startFetchMatches;

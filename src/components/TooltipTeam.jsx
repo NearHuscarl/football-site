@@ -4,6 +4,7 @@ import has from 'lodash/has';
 import store from '../store/configureStore';
 import Tooltip from './Tooltip'
 import Image from './Image';
+import FakeLink from './FakeLink';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
 
 const getTeam = (teamId) => {
@@ -59,16 +60,16 @@ class TooltipTeam extends React.Component {
 					<span className='bold'>Email:</span>{' '}
 					<button
 						type='button'
-						className='button button--link tooltip-team__email'
-						onClick={() => window.open(`mailto:${team.email}`)}>{team.email}</button>
+						className='button button--link-red'
+						onClick={() => window.open(`mailto:${team.contact.email}`)}>{team.contact.email}</button>
 				</div>
 				<div>
 					<span className='bold'>Address:</span>{' '}
-					{team.address}
+					{team.contact.address}
 				</div>
 				<div>
 					<span className='bold'>Website:</span>{' '}
-					<a href={team.website} target='_blank' rel='noreferrer noopener'>{team.website}</a>
+					<a href={team.contact.website} target='_blank' rel='noreferrer noopener'>{team.contact.website}</a>
 				</div>
 			</div>
 		</React.Fragment>
@@ -88,9 +89,10 @@ class TooltipTeam extends React.Component {
 			<Tooltip
 				className={className}
 				onMouseEnter={this.onMouseEnter}
-				component={team ? () => this.renderTeamInfo(team) : 'span'}>{
-					children
-				}
+				component={team ? () => this.renderTeamInfo(team) : 'span'}>
+				<FakeLink to={`team/${team.id}`}>
+					{children}
+				</FakeLink>
 			</Tooltip>
 		);
 	}
@@ -107,3 +109,46 @@ TooltipTeam.defaultProps = {
 };
 
 export default TooltipTeam;
+
+// This component need a history object to navigate to other routes
+// because it will be placed outside of the Route component which
+// make routing via Link component not working
+// Usecase: CustomRenderer component in ag-grid will be appended to the dom
+// (outside of the Route component)
+export class TooltipTeamHistory extends TooltipTeam {
+	onClick = () => {
+		const { team } = this.state;
+		const { history } = this.props;
+
+		history.push(`team/${team.id}`)
+	}
+
+	render() {
+		const { children, className } = this.props;
+		const { team } = this.state;
+
+		return (
+			<Tooltip
+				className={className}
+				onMouseEnter={this.onMouseEnter}
+				component={team ? () => this.renderTeamInfo(team) : 'span'}>
+				<span
+					tabIndex={-1}
+					role='button'
+					onKeyPress={this.onClick}
+					onClick={this.onClick}>
+					{children}
+				</span>
+			</Tooltip>
+		);
+	}
+}
+
+TooltipTeamHistory.propTypes = {
+	id: PropTypes.number.isRequired,
+	children: PropTypes.node.isRequired,
+	className: PropTypes.string,
+	history: PropTypes.shape({
+		push: PropTypes.func,
+	}).isRequired,
+};

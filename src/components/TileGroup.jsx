@@ -6,7 +6,7 @@ import Tile from './Tile';
 
 const TileGroup = () => (
 	<div className='content-container'>
-		<div className='tile-group'>
+		<div className='container-between'>
 			<Tile name='News'>
 				<NewsTile />
 			</Tile>

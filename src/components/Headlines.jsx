@@ -55,7 +55,7 @@ class Headlines extends React.Component {
 		const components = [];
 
 		headlines.forEach((headline, index) => {
-			const className = (index === headlineIndex) ? 'headline__card card card--selected' : 'headline__card card'
+			const className = (index === headlineIndex) ? 'headline__card shadow shadow--selected' : 'headline__card shadow'
 			components.push((
 				<div
 					key={headline.url}

@@ -1,0 +1,62 @@
+.fa-star, .fa-star-half-o, .fa-star-o {
+    color: $yellow;
+}
+
+.rating {
+    display: inline-block;
+    border-radius: 3px;
+    color: $off-white;
+    font-family: 'Quicksand-Medium';
+    height: 2.5rem;
+    line-height: 2.5rem;
+    text-align: center;
+    width: 2.5rem;
+}
+
+.rating--0 {
+    background-color: mix($dark-blue, $red, 75%);
+}
+
+.rating--45 {
+    background-color: mix($dark-blue, $red, 50%);
+}
+
+.rating--50 {
+    background-color: mix($dark-blue, $red, 25%);
+}
+
+.rating--55 {
+    background-color: $red;
+}
+
+.rating--60 {
+    background-color: mix($red, $yellow, 75%);
+}
+
+.rating--65 {
+    background-color: mix($red, $yellow, 50%);
+}
+
+.rating--70 {
+    background-color: mix($red, $yellow, 25%);
+}
+
+.rating--75 {
+    background-color: $yellow;
+}
+
+.rating--80 {
+    background-color: mix($yellow, $cyan, 75%);
+}
+
+.rating--85 {
+    background-color: mix($yellow, $cyan, 50%);
+}
+
+.rating--90 {
+    background-color: mix($yellow, $cyan, 25%);
+}
+
+.rating--95 {
+    background-color: $cyan;
+}

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const fakeLinkStyle = {
 	textDecoration: 'none',
-	color: 'initial',
+	color: 'inherit',
 };
 
 const FakeLink = (props) => (
@@ -13,7 +13,7 @@ const FakeLink = (props) => (
 
 
 FakeLink.propTypes = {
-	children: PropTypes.element.isRequired,
+	children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
 };
 
 export default FakeLink;

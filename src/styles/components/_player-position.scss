@@ -1,0 +1,23 @@
+.pos {
+    font-family: 'Quicksand-Medium';
+}
+
+.pos--misc {
+    color: $dark-blue;
+}
+
+.pos--goalkeeper {
+    color: mix($red, $yellow);
+}
+
+.pos--defence {
+    color: $blue;
+}
+
+.pos--midfield {
+    color: mix($yellow, $cyan);
+}
+
+.pos--attack {
+    color: $red;
+}

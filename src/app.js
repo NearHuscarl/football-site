@@ -31,38 +31,12 @@ renderApp();
 // import moment from 'moment';
 // import database from './firebase/firebase';
 
-// const flattenArticleData = (article) => {
-// 	const result = article;
-	
-// 	result.sourceId = article.source.id;
-// 	result.sourceName = article.source.name;
-	
-// 	delete result.source;
-// 	return result;
-// }
-
-// database.ref('articles').remove().then(() => {
-// 	const ids = [21,22,23,24];
-
-// 	ids.reduce((prev, id) => {
-// 		return prev.then(() => {
-// 			return database.ref('cachedData/news/data/' + id + '/articles').once('value').then((snapshot) => {
-// 				snapshot.forEach((child) => {
-// 					const article = flattenArticleData(child.val());
-// 					database.ref('articles').push().setWithPriority(article, 0 - moment(article.publishedAt).valueOf());
-// 				});
-// 			});
-// 		});
-// 	}, Promise.resolve());
-// });
-
+// store.dispatch(startFetchPlayerFromTeam(64));
 
 // FirebaseUtil.getAllTeamNameHashes().then((teamNames) => {
 // 	console.log(teamNames);
 // });
 // FirebaseUtil.logArticles('2019-05-01', '2019-06-01');
-// FirebaseUtil.logMatchDates('2019-04-01', '2019-06-01');
-// FirebaseUtil.logMatches('2019-04-01', '2019-06-01');
 
 // import startSearchMatches from './actions/matchResults';
 // store.dispatch(startSearchMatches());

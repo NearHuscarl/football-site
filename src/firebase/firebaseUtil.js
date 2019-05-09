@@ -104,10 +104,8 @@ class FirebaseUtil {
 	}
 	
 	static getAllTeamNames = () => database
-		.ref(`cachedData/teams`)
-		.once('value')
-		.then((snapshot) => {
-			const teamData = snapshot.val();
+		.ref(`teams`)
+		.once('value').then((snapshot) => {
 			const teamNames = {
 				shortName: [],
 				name: [],
@@ -117,21 +115,16 @@ class FirebaseUtil {
 				},
 			};
 
-			Object.keys(teamData).forEach((competitionId) => {
-				const teams = teamData[competitionId].data;
+			snapshot.forEach((childSnapshot) => {
+				const team = childSnapshot.val();
+				const { shortName } = team;
+				const name = trimTeamName(team.name);
 
-				Object.keys(teams).forEach((teamId) => {
-					const id = Number(teamId);
-					const team = teams[id];
-					const { shortName } = team;
-					const name = trimTeamName(team.name);
+				teamNames.shortName.push(shortName);
+				teamNames.name.push(name);
 
-					teamNames.shortName.push(shortName);
-					teamNames.name.push(name);
-
-					teamNames.dict.shortName[shortName] = id;
-					teamNames.dict.name[name] = id;
-				});
+				teamNames.dict.shortName[shortName] = team.id;
+				teamNames.dict.name[name] = team.id;
 			});
 
 			// copy(JSON.stringify(teamNames))

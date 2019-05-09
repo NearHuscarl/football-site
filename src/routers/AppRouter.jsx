@@ -25,7 +25,11 @@ const FixturesPage = lazy(() => import(/*
 const StandingPage = lazy(() => import(/*
 	webpackChunkName: "standing",
 	webpackPrefetch: true
-  */ '../pages/StandingPage'));
+	*/ '../pages/StandingPage'));
+const TeamPage = lazy(() => import(/*
+	webpackChunkName: "team",
+	webpackPrefetch: true
+	*/ '../pages/TeamPage'));
 const PlayersPage = lazy(() => import(/*
 	webpackChunkName: "player",
 	webpackPrefetch: true
@@ -43,6 +47,7 @@ const AppRouter = () => (
 				<Route path="/search" component={SearchPage} exact />
 				<Route path="/fixtures" component={FixturesPage} exact />
 				<Route path="/standings" component={StandingPage} />
+				<Route path="/team/:id" component={TeamPage} />
 				<Route path="/players" component={PlayersPage} exact />
 				<Route component={NotFoundPage} />
 			</Switch>

@@ -5,6 +5,7 @@ import articleReducer from '../reducers/articles';
 import standingsReducer from '../reducers/standings';
 import matchesReducer from '../reducers/matches';
 import teamsReducer from '../reducers/teams';
+import teamReducer from '../reducers/team';
 import articleFiltersReducer from '../reducers/articleFilters';
 import articleResultsReducer from '../reducers/articleResults';
 import matchFiltersReducer from '../reducers/matchFilters';
@@ -21,6 +22,7 @@ const store = createStore(
 		standings: standingsReducer,
 		matches: matchesReducer,
 		teams: teamsReducer,
+		team: teamReducer,
 		articleFilters: articleFiltersReducer,
 		articleResults: articleResultsReducer,
 		matchFilters: matchFiltersReducer,

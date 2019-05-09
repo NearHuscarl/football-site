@@ -40,15 +40,4 @@
     .tooltip-team__text {
         padding: $s-size;
     }
-
-    .tooltip-team__email {
-        color: inherit;
-        font-family: 'Quicksand-Regular';
-        font-size: inherit;
-        font-weight: inherit;
-        padding: inherit;
-        &:hover {
-            color: $red;
-        }
-    }
 }

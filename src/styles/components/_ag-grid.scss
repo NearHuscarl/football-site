@@ -17,10 +17,18 @@
     .ag-row {
         // border-left: 1px solid $gray !important;
         // border-right: 1px solid $gray !important;
+
+        .ag-cell {
+            font-family: 'Quicksand-Medium';
+            color: $gray;
+        }
         
         // custom cell renderer container
         .ag-react-container {
-           $logo-size: 22px;
+            $logo-size: 22px;
+            height: 100%;
+            display: flex;
+            align-items: center;
 
             .table__team {
                 display: flex;
@@ -44,7 +52,6 @@
             border: none;
             border-left: 3px solid $blue;
         }
-
         .europe-league-rank {
             border: none;
             border-left: 3px solid $orange;
@@ -62,7 +69,6 @@
            background-color: transparentize($color: $blue, $amount: 0.83);
         }
     }
-
     .ag-row.europe-league-row {
         background-color: transparentize($color: $orange, $amount: 0.93);
         
@@ -81,4 +87,15 @@
     .ag-row-last {
         // border-bottom: 1px solid $gray !important;
     }
+}
+
+// --- Player List ---
+
+.player-avatar {  
+    @include image-frame(60px, 60px);
+    background-color: darken($color: $off-white, $amount: 10%); 
+}
+
+.flag {
+    margin: 0 0.3rem -0.3rem 0;
 }

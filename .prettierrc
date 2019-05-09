@@ -1,7 +1,9 @@
 {
-	'singleQuote': true,
-	'useTabs': true,
-	'jsxBracketSameLine': true,
-	'trailingComma': all,
-	'arrowParens': always,
+	"singleQuote": true,
+	"jsxSingleQuote": true,
+	"useTabs": true,
+	"jsxBracketSameLine": false,
+	"trailingComma": "all",
+	"arrowParens": "always",
+	"bracketSpacing": true
 }

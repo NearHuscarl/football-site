@@ -1,10 +1,7 @@
 import FootballData from 'footballdata-api-v2';
-import has from 'lodash/has';
 import database from '../firebase/firebase';
 import { checkCacheTime, updateCacheTime, filterRef, updateChildRef } from './util';
 import Log from '../utilities/log'
-import teamLogos from '../utilities/teamLogos';
-import { standingScores } from '../settings';
 
 const fetchStandingPending = (competitionId) => ({
 	type: 'FETCH_STANDING_PENDING',
@@ -72,19 +69,7 @@ const startFetchStanding = (competitionId) =>
 				return filterRef(database.ref('standings'), 'competitionId', { equalTo: competitionId })
 					.then((result) => result[0]);
 			})
-			.then((result) => {
-				const standing = result;
-
-				// Update obsolete logo urls
-				Object.keys(standingScores).forEach((scoreType) => {
-					const type = scoreType.toLowerCase();
-					standing[type].forEach((rank, tableIndex) => {
-						const teamId = rank.team.id;
-						if (has(teamLogos, teamId)) {
-							standing[type][tableIndex].team.crestUrl = teamLogos[teamId];
-						}
-					});
-				});
+			.then((standing) => {
 				dispatch(fetchStandingCompleted(competitionId, standing));
 			})
 	}

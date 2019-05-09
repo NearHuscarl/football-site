@@ -1,0 +1,44 @@
+.headline {
+    display: flex;
+
+    .headline__image {
+        display: flex;
+        flex: 0 1 66%;
+        background-size: cover;
+        background-position: 50% 50%;
+
+        img {
+            height: 400px;
+            object-fit: cover; // Crop height down, do not shrink
+        }
+
+        .headline__title {
+            font-size: 1.85rem;
+            font-weight: bold;
+        }
+        
+        .headline__description {
+            // color: $off-white;
+            color:  darken($off-white, 10%);
+            font-size: 1.4rem;
+        }
+        
+        .headline__date {
+            font-size: 1.4rem;
+            position: absolute;
+            bottom: 0; 
+        }
+    }
+
+    .headline__card-list {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        font-family: 'Quicksand-Bold';
+        min-height: 320px;
+
+        .headline__card {
+            flex: 1;
+        }
+    }
+}

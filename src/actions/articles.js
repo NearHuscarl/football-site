@@ -1,7 +1,7 @@
 import NewsAPI from 'newsapi';
 import moment from 'moment';
 import database from '../firebase/firebase';
-import { checkCacheTime, updateCacheTime, filterRef, updateChildRef } from './util';
+import { checkCacheTime, updateCacheTime, updateChildRef } from './util';
 import { newsSources } from '../settings';
 import Log from '../utilities/log'
 
@@ -12,7 +12,7 @@ export const setHeadlines = (headlines) => ({
 	},
 });
 
-export const fetchArticlesPending = () => ({
+const fetchArticlesPending = () => ({
 	type: 'FETCH_ARTICLES_PENDING',
 });
 

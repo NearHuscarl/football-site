@@ -93,6 +93,7 @@ const settings = {
 	cacheTime: {
 		articles: 24, // hours
 		matches: 0.75,
+		players: 24 * 30,
 		standings: 1,
 		topScorers: 24,
 		teams: 24 * 15,
