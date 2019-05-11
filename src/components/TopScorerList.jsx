@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TooltipTeam from './TooltipTeam';
+import { scorerPropTypes } from '../utilities/footballProptypes';
 
 class TopScorerList extends React.Component {
 	renderScorerItem = (scorer) => (
@@ -46,7 +47,7 @@ class TopScorerList extends React.Component {
 }
 
 TopScorerList.propTypes = {
-	scorers: PropTypes.arrayOf(PropTypes.object).isRequired,
+	scorers: PropTypes.arrayOf(scorerPropTypes).isRequired,
 };
 
 export default TopScorerList;

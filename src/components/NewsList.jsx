@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import NewsListItem from './NewsListItem';
+import { articlePropTypes } from '../utilities/footballProptypes';
 
 class NewsList extends React.Component {
 	shouldComponentUpdate(nextProps) {
@@ -11,7 +12,7 @@ class NewsList extends React.Component {
 	}
 
 	renderArticle = (article, highlightedWords) => (
-		<NewsListItem key={article.url} {...article} highlightedWords={highlightedWords} />
+		<NewsListItem key={article.url} article={article} highlightedWords={highlightedWords} />
 	);
 
 	renderArticles = () => {
@@ -50,7 +51,7 @@ class NewsList extends React.Component {
 }
 
 NewsList.propTypes = {
-	articles: PropTypes.arrayOf(PropTypes.object).isRequired,
+	articles: PropTypes.arrayOf(articlePropTypes).isRequired,
 	onClickSeeMoreButton: PropTypes.func,
 	renderSeeMoreButton: PropTypes.bool,
 	highlightedWords: PropTypes.string,

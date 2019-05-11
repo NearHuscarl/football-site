@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { teamKitPropTypes } from '../utilities/footballProptypes';
 
 const TeamKit = ({ kit }) => (
 	<div className='card'>
@@ -28,12 +28,7 @@ const TeamKit = ({ kit }) => (
 );
 
 TeamKit.propTypes = {
-	kit: PropTypes.shape({
-		home: PropTypes.string,
-		away: PropTypes.string,
-		third: PropTypes.string,
-		goalkeeper: PropTypes.string,
-	}).isRequired,
+	kit: teamKitPropTypes.isRequired,
 };
 
 export default TeamKit;

@@ -1,5 +1,7 @@
-// List of teams which have obsolete logos
-const obsoleteFootballDataTeamLogo = {
+/**
+ * List of Football Data team ids which have obsolete logos
+ */
+const obsoleteFDTeamLogoIds = {
 	// Eredivisie
 	668: true,
 	680: true,
@@ -66,4 +68,4 @@ const obsoleteFootballDataTeamLogo = {
 	99: true,
 }
 
-export default obsoleteFootballDataTeamLogo;
+export default obsoleteFDTeamLogoIds;

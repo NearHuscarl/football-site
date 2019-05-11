@@ -5,6 +5,7 @@ import { Carousel } from 'react-responsive-carousel';
 import Image from './Image';
 import Loader from './Loader';
 import defaultArticleImage from '../../public/images/Default_Article_Image.jpg';
+import { articlePropTypes } from '../utilities/footballProptypes';
 
 class NewsTile extends React.Component {
 	onClickNews = (index) => {
@@ -53,7 +54,7 @@ const getArticlesThatAreNotHeadlines = (articles, headlines) => {
 }
 
 NewsTile.propTypes = {
-	articles: PropTypes.arrayOf(PropTypes.object).isRequired,
+	articles: PropTypes.arrayOf(articlePropTypes).isRequired,
 };
 
 const mapStateToProps = (state) => ({

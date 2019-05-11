@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import Image from './Image';
 import TooltipTeam from './TooltipTeam';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
+import { matchPropTypes, teamPropTypes } from '../utilities/footballProptypes';
 
 const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 	const date = moment.utc(fixture.utcDate).format('HH:mm');
@@ -14,7 +14,7 @@ const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 				<Image alt='home team' src={homeTeam.crestUrl} defaultImage={defaultLogo} />
 			</TooltipTeam>
 			<div className='fixture-item__info'>
-				<span className='fixture-item__team-home'>
+				<span className='fixture-item__team vertical-align flex-right'>
 					{homeTeam.name}
 				</span>
 				<span className='fixture-item__vs'>
@@ -25,7 +25,7 @@ const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 							`${fixture.score.fullTime.homeTeam} - ${fixture.score.fullTime.awayTeam}`
 					}
 				</span>
-				<span className='fixture-item__team-away'>
+				<span className='fixture-item__team vertical-align flex-left'>
 					{awayTeam.name}
 				</span>
 			</div>
@@ -37,22 +37,9 @@ const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 }
 
 FixtureListItem.propTypes = {
-	fixture: PropTypes.shape({
-		id: PropTypes.number,
-		status: PropTypes.string,
-		utcDate: PropTypes.string,
-		score: PropTypes.object,
-	}).isRequired,
-
-	homeTeam: PropTypes.shape({
-		name: PropTypes.string,
-		crestUrl: PropTypes.string,
-	}).isRequired,
-	
-	awayTeam: PropTypes.shape({
-		name: PropTypes.string,
-		crestUrl: PropTypes.string,
-	}).isRequired,
+	fixture: matchPropTypes.isRequired,
+	homeTeam: teamPropTypes.isRequired,
+	awayTeam: teamPropTypes.isRequired,
 };
 
 export default FixtureListItem;

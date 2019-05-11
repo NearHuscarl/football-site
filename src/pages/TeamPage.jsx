@@ -10,6 +10,8 @@ import PlayerList from '../components/PlayerList';
 import Loader from '../components/Loader';
 import startFetchTeam from '../actions/team';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
+import { teamDetailPropTypes } from '../utilities/footballProptypes';
+import { matchPropTypes } from '../utilities/routerProptypes';
 
 export class TeamPage extends React.Component {
 	constructor(props) {
@@ -83,14 +85,9 @@ export class TeamPage extends React.Component {
 
 TeamPage.propTypes = {
 	startFetchTeam: PropTypes.func.isRequired,
-	team: PropTypes.shape({
-		team: PropTypes.object,
-		squad: PropTypes.object,
-	}).isRequired,
+	team: teamDetailPropTypes.isRequired,
 	pending: PropTypes.bool.isRequired,
-	match: PropTypes.shape({
-		params: PropTypes.object,
-	}).isRequired,
+	match: matchPropTypes.isRequired,
 };
 
 const mapStateToProps = (state) => ({

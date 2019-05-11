@@ -4,6 +4,7 @@ import { AgGridReact, AgGridColumn } from 'ag-grid-react';
 import isArray from 'lodash/isArray';
 import { competitionInfo } from '../settings';
 import trimTeamName from '../utilities/trimTeamName';
+import { rankPropTypes } from '../utilities/footballProptypes';
 
 class StandingTableSmall extends React.Component {
 	isRankInRange = (rank, range) => {
@@ -87,7 +88,7 @@ class StandingTableSmall extends React.Component {
 
 StandingTableSmall.propTypes = {
 	className: PropTypes.string,
-	standing: PropTypes.arrayOf(PropTypes.object).isRequired,
+	standing: PropTypes.arrayOf(rankPropTypes).isRequired,
 	competitionId: PropTypes.number.isRequired,
 };
 

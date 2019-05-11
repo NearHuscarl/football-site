@@ -11,6 +11,7 @@ import { history } from '../routers/AppRouter';
 import Image from './Image';
 import Loader from './Loader';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
+import { teamModelPropTypes, matchPropTypes } from '../utilities/footballProptypes';
 
 class FixtureTile extends React.Component {
 	constructor(props) {
@@ -141,8 +142,8 @@ const getMatchesByCompetition = (matches) => {
 }
 
 FixtureTile.propTypes = {
-	fixtures: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
-	teams: PropTypes.objectOf(PropTypes.object).isRequired,
+	fixtures: PropTypes.objectOf(PropTypes.arrayOf(matchPropTypes)).isRequired,
+	teams: teamModelPropTypes.isRequired,
 };
 
 const mapStateToProps = (state) => ({

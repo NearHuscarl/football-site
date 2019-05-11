@@ -11,29 +11,17 @@
         font-size: $s-size;
         font-family: 'Quicksand-Medium';
 
-        @mixin fixture-item__team {
-            display: inline-block;
+        .fixture-item__team {
             width: 40%;
             margin: 0 auto;
             padding: 0 2px;
             font-size: $font-size-large;
         }
 
-        .fixture-item__team-home {
-           @include fixture-item__team();
-           text-align: right;
-           padding-right: $s-size;
-        }
-        .fixture-item__team-away {
-            @include fixture-item__team();
-            text-align: left;
-            padding-left: $s-size;
-        }
-
         .fixture-item__vs {
             background-color: darken($color: $off-white, $amount: 10%);
             width: 15%;
-            margin: auto;
+            margin: auto $s-size;
             text-align: center;
             font-family: 'Quicksand-Regular';
             font-size: $font-size-medium;

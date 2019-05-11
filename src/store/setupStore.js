@@ -5,7 +5,6 @@ import startFetchMatches from '../actions/matches';
 import startFetchTeams from '../actions/teams';
 import startFetchCompetitions from '../actions/competitions';
 import startFetchStanding from '../actions/standings';
-import checkUpdatePlayers from '../actions/players';
 import { competitionIds } from '../settings';
 
 const topCompetitions = [
@@ -18,7 +17,6 @@ const topCompetitions = [
 const setupStore = (store) => {
 	// Not needed now
 	// store.dispatch(startFetchCompetitions());
-	// checkUpdatePlayers();
 
 	store.dispatch(startFetchArticles())
 		.then(() => {

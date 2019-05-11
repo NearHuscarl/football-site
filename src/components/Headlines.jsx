@@ -9,6 +9,7 @@ import Image from './Image';
 import Loader from './Loader';
 import PageHeader from './PageHeader';
 import defaultArticleImage from '../../public/images/Default_Article_Image.jpg';
+import { articlePropTypes } from '../utilities/footballProptypes';
 
 // TODO: convert into presentation component
 class Headlines extends React.Component {
@@ -125,7 +126,7 @@ class Headlines extends React.Component {
 export const MockHeadlines = Headlines;
 
 Headlines.propTypes = {
-	headlines: PropTypes.arrayOf(PropTypes.object).isRequired,
+	headlines: PropTypes.arrayOf(articlePropTypes).isRequired,
 };
 
 const mapStateToProps = (state) => ({

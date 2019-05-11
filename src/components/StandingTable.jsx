@@ -9,6 +9,8 @@ import Image from './Image';
 import Loader from './Loader';
 import StandingTableHeader from './StandingTableHeader';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
+import { rankPropTypes } from '../utilities/footballProptypes';
+import { historyPropTypes } from '../utilities/routerProptypes'
 
 class StandingTable extends React.Component {
 	constructor(props) {
@@ -170,10 +172,8 @@ class StandingTable extends React.Component {
 StandingTable.propTypes = {
 	loading: PropTypes.bool,
 	competitionId: PropTypes.number.isRequired,
-	standing: PropTypes.arrayOf(PropTypes.object).isRequired,
-	history: PropTypes.shape({
-		push: PropTypes.func,
-	}).isRequired,
+	standing: PropTypes.arrayOf(rankPropTypes).isRequired,
+	history: historyPropTypes.isRequired,
 };
 
 

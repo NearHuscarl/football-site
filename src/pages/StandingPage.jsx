@@ -7,7 +7,9 @@ import StandingTable from '../components/StandingTable';
 import TopScorerList from '../components/TopScorerList';
 import Loader from '../components/Loader';
 import { startSearchStanding } from '../actions/standingResult';
-import obsoleteFootballDataTeamLogo from '../utilities/teamLogos';
+import obsoleteFDTeamLogoIds from '../utilities/obsoleteFDTeamLogoIds';
+import { teamModelPropTypes, rankPropTypes, topScorerPropTypes } from '../utilities/footballProptypes';
+import { historyPropTypes } from '../utilities/routerProptypes'
 
 export class StandingPage extends React.Component {
 	constructor(props) {
@@ -20,7 +22,7 @@ export class StandingPage extends React.Component {
 		const { competitionId, result, pending } = standingResult;
 		const table = result.map((rank) => {
 			const { team } = rank;
-			if (has(obsoleteFootballDataTeamLogo, team.id)) {
+			if (has(obsoleteFDTeamLogoIds, team.id)) {
 				team.crestUrl = teams[competitionId][team.id].crestUrl;
 			}
 			return rank;
@@ -50,19 +52,12 @@ StandingPage.propTypes = {
 	startSearchStanding: PropTypes.func.isRequired,
 	standingResult: PropTypes.shape({
 		competitionId: PropTypes.number,
-		result: PropTypes.arrayOf(PropTypes.object),
+		result: PropTypes.arrayOf(rankPropTypes),
 		pending: PropTypes.bool,
 	}).isRequired,
-	topScorers: PropTypes.shape({
-		scorers: PropTypes.arrayOf(PropTypes.object),
-	}),
-	teams: PropTypes.shape({
-		name: PropTypes.string,
-		crestUrl: PropTypes.string,
-	}).isRequired,
-	history: PropTypes.shape({
-		push: PropTypes.func,
-	}).isRequired,
+	topScorers: topScorerPropTypes,
+	teams: teamModelPropTypes.isRequired,
+	history: historyPropTypes.isRequired,
 };
 
 StandingPage.defaultProps = {

@@ -6,6 +6,7 @@ import take from 'lodash/take';
 import NewsList from './NewsList';
 import Loader from './Loader';
 import settings from '../settings';
+import { articlePropTypes } from '../utilities/footballProptypes';
 
 class NewsListSearch extends React.Component {
 	constructor(props) {
@@ -53,7 +54,7 @@ class NewsListSearch extends React.Component {
 export const MockNewsListSearch = NewsListSearch;
 
 NewsListSearch.propTypes = {
-	articles: PropTypes.arrayOf(PropTypes.object).isRequired,
+	articles: PropTypes.arrayOf(articlePropTypes).isRequired,
 	query: PropTypes.string.isRequired,
 	searchPending: PropTypes.bool.isRequired,
 };

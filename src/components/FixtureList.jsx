@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 import FixtureListItem from './FixtureListItem';
 import { competitionIds as competitionIdSet } from '../settings';
+import { matchPropTypes, teamModelPropTypes } from '../utilities/footballProptypes';
 
 class FixtureList extends React.Component {
 	renderFixtureItem = (match) => {
@@ -60,18 +61,17 @@ class FixtureList extends React.Component {
 
 	render() {
 		return (
-			<div className='content-container'>
-				{
-					this.renderFixtures()
-				}
+			<div className='content-container'>{
+				this.renderFixtures()
+			}
 			</div>
 		);
 	}
 }
 
 FixtureList.propTypes = {
-	matches: PropTypes.arrayOf(PropTypes.object).isRequired,
-	teams: PropTypes.objectOf(PropTypes.object).isRequired,
+	matches: PropTypes.arrayOf(matchPropTypes).isRequired,
+	teams: teamModelPropTypes.isRequired,
 };
 
 export default FixtureList;

@@ -6,6 +6,7 @@ import Tooltip from './Tooltip'
 import Image from './Image';
 import FakeLink from './FakeLink';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
+import { historyPropTypes } from '../utilities/routerProptypes'
 
 const getTeam = (teamId) => {
 	const teams = store.getState().teams.models;
@@ -82,7 +83,7 @@ class TooltipTeam extends React.Component {
 	}
 
 	render() {
-		const { children, className } = this.props;
+		const { children, className, id } = this.props;
 		const { team } = this.state;
 
 		return (
@@ -90,7 +91,7 @@ class TooltipTeam extends React.Component {
 				className={className}
 				onMouseEnter={this.onMouseEnter}
 				component={team ? () => this.renderTeamInfo(team) : 'span'}>
-				<FakeLink to={`team/${team.id}`}>
+				<FakeLink to={`team/${id}`}>
 					{children}
 				</FakeLink>
 			</Tooltip>
@@ -110,7 +111,7 @@ TooltipTeam.defaultProps = {
 
 export default TooltipTeam;
 
-// This component need a history object to navigate to other routes
+// This component need a history props to navigate to other routes
 // because it will be placed outside of the Route component which
 // make routing via Link component not working
 // Usecase: CustomRenderer component in ag-grid will be appended to the dom
@@ -148,7 +149,5 @@ TooltipTeamHistory.propTypes = {
 	id: PropTypes.number.isRequired,
 	children: PropTypes.node.isRequired,
 	className: PropTypes.string,
-	history: PropTypes.shape({
-		push: PropTypes.func,
-	}).isRequired,
+	history: historyPropTypes.isRequired,
 };

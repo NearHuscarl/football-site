@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import StarRating from './StarRating';
 import Rating from './Rating';
+import { teamDetailPropTypes } from '../utilities/footballProptypes';
 
 const getStarting11AverageAge = (team) => {
 	const starting11 = team.squad.starting;
@@ -129,7 +129,7 @@ const TeamDetail = ({ team }) => (
 );
 
 TeamDetail.propTypes = {
-	team: PropTypes.shape({}).isRequired,
+	team: teamDetailPropTypes.isRequired,
 };
 
 export default TeamDetail;

@@ -5,6 +5,7 @@ import NewsList from './NewsList';
 import Loader from './Loader';
 import { startFetchArticlesFrom } from '../actions/articles';
 import settings from '../settings';
+import { articlePropTypes } from '../utilities/footballProptypes';
 
 const ARTICLE_BATCH = 15;
 let articleCount = ARTICLE_BATCH;
@@ -33,7 +34,7 @@ class NewsListTimeline extends React.Component {
 export const MockNewsListTimeline = NewsListTimeline;
 
 NewsListTimeline.propTypes = {
-	articles: PropTypes.arrayOf(PropTypes.object).isRequired,
+	articles: PropTypes.arrayOf(articlePropTypes).isRequired,
 	startFetchArticlesFrom: PropTypes.func.isRequired,
 };
 

@@ -7,6 +7,7 @@ import Position from './Position';
 import Rating from './Rating';
 import StarRating from './StarRating';
 import defaultAvatar from '../../public/images/Default_Player_Avatar.png';
+import { playerPropTypes } from '../utilities/footballProptypes';
 
 class PlayerList extends React.Component {
 	constructor(props) {
@@ -99,7 +100,7 @@ class PlayerList extends React.Component {
 }
 
 PlayerList.propTypes = {
-	players: PropTypes.arrayOf(PropTypes.object).isRequired,
+	players: PropTypes.arrayOf(playerPropTypes).isRequired,
 };
 
 export default PlayerList;

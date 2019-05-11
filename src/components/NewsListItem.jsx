@@ -7,6 +7,7 @@ import Image from './Image';
 import TooltipTeam from './TooltipTeam';
 import defaultArticleImage from '../../public/images/Default_Article_Image.jpg';
 import wrapWordIntoComponent from '../utilities/wrapWordIntoComponent';
+import { articlePropTypes } from '../utilities/footballProptypes';
 
 const highlightWordInContent = (content, keyword) => {
 	const params = [{
@@ -26,48 +27,40 @@ const highlightWordInContent = (content, keyword) => {
 };
 
 const NewsListItem = (props) => {
-	const { highlightedWords } = props;
+	const { highlightedWords, article } = props;
 	const hashedQuery = highlightedWords.length > 0 ? hashMultipleWords(props.highlightedWords) : undefined;
 	// TODO: remove
 	// const hashedQuery = hashMultipleWords('has lost');
 
-	const title = highlightWordInContent(props.title, hashedQuery);
-	const description = highlightWordInContent(props.description, hashedQuery);
-	const image = props.urlToImage ? props.urlToImage : defaultArticleImage;
-	const content = props.content && highlightWordInContent(props.content.replace(/\[.*\]$/, ''), hashedQuery);
-	const publishedAt = moment(props.publishedAt).format('HH:mm DD/MM/YYYY');
+	const title = highlightWordInContent(article.title, hashedQuery);
+	const description = highlightWordInContent(article.description, hashedQuery);
+	const image = article.urlToImage ? article.urlToImage : defaultArticleImage;
+	const content = article.content && highlightWordInContent(article.content.replace(/\[.*\]$/, ''), hashedQuery);
+	const publishedAt = moment(article.publishedAt).format('HH:mm DD/MM/YYYY');
 
 	return (
-		<a className='news-list-item' href={props.url} target='_blank' rel='noreferrer noopener'>
-			<div className='news-list-item__image'>
+		<div className='news-list-item'>
+			<a className='news-list-item__image' href={article.url} target='_blank' rel='noreferrer noopener'>
 				<Image alt='article' src={image} defaultImage={defaultArticleImage} />
-			</div>
+			</a>
 			<div className='news-list-item__text'>
-				<span className='news-list-item__source'>{props.sourceName}</span>
+				<span className='news-list-item__source'>{article.sourceName}</span>
 				<span className='news-list-item__date'>{publishedAt}</span>
 				<h2>{title}</h2>
 				<h3>{description}</h3>
 				<div>{content}</div>
 			</div>
-		</a>
+		</div>
 	);
 }
 
 NewsListItem.propTypes = {
-	title: PropTypes.string.isRequired,
-	description: PropTypes.string.isRequired,
-	content: PropTypes.string,
-	publishedAt: PropTypes.string.isRequired,
-	url: PropTypes.string.isRequired,
-	urlToImage: PropTypes.string,
-	sourceName: PropTypes.string.isRequired,
+	article: articlePropTypes.isRequired,
 	highlightedWords: PropTypes.string,
 };
 
 NewsListItem.defaultProps = {
 	highlightedWords: '',
-	content: '',
-	urlToImage: '',
 };
 
 export default NewsListItem;

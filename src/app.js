@@ -30,6 +30,8 @@ renderApp();
 // import FirebaseUtil from './firebase/firebaseUtil';
 // import moment from 'moment';
 // import database from './firebase/firebase';
+// import checkUpdatePlayers from './actions/players';
+// checkUpdatePlayers();
 
 // store.dispatch(startFetchPlayerFromTeam(64));
 

@@ -8,6 +8,7 @@ import { competitionIds } from '../settings';
 import { history } from '../routers/AppRouter';
 import StandingTableSmall from './StandingTableSmall';
 import Loader from './Loader';
+import { standingPropTypes } from '../utilities/footballProptypes';
 
 class StandingTile extends React.Component {
 	constructor(props) {
@@ -77,7 +78,7 @@ class StandingTile extends React.Component {
 export const MockStandingTile = StandingTile;
 
 StandingTile.propTypes = {
-	standings: PropTypes.objectOf(PropTypes.object).isRequired,
+	standings: standingPropTypes.isRequired,
 	setStandingCompetitionFilter: PropTypes.func.isRequired,
 };
 

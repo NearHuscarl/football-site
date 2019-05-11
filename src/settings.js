@@ -1,5 +1,6 @@
 // Name - ID mappings
 export const competitionIds = {
+	// championLeague: 2001,
 	bundesliga: 2002,
 	premierLeague: 2021,
 	championship: 2016,

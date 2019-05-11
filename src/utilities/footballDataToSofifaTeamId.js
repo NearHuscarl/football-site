@@ -78,7 +78,7 @@ export const getTeamIdMap = () => {
 		})
 }
 
-// mapTeamIds = (footballDataTeams, sofifaTeams).then((result) => console.log(result))
+// footballDataToSofifaTeamId = (footballDataTeams, sofifaTeams).then((result) => console.log(result))
 const footballDataToSofifaTeamId = {
 	"2": 10029,
 	"3": 32,

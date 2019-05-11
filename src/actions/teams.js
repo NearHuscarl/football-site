@@ -2,9 +2,9 @@ import FootballData from 'footballdata-api-v2';
 import has from 'lodash/has';
 import database from '../firebase/firebase';
 import { checkCacheTime, updateCacheTime, updateChildRef } from './util';
-import footballDataToSofifaTeamId from '../utilities/teamIdMap';
+import footballDataToSofifaTeamId from '../utilities/footballDataToSofifaTeamId';
 import Log from '../utilities/log'
-import obsoleteFootballDataTeamLogo from '../utilities/teamLogos';
+import obsoleteFDTeamLogoIds from '../utilities/obsoleteFDTeamLogoIds';
 
 const fetchTeamsPending = () => ({
 	type: 'FETCH_TEAMS_PENDING',
@@ -44,7 +44,7 @@ const mergeTeamInfo = (fdTeam, sofifaTeam) => {
 	team.id = fdTeam.id; 
 	team.squad = team.squad.map((player) => ({ id: player.id, role: player.role })); // trim name field before uploading to firebase
 
-	if (has(obsoleteFootballDataTeamLogo, team.id)) {
+	if (has(obsoleteFDTeamLogoIds, team.id)) {
 		team.crestUrl = team.logo; // use logo from sofifa instead of crestUrl from FootballData
 	}
 	delete team.logo;

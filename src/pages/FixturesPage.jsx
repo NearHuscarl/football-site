@@ -5,6 +5,7 @@ import FixtureListFilters from '../components/FixtureListFilters';
 import FixtureList from '../components/FixtureList';
 import startSearchMatches from '../actions/matchResults';
 import Loader from '../components/Loader';
+import { teamModelPropTypes, matchPropTypes } from '../utilities/footballProptypes';
 
 class FixturePage extends React.Component {
 	constructor(props) {
@@ -32,10 +33,10 @@ class FixturePage extends React.Component {
 
 FixturePage.propTypes = {
 	matchResults: PropTypes.shape({
-		results: PropTypes.arrayOf(PropTypes.object).isRequired,
+		results: PropTypes.arrayOf(matchPropTypes).isRequired,
 		pending: PropTypes.bool,
 	}).isRequired,
-	teams: PropTypes.objectOf(PropTypes.object).isRequired,
+	teams: teamModelPropTypes.isRequired,
 	startSearchMatches: PropTypes.func.isRequired,
 	pending: PropTypes.bool.isRequired,
 };

@@ -69,6 +69,9 @@ ul {
     position: relative;
 }
 
+.flex-left { justify-content: flex-start; }
+.flex-right { justify-content: flex-end; }
+
 .header {
 	background: lighten($color: $dark-blue, $amount: 12%);
     color: $off-white;
@@ -134,7 +137,8 @@ ul {
 .m-l { margin: $l-size; }
 // center block self
 .center-block { margin: 0 auto; }
+
 // position inline children
-.center-inline { text-align: center; }
-.left-inline { text-align: left; }
-.right-inline { text-align: right; }
+.align-center { text-align: center; }
+.align-left { text-align: left; }
+.align-right { text-align: right; }
