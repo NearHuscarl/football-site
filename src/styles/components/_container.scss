@@ -4,7 +4,28 @@
 	max-width: 110rem;
 }
 
+.container {
+	display: flex;
+}
+
 .container-between {
 	display: flex;
 	justify-content: space-between;
+}
+
+.container-col {
+	display: flex;
+	flex-direction: column;
+}
+
+.col {
+	margin: $s-size;
+}
+
+.col-2 {
+	width: calc(50% - (#{$s-size} * 2));
+}
+
+.col-4 {
+	width: calc(25% - (#{$s-size} * 2));
 }

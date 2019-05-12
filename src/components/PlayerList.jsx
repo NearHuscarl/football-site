@@ -8,8 +8,9 @@ import Rating from './Rating';
 import StarRating from './StarRating';
 import defaultAvatar from '../../public/images/Default_Player_Avatar.png';
 import { playerPropTypes } from '../utilities/footballProptypes';
+import withPlayerModal from '../hoc/PlayerList';
 
-class PlayerList extends React.Component {
+export class PlayerList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.rowHeight = 60; // px
@@ -17,10 +18,16 @@ class PlayerList extends React.Component {
 
 	avatarRenderer = (params) => {
 		const src = params.value;
+		const { onClickPlayer } = this.props;
 
 		return (
-			<figure className='player-avatar'>
-				<Image alt='avatar' src={src} defaultImage={defaultAvatar} />
+			<figure className='player-avatar a'>
+				<Image
+					onClick={() => onClickPlayer(params.data)}
+					onKeyPress={() => onClickPlayer(params.data)}
+					alt='avatar'
+					src={src}
+					defaultImage={defaultAvatar} />
 			</figure>
 		);
 	}
@@ -30,12 +37,23 @@ class PlayerList extends React.Component {
 	
 	nameRenderer = (params) => {
 		const { shortName, countryFlag, internationalReputation } = params.data;
+		const { onClickPlayer } = this.props;
 
 		return (
 			<div>
-				<div className='bold'>{shortName}</div>
+				<div
+					role='button'
+					tabIndex={-1}
+					onClick={() => onClickPlayer(params.data)}
+					onKeyPress={() => onClickPlayer(params.data)}
+					className='bold a'>
+					{shortName}
+				</div>
 				<div>
-					<Image className='flag' alt='country flag' src={countryFlag} />
+					<Image
+						className='flag'
+						alt='country flag'
+						src={countryFlag} />
 					<span>
 						<StarRating score={internationalReputation} />
 					</span>
@@ -47,9 +65,7 @@ class PlayerList extends React.Component {
 	positionRenderer = (params) => {
 		const positions = params.value;
 
-		return positions.split(',').map((position) =>
-			<Position key={position}>{position}</Position>
-		);
+		return <Position>{positions}</Position>;
 	}
 
 	ratingRenderer = (params) => {
@@ -101,6 +117,11 @@ class PlayerList extends React.Component {
 
 PlayerList.propTypes = {
 	players: PropTypes.arrayOf(playerPropTypes).isRequired,
+	onClickPlayer: PropTypes.func,
 };
 
-export default PlayerList;
+PlayerList.defaultProps = {
+	onClickPlayer: null,
+}
+
+export default withPlayerModal(PlayerList);

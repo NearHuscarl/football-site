@@ -34,6 +34,16 @@ renderApp();
 // checkUpdatePlayers();
 
 // store.dispatch(startFetchPlayerFromTeam(64));
+// database.ref('teams').orderByChild('id').equalTo(62).once('value').then((snap) => {
+// 	snap.forEach((child) => {
+// 		console.log(child.key);
+// 	})
+// });
+// database.ref('players').orderByChild('id').equalTo(204311).once('value').then((snap) => {
+// 	snap.forEach((child) => {
+// 		console.log(child.val());
+// 	})
+
 
 // FirebaseUtil.getAllTeamNameHashes().then((teamNames) => {
 // 	console.log(teamNames);

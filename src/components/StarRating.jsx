@@ -28,7 +28,7 @@ const StarRating = ({ score, maxScore }) => {
 		}
 	}
 
-	return components;
+	return <span>{components}</span>;
 }
 
 StarRating.propTypes = {

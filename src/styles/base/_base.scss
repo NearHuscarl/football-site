@@ -10,6 +10,11 @@ a {
 	color: $blue;
 }
 
+::selection {
+	background-color: transparentize($blue, 0.2);
+	color: $off-white;
+}
+
 body {
 	color: $dark-gray;
 	font-family: Quicksand-Light, Helvetica, Arial, sans-serif;
@@ -54,6 +59,13 @@ ul {
 	li {
 		margin-top: $xs-size;
 		font-family: 'Quicksand-Regular';
+	}
+}
+
+.a {
+	cursor: pointer;
+	&:hover {
+		text-decoration: underline;
 	}
 }
 

@@ -4,18 +4,26 @@
 * @param {String} - $background - required - format accepted: hsla, rgb, #
 * @param {Strong} - $color - optional - format accepted: hsla, rgb, #
 */
-@mixin set-button-color($background, $color: '') {
+@mixin set-button-color($background, $color) {
+	$background-light: lighten($background, 3%);
+	$outline-color: transparentize(darken($background, 10%), 0.4);
+	
 	background: $background;
-	@if ($color != '') {
-		color: $color;
+	box-shadow: 0 9px 45px 0 $outline-color;
+	color: $color;
+	
+	&:hover {
+		background: $background-light;
 	}
 
-	&:hover {
-		background: lighten($background, 7%);
-	}
-	
 	&:focus {
-		outline-color: darken($background, 7%);
+		background: $background-light;
+		box-shadow: 0 0 0 0.2rem $outline-color;
+	}
+
+	&:active {
+		background: $background-light;
+		box-shadow: 0 0 0 0.2rem transparent;
 	}
 }
 

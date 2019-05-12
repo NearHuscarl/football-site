@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react';
-// import { withRouter } from 'react-router-dom'
 import isArray from 'lodash/isArray';
 import { competitions, competitionInfo } from '../settings';
 import { TooltipTeamHistory } from './TooltipTeam';
@@ -105,7 +104,7 @@ class StandingTable extends React.Component {
 		return (
 			<span className='table__team'>
 				<TooltipTeamHistory id={id} history={this.props.history}>
-					<div className='table__team-logo'>
+					<div className='table__team-logo a'>
 						<Image alt='team logo' src={src} defaultImage={defaultLogo} />
 					</div>
 				</TooltipTeamHistory>

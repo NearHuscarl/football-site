@@ -1,39 +1,75 @@
-.ReactModalPortal > div {
-	opacity: 0;
+body {
+	// set background-color to $dark-blue and 
+	// #app background-color to white to remove
+	// the white border on top when blurring
+	background-color: $dark-blue;
 }
 
-.ReactModalPortal .ReactModal__Overlay {
+#app {
+	background-color: white;
+	filter: blur(0xp);
+	transition: filter 200ms ease-in-out;
+}
+
+#app.blur {
+	filter: blur(5px);
+}
+
+.ReactModal__Overlay {
 	align-items: center;
+	background-color: transparent !important;
 	display: flex;
 	justify-content: center;
-	transition: opacity 200ms ease-in-out;
-}
-
-.ReactModalPortal .ReactModal__Overlay--after-open {
-	opacity: 1;
-}
-
-.ReactModalPortal .ReactModal__Overlay--before-close {
 	opacity: 0;
+    transform: scale(0.75);
+	transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+	z-index: 1002;
+}
+
+.ReactModal__Overlay--after-open {
+	opacity: 1;
+    transform: translateX(0);
+}
+
+.ReactModal__Overlay--before-close {
+	opacity: 0;
+    transform: scale(0.75);
+}
+
+.ReactModal__Content {
+	background-color: white !important;
+}
+
+.modal__statusbar {
+	background-color: $off-white;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	height: 4rem;
+	line-height: 0;
+	text-align: right;
+	padding: $s-size;
+}
+
+.modal__body {
+	padding: $s-size;
+}
+
+.modal__player-container {
+	width: 51rem;
+}
+
+.modal__player-summary {
+	display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 .modal {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 	border-radius: 5px;
-	background: $dark-gray;
-	color: white;
-	max-width: 50rem;
+	background: white;
+	// color: white;
+	// max-width: 50rem;
 	outline: none;
-	padding: $l-size;
-	text-align: center;
 }
 
-.modal__title {
-	font-weight: 300;
-	margin: 0 0 $m-size 0;
-}
-
-.modal__button {
-	width: 10rem;
-	margin: $s-size;
-	margin-bottom: 0;
-}

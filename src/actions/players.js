@@ -47,7 +47,7 @@ const flattenPlayerData = (player) => {
 }
 
 const getPlayerDetails = () =>
-	fetch('https://gist.githubusercontent.com/NearHuscarl/7f171acfdbb5ad4dd74d6676c30c587f/raw/0c424bff6dfed3b4b56be9e510c1eef82a3ac607/players.json')
+	fetch('https://gist.githubusercontent.com/NearHuscarl/7f171acfdbb5ad4dd74d6676c30c587f/raw/289f512e4acd2c7ec255b06243d0d15e0b4d7466/players.json')
 		.then((response) => response.json());
 
 const refreshPlayers = () => {

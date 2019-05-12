@@ -1,15 +1,52 @@
 .button {
+	$border: 0;
+
+    box-sizing: border-box;
+    user-select: none;
+    margin: 0;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    text-decoration: none;
+    outline: none;
+    white-space: nowrap;
+    border: $border;
+    border-radius: 4px;
+	font-family: 'Quicksand-Bold';
+    padding: $s-size $m-size;
+    font-size: $font-size-large;
+    transition: all .2s ease-out;
+	
+	&:hover {
+		transform: translateY(-2px);
+		border-color: $border;
+	}
+
+	&:focus {
+		border: $border;
+	}
+
+	&:active {
+		transform: translateY(1px);
+		border: $border;
+	}
+}
+
+.btn-round {
+	background-color: $red;
 	border: none;
-	border-radius: 3px;
-	color: white;
-	display: inline-block;
-	font-family: 'Quicksand-Medium';
-	font-size: $font-size-large;
-	font-weight: 300;
-	line-height: 1;
-	padding: $s-size;
-	text-decoration: none;
-	transition: 0.3s ease;
+	border-radius: 50%;
+	line-height: 0;
+	width: 1.5rem;
+	height: 1.5rem;
+	transition: all .2s ease-out;
+
+	&:hover {
+		background-color: lighten($red, 5%);
+	}
 }
 
 .button--icon {
@@ -21,13 +58,16 @@
 // We assume the search button is on the right of the input area
 .button--search {
 	border-radius: 0 3px 3px 0;
+	&:hover {
+		transform: none;
+	}
 }
 
-@include generate-button-color('DEFAULT', $blue);
+@include generate-button-color('DEFAULT', $blue, white);
 // Generate button--red class
-@include generate-button-color('red', $red);
-@include generate-button-color('yellow', $yellow);
-@include generate-button-color('dark', $dark-gray);
+@include generate-button-color('red', $red, white);
+@include generate-button-color('yellow', $yellow, white);
+@include generate-button-color('dark', $dark-gray, white);
 @include generate-button-color('secondary', #888888);
 
 @mixin button--link() {
@@ -36,9 +76,10 @@
 	font-size: inherit;
 	font-weight: inherit;
 	padding: inherit;
+	box-shadow: none;
 
 	background: none;
-	&:hover {
+	&:hover, &:active, &:focus {
 		background: none;
 	}
 }

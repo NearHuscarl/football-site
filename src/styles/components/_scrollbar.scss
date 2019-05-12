@@ -1,11 +1,12 @@
 ::-webkit-scrollbar-track {
 	border-radius: 10px;
-	background-color: transparent;
+	background-color: lighten($color: $gray, $amount: 20%);
 }
 
 ::-webkit-scrollbar {
 	width: 1.5rem;
-	background-color: transparent;
+	background-color: lighten($color: $gray, $amount: 20%);
+	// background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {

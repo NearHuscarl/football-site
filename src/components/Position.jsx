@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Position = ({ children, ...rest }) => {
-	const position = children;
-	let className = '';
-
+const getClassNameFromPosition = (position) => {
 	switch (position) {
 		case 'ST':
 		case 'LS':
@@ -14,8 +11,7 @@ const Position = ({ children, ...rest }) => {
 		case 'RF':
 		case 'LW':
 		case 'RW':
-			className = 'pos--attack';
-			break;
+			return 'pos--attack';
 
 		case 'CAM':
 		case 'LAM':
@@ -28,8 +24,7 @@ const Position = ({ children, ...rest }) => {
 		case 'CDM':
 		case 'LDM':
 		case 'RDM':
-			className = 'pos--midfield';
-			break;
+			return 'pos--midfield';
 
 		case 'LWB':
 		case 'RWB':
@@ -38,27 +33,48 @@ const Position = ({ children, ...rest }) => {
 		case 'RCB':
 		case 'LB':
 		case 'RB':
-			className = 'pos--defence';
-			break;
+			return 'pos--defence';
 
 		case 'GK':
-			className = 'pos--goalkeeper';
-			break;
+			return 'pos--goalkeeper';
 
 		case 'SUB':
 		case 'RES':
-			className = 'pos--misc';
-			break;
+			return 'pos--misc';
 
 		default:
 			throw Error(`Unknown player position: ${position}`);
 	}
+}
 
-	return <span className={`pos ${className}`} {...rest}>{children}</span>;
+const Position = ({ children, ...rest }) => {
+	let positions = [];
+
+	if (!Array.isArray(children)) {
+		positions = children.split(',');
+	} else {
+		positions = children;
+	}
+
+	return (
+		<span {...rest}>
+			{positions.map((position, index) => {
+				const comma = index !== positions.length - 1 ? ', ' : '';
+				return (
+					<span key={position} className={`pos ${getClassNameFromPosition(position)}`}>
+						{position + comma}
+					</span>
+				);
+			})}
+		</span>
+	);
 }
 
 Position.propTypes = {
-	children: PropTypes.string.isRequired,
+	children: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.arrayOf(PropTypes.string),
+	]).isRequired,
 };
 
 export default Position;
