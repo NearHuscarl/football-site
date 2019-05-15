@@ -1,5 +1,5 @@
 import FootballData from 'footballdata-api-v2';
-import database from '../firebase/firebase';
+import firestore from '../firebase/firebase';
 import { checkCacheTime, updateCacheTime } from './util';
 import Log from '../utilities/log'
 
@@ -18,17 +18,11 @@ const fetchTopScorersCompleted = (competitionId, scorers) => ({
 const flattenTopScorersData = (topScorers) => {
 	const result = topScorers;
 	
-	result.competitionId = topScorers.competition.id;
-	result.competitionName = topScorers.competition.name;
-	result.areaId = topScorers.competition.area.id;
-	result.areaName = topScorers.competition.area.name;
-	result.seasonId = topScorers.season.id;
-	result.startDate = topScorers.season.startDate;
-	result.endDate = topScorers.season.endDate;
-	result.currentMatchday = topScorers.season.currentMatchday;
+	result.area = topScorers.competition.area;
+	result.competition = { id: topScorers.competition.id, name: topScorers.competition.name };
 	
-	delete result.competition;
-	delete result.season;
+	delete result.season.winner;
+	delete result.count;
 	delete result.filters;
 	
 	return result;
@@ -43,8 +37,7 @@ const refreshTopScorer = (competitionId) => {
 	}).then((data) => {
 		const topScorers = flattenTopScorersData(data);
 
-		database
-			.ref(`topScorers/${competitionId}`)
+		firestore.doc(`topScorers/${competitionId}`)
 			.set(topScorers)
 			.then(() => updateCacheTime('topScorers', competitionId));
 		return topScorers;
@@ -62,10 +55,10 @@ const startFetchTopScorers = (competitionId) =>
 				if (expired) {
 					return refreshTopScorer(competitionId)
 				}
-				return database
-					.ref(`topScorers/${competitionId}`)
-					.once('value')
-					.then((snapshot) => snapshot.val());
+				return firestore
+					.doc(`topScorers/${competitionId}`)
+					.get()
+					.then((doc) => doc.data());
 			})
 			.then((topScorers) => {
 				dispatch(fetchTopScorersCompleted(competitionId, topScorers));

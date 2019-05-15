@@ -1,6 +1,5 @@
 import NewsAPI from 'newsapi';
 import { reduceFilters } from '../reducers/articleResults';
-import { flattenArticleData } from './articles'
 import Log from '../utilities/log';
 
 const searchArticlePending = () => ({
@@ -48,8 +47,7 @@ const startSearchArticles = () =>
 			sources,
 			pageSize: 100,
 		}).then((response) => {
-			const results = response.articles.map((article) => flattenArticleData(article));
-			dispatch(searchArticleCompleted(filters, results));
+			dispatch(searchArticleCompleted(filters, response.articles));
 		})
 	}
 

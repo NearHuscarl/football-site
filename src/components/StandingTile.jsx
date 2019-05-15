@@ -58,7 +58,7 @@ class StandingTile extends React.Component {
 						onClickItem={this.onClickStandingTable}>
 						{
 							competitions.map((competitionId) => {
-								const standing = props.standings[competitionId];
+								const standing = props.standings[competitionId].standings;
 								return <StandingTableSmall
 									className='tile-imageitem'
 									key={competitionId}

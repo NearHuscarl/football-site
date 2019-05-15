@@ -43,7 +43,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	startFetchArticlesFrom: (date) => dispatch(startFetchArticlesFrom(date)),
+	startFetchArticlesFrom: (count) => dispatch(startFetchArticlesFrom(count)),
 });
 
 export default connect(

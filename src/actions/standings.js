@@ -1,6 +1,6 @@
 import FootballData from 'footballdata-api-v2';
-import database from '../firebase/firebase';
-import { checkCacheTime, updateCacheTime, filterRef, updateChildRef } from './util';
+import firestore from '../firebase/firebase';
+import { checkCacheTime, updateCacheTime, get, update } from './util';
 import Log from '../utilities/log'
 
 const fetchStandingPending = (competitionId) => ({
@@ -21,21 +21,17 @@ const fetchStandingCompleted = (competitionId, standing) => ({
 const flattenStandingData = (standing) => {
 	const result = standing;
 	
-	result.competitionId = standing.competition.id;
-	result.competitionName = standing.competition.name;
-	result.seasonId = standing.season.id;
-	result.startDate = standing.season.startDate;
-	result.endDate = standing.season.endDate;
-	result.currentMatchday = standing.season.currentMatchday;
-
-	standing.standings.forEach((s) => {
-		const { type } = s;
-		result[type.toLowerCase()] = s.table;
+	result.area = standing.competition.area;
+	result.competition = { id: standing.competition.id, name: standing.competition.name };
+	
+	const standingArray = standing.standings;
+	result.standings = {};
+	standingArray.forEach((s) => {
+		result.standings[s.type.toLowerCase()] = s.table;
 	});
 	
-	delete result.competition;
-	delete result.season;
-	delete result.standings;
+	delete result.season.winner;
+	delete result.filters;
 	
 	return result;
 }
@@ -49,7 +45,8 @@ const refreshStanding = (competitionId) => {
 	}).then((data) => {
 		const standings = flattenStandingData(data);
 		
-		updateChildRef(database.ref('standings'), 'competitionId', { equalTo: competitionId }, standings)
+		update(firestore.collection('standings')
+			.where('competition.id', '==', competitionId), standings)
 			.then(() => updateCacheTime('standings', competitionId));
 		return standings;
 	}).catch((err) => {
@@ -66,7 +63,8 @@ const startFetchStanding = (competitionId) =>
 				if (expired) {
 					return refreshStanding(competitionId);
 				}
-				return filterRef(database.ref('standings'), 'competitionId', { equalTo: competitionId })
+				return get(firestore.collection('standings')
+					.where('competition.id', '==', competitionId))
 					.then((result) => result[0]);
 			})
 			.then((standing) => {

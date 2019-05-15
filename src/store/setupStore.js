@@ -2,7 +2,7 @@ import shuffle from 'lodash/shuffle';
 import take from 'lodash/take';
 import { startFetchArticles, setHeadlines } from '../actions/articles';
 import startFetchMatches from '../actions/matches';
-import startFetchTeams from '../actions/teams';
+import { startFetchTeams } from '../actions/teams';
 import startFetchCompetitions from '../actions/competitions';
 import startFetchStanding from '../actions/standings';
 import { competitionIds } from '../settings';
@@ -29,7 +29,7 @@ const setupStore = (store) => {
 		store.dispatch(startFetchStanding(competitionId));
 	});
 	
-	store.dispatch(startFetchTeams(Object.values(competitionIds)));
+	store.dispatch(startFetchTeams());
 	store.dispatch(startFetchMatches());
 }
 

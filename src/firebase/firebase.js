@@ -1,5 +1,5 @@
 import firebase from 'firebase/app';
-import 'firebase/database';
+import 'firebase/firestore';
 
 const config = {
 	apiKey: process.env.FIREBASE_API_KEY,
@@ -11,9 +11,17 @@ const config = {
 };
 
 firebase.initializeApp(config);
-const database = firebase.database();
+firebase.firestore().enablePersistence()
+	.catch((e) => {
+		if (e.code === 'failed-precondition') {
+			// Multiple tabs open, persistence can only be enabled
+			// in one tab at a a time.
+		} else if (e.code === 'unimplemented') {
+			// The current browser does not support all of the
+			// features required to enable persistence
+		}
+	});
 
-export {
-	firebase,
-	database as default,
-};
+const firestore = firebase.firestore();
+
+export default firestore;

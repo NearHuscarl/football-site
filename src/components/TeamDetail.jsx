@@ -1,21 +1,17 @@
 import React from 'react';
 import StarRating from './StarRating';
 import Rating from './Rating';
-import { teamDetailPropTypes } from '../utilities/footballProptypes';
+import { teamPropTypes } from '../utilities/footballProptypes';
 
 const getStarting11AverageAge = (team) => {
-	const starting11 = team.squad.starting;
-	return (starting11.reduce((prevAge, player) => prevAge + player.age, 0) / starting11.length).toFixed(2);
+	const starting11 = team.squad.filter((player) => player.role === 'Starting');
+	const totalAge = starting11.reduce((prevAge, player) => prevAge + player.age, 0);
+	return (totalAge / starting11.length).toFixed(2);
 }
 
 const getWholeTeamAverageAge = (team) => {
-	const { starting, sub, res, onLoan } = team.squad;
-	const totalAge = starting.reduce((prevAge, player) => prevAge + player.age, 0)
-		+ sub.reduce((prevAge, player) => prevAge + player.age, 0)
-		+ res.reduce((prevAge, player) => prevAge + player.age, 0)
-		+ onLoan.reduce((prevAge, player) => prevAge + player.age, 0);
-
-	return (totalAge / (starting.length + sub.length + res.length + onLoan.length)).toFixed(2);
+	const totalAge = team.squad.reduce((prevAge, player) => prevAge + player.age, 0);
+	return (totalAge / team.squad.length).toFixed(2);
 }
 
 const renderTeamSummary = (team) => (
@@ -28,10 +24,10 @@ const renderTeamSummary = (team) => (
 				<span className='bold'>Code:</span>{' '}{team.tla}
 			</li>
 			<li>
-				<span className='bold'>Area:</span>{' '}{team.areaName}
+				<span className='bold'>Area:</span>{' '}{team.area.name}
 			</li>
 			<li>
-				<span className='bold'>Competition:</span>{' '}{team.competitionName}
+				<span className='bold'>Competition:</span>{' '}{team.competition.name}
 			</li>
 			<li>
 				<span className='bold'>Rival Team:</span>{' '}{team.rivalTeam}
@@ -40,7 +36,7 @@ const renderTeamSummary = (team) => (
 				<span className='bold'>Club color:</span>{' '}{team.clubColors}
 			</li>
 			<li>
-				<span className='bold'>Founded:</span>{' '}{team.contact.founded} {/* TODO: founded should not be in contact */}
+				<span className='bold'>Founded:</span>{' '}{team.founded}
 			</li>
 			<li>
 				<span className='bold'>Venue:</span>{' '}{team.venue}
@@ -129,7 +125,7 @@ const TeamDetail = ({ team }) => (
 );
 
 TeamDetail.propTypes = {
-	team: teamDetailPropTypes.isRequired,
+	team: teamPropTypes.isRequired,
 };
 
 export default TeamDetail;

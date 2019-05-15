@@ -10,7 +10,7 @@ import defaultAvatar from '../../public/images/Default_Player_Avatar.png';
 import { playerPropTypes } from '../utilities/footballProptypes';
 import withPlayerModal from '../hoc/PlayerList';
 
-export class PlayerList extends React.Component {
+class PlayerList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.rowHeight = 60; // px
@@ -18,13 +18,14 @@ export class PlayerList extends React.Component {
 
 	avatarRenderer = (params) => {
 		const src = params.value;
+		const player = params.data;
 		const { onClickPlayer } = this.props;
 
 		return (
 			<figure className='player-avatar a'>
 				<Image
-					onClick={() => onClickPlayer(params.data)}
-					onKeyPress={() => onClickPlayer(params.data)}
+					onClick={() => onClickPlayer(player)}
+					onKeyPress={() => onClickPlayer(player)}
 					alt='avatar'
 					src={src}
 					defaultImage={defaultAvatar} />
@@ -36,7 +37,7 @@ export class PlayerList extends React.Component {
 	defaultRowRenderer = (params) => <div>{params.value}</div>
 	
 	nameRenderer = (params) => {
-		const { shortName, countryFlag, internationalReputation } = params.data;
+		const player = params.data;
 		const { onClickPlayer } = this.props;
 
 		return (
@@ -44,18 +45,18 @@ export class PlayerList extends React.Component {
 				<div
 					role='button'
 					tabIndex={-1}
-					onClick={() => onClickPlayer(params.data)}
-					onKeyPress={() => onClickPlayer(params.data)}
+					onClick={() => onClickPlayer(player)}
+					onKeyPress={() => onClickPlayer(player)}
 					className='bold a'>
-					{shortName}
+					{player.shortName}
 				</div>
 				<div>
 					<Image
 						className='flag'
 						alt='country flag'
-						src={countryFlag} />
+						src={player.countryFlag} />
 					<span>
-						<StarRating score={internationalReputation} />
+						<StarRating score={player.stats.internationalReputation} />
 					</span>
 				</div>
 			</div>
@@ -103,7 +104,7 @@ export class PlayerList extends React.Component {
 					<AgGridColumn headerName='' field='avatar' width={60} sortable={false}
 						cellRenderer='avatarRenderer' cellStyle={{ padding: 0 }} />
 					<AgGridColumn headerName='Name' field='shortName' width={200} cellRenderer='nameRenderer' />
-					<AgGridColumn headerName='Position' field='teamPosition' width={70} cellRenderer='positionRenderer' />
+					<AgGridColumn headerName='Position' field='team.position' width={70} cellRenderer='positionRenderer' />
 					<AgGridColumn headerName='Age' field='age' width={50} />
 					<AgGridColumn headerName='Overall' field='overallRating' width={67} cellRenderer='ratingRenderer' />
 					<AgGridColumn headerName='Potential' field='potential' cellRenderer='ratingRenderer' />
@@ -114,6 +115,8 @@ export class PlayerList extends React.Component {
 		)
 	}
 }
+
+export const PlayerListMock = PlayerList;
 
 PlayerList.propTypes = {
 	players: PropTypes.arrayOf(playerPropTypes).isRequired,

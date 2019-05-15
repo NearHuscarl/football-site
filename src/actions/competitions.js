@@ -1,5 +1,5 @@
-import database from '../firebase/firebase';
-import { checkCacheTime, updateCacheTime } from './util';
+import firestore from '../firebase/firebase';
+import { checkCacheTime, updateCacheTime, get } from './util';
 import Log from '../utilities/log'
 import { competitionIds as competitionIdSet } from '../settings';
 
@@ -22,19 +22,19 @@ const refreshCompetitions = () => {
 	Log.debug('start getting competitions');
 	return fetch(proxyUrl + url, {
 		headers: {
-			"Access-Control-Allow-Headers": "x-requested-with, x-requested-by",
+			'Access-Control-Allow-Headers': 'x-requested-with, x-requested-by',
 		}
 	}).then((response) => response.json()).then((data) => {
 		const competitionArray = data.competitions;
-		const results = {};
 		const competitionIds = Object.values(competitionIdSet);
+		const results = {};
+
 		competitionArray.forEach((competition) => {
 			if (competitionIds.indexOf(competition.id) !== -1) {
 				results[competition.id] = competition;
+				firestore.doc(`competitions/${competition.id}`).set(competition);
 			}
 		});
-
-		database.ref('competitions').set(results);
 		updateCacheTime('competitions');
 		return results;
 	});
@@ -49,13 +49,15 @@ const startFetchCompetitions = () =>
 				if (expired) {
 					return refreshCompetitions()
 				}
-				return database
-					.ref('competitions')
-					.once('value')
-					.then((snapshot) => snapshot.val());
-			})
-			.then((competitions) => {
-				dispatch(fetchCompetitionsCompleted(competitions));
+
+				const results = {};
+				const addCompetition = (competition) => {
+					results[competition.id] = competition
+				}
+
+				return get(firestore
+					.collection('competitions'), addCompetition)
+					.then(() => dispatch(fetchCompetitionsCompleted(results)));
 			});
 	}
 

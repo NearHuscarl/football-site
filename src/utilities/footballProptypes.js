@@ -1,5 +1,10 @@
 import PropTypes from 'prop-types';
 
+const nameProptypes = PropTypes.shape({
+	id: PropTypes.number,
+	name: PropTypes.string,
+});
+
 export const articlePropTypes = PropTypes.shape({
 	title: PropTypes.string,
 	description: PropTypes.string,
@@ -7,14 +12,17 @@ export const articlePropTypes = PropTypes.shape({
 	publishedAt: PropTypes.string,
 	url: PropTypes.string,
 	urlToImage: PropTypes.string,
-	sourceName: PropTypes.string,
+	source: PropTypes.shape({
+		id: PropTypes.string,
+		name: PropTypes.string,
+	}),
 });
 
 export const matchPropTypes = PropTypes.shape({
 	id: PropTypes.number,
-	competitionId: PropTypes.number,
-	homeTeamId: PropTypes.number,
-	awayTeamId: PropTypes.number,
+	competition: nameProptypes,
+	homeTeam: nameProptypes,
+	awayTeam: nameProptypes,
 	status: PropTypes.string,
 	utcDate: PropTypes.string,
 	score: PropTypes.shape({
@@ -23,16 +31,44 @@ export const matchPropTypes = PropTypes.shape({
 });
 
 export const playerPropTypes = PropTypes.shape({
-	avatar: PropTypes.string,
 	age: PropTypes.number,
-	shortName: PropTypes.string,
+	avatar: PropTypes.string,
+	birthday: PropTypes.string,
+	country: PropTypes.string,
 	countryFlag: PropTypes.string,
-	internationalReputation: PropTypes.number,
-	teamPosition: PropTypes.string,
+	height: PropTypes.string,
+	id: PropTypes.number,
+	name: PropTypes.string,
 	overallRating: PropTypes.number,
 	potential: PropTypes.number,
+	position: PropTypes.arrayOf(PropTypes.string),
+	shortName: PropTypes.string,
+	stats: PropTypes.shape({
+		bodyType: PropTypes.string,
+		internationalReputation: PropTypes.number,
+		preferredFoot: PropTypes.string,
+		releaseClause: PropTypes.string,
+		skillMoves: PropTypes.number,
+		weakFoot: PropTypes.number,
+		workRate: PropTypes.string,
+	}),
 	value: PropTypes.string,
 	wage: PropTypes.string,
+	weight: PropTypes.string,
+	team: PropTypes.shape({
+		name: PropTypes.string,
+		position: PropTypes.arrayOf(PropTypes.string),
+		rating: PropTypes.number,
+		shirtNumber: PropTypes.number,
+		joinDate: PropTypes.string,
+		contractEndDate: PropTypes.string,
+	}),
+	nationalteam: PropTypes.shape({
+		name: PropTypes.string,
+		position: PropTypes.arrayOf(PropTypes.string),
+		rating: PropTypes.number,
+		shirtNumber: PropTypes.number,
+	}),
 });
 
 export const rankPropTypes = PropTypes.shape({
@@ -53,14 +89,11 @@ export const rankPropTypes = PropTypes.shape({
 });
 
 export const standingPropTypes = PropTypes.shape({
-	total: PropTypes.arrayOf(rankPropTypes),
-});
-
-export const teamPropTypes = PropTypes.shape({
-	id: PropTypes.number,
-	name: PropTypes.string,
-	shortName: PropTypes.string,
-	crestUrl: PropTypes.string,
+	standings: PropTypes.shape({
+		home: PropTypes.arrayOf(rankPropTypes),
+		away: PropTypes.arrayOf(rankPropTypes),
+		total: PropTypes.arrayOf(rankPropTypes),
+	})
 });
 
 export const teamKitPropTypes = PropTypes.shape({
@@ -70,14 +103,14 @@ export const teamKitPropTypes = PropTypes.shape({
 	goalkeeper: PropTypes.string,
 });
 
-export const teamDetailPropTypes = PropTypes.shape({
+export const teamPropTypes = PropTypes.shape({
 	id: PropTypes.number,
 	name: PropTypes.string,
 	shortName: PropTypes.string,
 	crestUrl: PropTypes.string,
-	areaName: PropTypes.string,
+	area: nameProptypes,
 	countryFlag: PropTypes.string,
-	competitionName: PropTypes.string,
+	competition: nameProptypes,
 	rivalTeam: PropTypes.string,
 	clubColors: PropTypes.string,
 	tla: PropTypes.string,
@@ -89,20 +122,15 @@ export const teamDetailPropTypes = PropTypes.shape({
 	transferBudget: PropTypes.string,
 	domesticPrestige: PropTypes.number,
 	internationalPrestige: PropTypes.number,
+	founded: PropTypes.string,
 	kit: teamKitPropTypes,
-	squad: PropTypes.shape({
-		starting: PropTypes.arrayOf(playerPropTypes),
-		sub: PropTypes.arrayOf(playerPropTypes),
-		res: PropTypes.arrayOf(playerPropTypes),
-		onLoan: PropTypes.arrayOf(playerPropTypes),
-	}),
+	squad: PropTypes.arrayOf(playerPropTypes),
 	contact: PropTypes.shape({
 		address: PropTypes.string,
 		email: PropTypes.string,
 		phone: PropTypes.string,
 		fax: PropTypes.string,
 		website: PropTypes.string,
-		founded: PropTypes.string,
 	}),
 });
 

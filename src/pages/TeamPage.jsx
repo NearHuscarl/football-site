@@ -10,7 +10,7 @@ import PlayerList from '../components/PlayerList';
 import Loader from '../components/Loader';
 import startFetchTeam from '../actions/team';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
-import { teamDetailPropTypes } from '../utilities/footballProptypes';
+import { teamPropTypes } from '../utilities/footballProptypes';
 import { matchPropTypes } from '../utilities/routerProptypes';
 
 export class TeamPage extends React.Component {
@@ -19,6 +19,10 @@ export class TeamPage extends React.Component {
 		const teamId = Number(this.props.match.params.id);
 		this.props.startFetchTeam(teamId);
 	}
+
+	getSquad = (onLoan) =>
+		this.props.team.squad.filter((player) =>
+			onLoan ? player.role === 'OnLoan' : player.role !== 'OnLoan')
 
 	renderTeamInfo = () => {
 		const { team } = this.props;
@@ -32,20 +36,12 @@ export class TeamPage extends React.Component {
 				</aside>
 
 				<div>
-					<h2 className='mb-s'>Starting</h2>
-					<PlayerList players={team.squad.starting} />
-					<div className='sep-m' />
-
-					<h2 className='mb-s'>Sub</h2>
-					<PlayerList players={team.squad.sub} />
-					<div className='sep-m' />
-
-					<h2 className='mb-s'>Res</h2>
-					<PlayerList players={team.squad.res} />
+					<h2 className='mb-s'>Squad</h2>
+					<PlayerList players={this.getSquad(false)} />
 					<div className='sep-m' />
 
 					<h2 className='mb-s'>On Loan</h2>
-					<PlayerList players={team.squad.onLoan} />
+					<PlayerList players={this.getSquad(true)} />
 				</div>
 			</div>
 		);
@@ -66,7 +62,7 @@ export class TeamPage extends React.Component {
 							<h1>{team.name}</h1>
 							<div>
 								<img className='flag' alt='country flag' src={team.countryFlag} />
-								{team.areaName}
+								{team.area.name}
 							</div>
 						</div>
 					</div>
@@ -85,7 +81,7 @@ export class TeamPage extends React.Component {
 
 TeamPage.propTypes = {
 	startFetchTeam: PropTypes.func.isRequired,
-	team: teamDetailPropTypes.isRequired,
+	team: teamPropTypes.isRequired,
 	pending: PropTypes.bool.isRequired,
 	match: matchPropTypes.isRequired,
 };

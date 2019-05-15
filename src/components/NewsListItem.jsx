@@ -44,7 +44,7 @@ const NewsListItem = (props) => {
 				<Image alt='article' src={image} defaultImage={defaultArticleImage} />
 			</a>
 			<div className='news-list-item__text'>
-				<span className='news-list-item__source'>{article.sourceName}</span>
+				<span className='news-list-item__source'>{article.source.name}</span>
 				<span className='news-list-item__date'>{publishedAt}</span>
 				<h2>{title}</h2>
 				<h3>{description}</h3>

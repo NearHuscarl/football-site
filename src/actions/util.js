@@ -1,6 +1,6 @@
 import has from 'lodash/has';
 import moment from 'moment';
-import database from '../firebase/firebase';
+import firestore from '../firebase/firebase';
 import settings from '../settings';
 import Log from '../utilities/log';
 
@@ -18,115 +18,128 @@ const isExpired = (timeLeft, cacheTime) => {
 
 /**
  * 
- * @param {firebase.database.Reference} ref 
- * @param {string} field 
- * @param {{
- * 	  startAt?: string | number | boolean,
- *    endAt?: string | number | boolean,
- *    equalTo?: string | number | boolean,
- *    limitToFirst?: number,
- *    limitToLast?: number,
- *  }} query 
+ * @param {firebase.firestore.Query} query 
  */
-export const applyQueries = (ref, field, query) => {
-	let dbQuery = ref.orderByChild(field);
-
-	if (has(query, 'startAt')) {
-		dbQuery = dbQuery.startAt(query.startAt);
-	}
-	if (has(query, 'endAt')) {
-		dbQuery = dbQuery.endAt(query.endAt);
-	}
-	if (has(query, 'equalTo')) {
-		dbQuery = dbQuery.equalTo(query.equalTo);
-	}
-	if (has(query, 'limitToFirst')) {
-		dbQuery = dbQuery.limitToFirst(query.limitToFirst);
-	}
-	if (has(query, 'limitToLast')) {
-		dbQuery = dbQuery.limitToLast(query.limitToLast);
-	}
-
-	return dbQuery;
-}
+// eslint-disable-next-line no-underscore-dangle
+const getRef = (query) => query._query.path.segments.join('/')
 
 /**
- *
- * @param {firebase.database.Reference} ref 
- * @param {string} field
- * @param {{
- * 	  startAt?: string | number | boolean,
- *    endAt?: string | number | boolean,
- *    equalTo?: string | number | boolean,
- *    limitToFirst?: number,
- *    limitToLast?: number,
- *  }} query
- *
+ * 
+ * update or add new document to collection
+ * 
+ * @param {firebase.firestore.Query} query 
+ * @param {any} data 
+ * @param {function(firebase.firestore.DocumentReference)} callback 
+ * @param {boolean} overwrite 
  */
-export const filterRef = (ref, field, query) => applyQueries(ref, field, query)
-	.once('value')
-	.then((snapshot) => {
-		const results = [];
-		snapshot.forEach((childSnapshot) => {
-			results.push(childSnapshot.val());
-		});
-		return results;
+export const update = (query, data, callback = null, overwrite = false) =>
+	query.get().then((querySnapshot) => {
+		if (!querySnapshot.empty) {
+			return Promise
+				.all(querySnapshot.docs.map((doc) => {
+					if (overwrite) {
+						doc.ref.set(data);
+					} else {
+						doc.ref.update(data);
+					}
+					return callback && callback(doc.ref);
+				}))
+				.then(() => true);
+		}
+		return firestore.collection(getRef(query)).add(data)
+			.then((doc) => callback && callback(doc))
+			.then(() => false);
 	});
 
 /**
  * 
- * @param {firebase.database.Reference} parentRef 
- * @param {string} field 
- * @param {{
- * 	  startAt?: string | number | boolean,
- *    endAt?: string | number | boolean,
- *    equalTo?: string | number | boolean,
- *    limitToFirst?: number,
- *    limitToLast?: number,
- *  }} query
- * @param {any} updateData 
- * @param {string | number} priority 
+ * update or add new document to collection with WriteBatch
  * 
+ * @param {firebase.firestore.WriteBatch} batch 
+ * @param {firebase.firestore.Query} query 
+ * @param {any} data 
+ * @param {function(firebase.firestore.DocumentReference)} callback 
+ * @param {boolean} overwrite 
  */
-export const updateChildRef = (parentRef, field, query, updateData, priority = undefined) =>
-	applyQueries(parentRef, field, query)
-		.once('value').then((snapshot) => {
-			if (snapshot.val()) {
-				snapshot.forEach((childSnapshot) => {
-					childSnapshot.ref.set(updateData);
-				});
-			} else if (priority) {
-				parentRef.push().setWithPriority(updateData, priority);
-			} else {
-				parentRef.push(updateData);
+export const batchUpdate = (batch, query, data, callback = null, overwrite = false) =>
+	query.get().then((querySnapshot) => {
+		if (!querySnapshot.empty) {
+			querySnapshot.forEach((doc) => {
+				if (overwrite) {
+					batch.set(doc.ref, data);
+				} else {
+					batch.update(doc.ref, data);
+				}
+				if (callback) callback(doc.ref);
+			});
+			return true;
+		} {
+			const newRef = firestore.collection(getRef(query)).doc();
+			batch.set(newRef, data);
+			if (callback) callback(newRef);
+			return false;
+		}
+	});
+
+/**
+ * 
+ * @param {firebase.firestore.Query} query 
+ */
+export const get = (query, callback = null) =>
+	query.get().then((querySnapshot) => {
+		const results = [];
+		querySnapshot.forEach((doc) => {
+			const item = doc.data();
+
+			if (callback) {
+				callback(item);
 			}
+			results.push(item);
 		});
+		return results;
+	})
 
-export const updateCacheTime = (type, identify = '') =>
-	database.ref(`cacheTime/${type}/${identify}`).set(moment().valueOf());
+export const updateCacheTime = (type, identifier = '') => {
+	const payload = { lastUpdated: moment().valueOf() };
 
-export const checkCacheTime = (type, identify = '') =>
-	database
-		.ref(`cacheTime/${type}/${identify}`)
-		.once('value')
-		.then((snapshot) => {
-			const lastUpdated = snapshot.val() || 0;
-			const now = moment();
-			const cacheTimeUntilNow = moment.duration(now.diff(lastUpdated));
-			const typeExist = has(settings.cacheTime, type);
-			if (!typeExist) {
-				Log.info(`'${type}' cache time not exists. Fall back to default cache time (${settings.cacheTime.default})`);
-			}
+	if (identifier.length === 0) {
+		firestore.doc(`cacheTime/${type}`).set(payload);
+	} else {
+		firestore.doc(`cacheTime/${type}/id/${identifier}`).set(payload);
+	}
+}
 
-			const cacheTime = settings.cacheTime[typeExist ? type : 'default'];
-			const timeLeft = (cacheTime - cacheTimeUntilNow.asHours()).toFixed(2);
-			const expired = isExpired(timeLeft, cacheTime);
+const getCacheTime = (type, identifier = '') => {
+	const getLastUpdatedValue = () => (doc) => {
+		if (doc.exists) {
+			return doc.data().lastUpdated;
+		}
+		return 0;
+	}
 
-			if (!expired) {
-				Log.debug(`${timeLeft} hour(s) left before refreshing ${type}`);
-			}
-			return expired;
-		})
-		.catch((err) => {
-			Log.error(`checkCacheTime: ${err}`);
-		})
+	if (identifier.length === 0) {
+		return firestore.doc(`cacheTime/${type}`).get()
+			.then(getLastUpdatedValue());
+	}
+	return firestore.doc(`cacheTime/${type}/id/${identifier}`).get()
+		.then(getLastUpdatedValue());
+}
+
+export const checkCacheTime = (type, identifier = '') =>
+	getCacheTime(type, identifier).then((lastUpdated) => {
+		const now = moment();
+		const cacheTimeUntilNow = moment.duration(now.diff(lastUpdated));
+		const typeExist = has(settings.cacheTime, type);
+		if (!typeExist) {
+			Log.info(`'${type}' cache time not exists. Fall back to default cache time (${settings.cacheTime.default})`);
+		}
+
+		const cacheTime = settings.cacheTime[typeExist ? type : 'default'];
+		const timeLeft = (cacheTime - cacheTimeUntilNow.asHours()).toFixed(2);
+		const expired = isExpired(timeLeft, cacheTime);
+
+		if (!expired) {
+			Log.debug(`${timeLeft} hour(s) left before refreshing ${type}`);
+		}
+		return expired;
+	});

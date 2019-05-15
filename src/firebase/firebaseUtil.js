@@ -2,17 +2,11 @@ import defaultsDeep from 'lodash/defaultsDeep';
 import has from 'lodash/has';
 import uniq from 'lodash/uniq';
 import moment from 'moment';
-import database from './firebase';
+import firestore from './firebase';
 import hashMultipleWords from '../utilities/hashMultipleWords'
 import trimTeamName from '../utilities/trimTeamName';
 
 class FirebaseUtil {
-
-	static checkPath = (path) => database
-		.ref(path)
-		.once('value')
-		.then((snapshot) => !!snapshot.val());
-
 	static logArticles = (startDate, endDate) => {
 		let start = startDate;
 		let end = endDate;
@@ -22,15 +16,14 @@ class FirebaseUtil {
 		if (!endDate) {
 			end = start;
 		}
-		database.ref('articles')
-			.orderByChild('publishedAt')
-			.startAt(start)
-			.endAt(moment(end).add(1, 'days').format('YYYY-MM-DD'))
-			.once('value').then((snapshot) => {
+		firestore.collection('articles')
+			.where('publishedAt', '>=', start)
+			.where('publishedAt', '<', moment(end).add(1, 'days').format('YYYY-MM-DD'))
+			.get().then((querySnapshot) => {
 				const articles = {};
 				const urls = [];
-				snapshot.forEach((childSnapshot) => {
-					const article = childSnapshot.val();
+				querySnapshot.forEach((childSnapshot) => {
+					const article = childSnapshot.data();
 					const date = moment.utc(article.publishedAt).format('YYYY-MM-DD');
 					if (!has(articles, date)) articles[date] = [];
 					articles[date].push(article);
@@ -54,14 +47,13 @@ class FirebaseUtil {
 		if (!endDate) {
 			end = start;
 		}
-		database.ref('matches')
-			.orderByChild('utcDate')
-			.startAt(start)
-			.endAt(moment(end).add(1, 'days').format('YYYY-MM-DD'))
-			.once('value').then((snapshot) => {
+		firestore.collection('matches')
+			.where('utcDate', '>=', start)
+			.where('utcDate', '<', moment(end).add(1, 'days').format('YYYY-MM-DD'))
+			.get().then((querySnapshot) => {
 				const matches = {};
-				snapshot.forEach((childSnapshot) => {
-					const match = childSnapshot.val();
+				querySnapshot.forEach((doc) => {
+					const match = doc.data();
 					const date = moment.utc(match.utcDate).format('YYYY-MM-DD');
 					if (!has(matches, date)) matches[date] = [];
 					matches[date].push(match);
@@ -82,14 +74,13 @@ class FirebaseUtil {
 		if (!endDate) {
 			end = start;
 		}
-		database.ref('matchDates')
-			.orderByChild('date')
-			.startAt(start)
-			.endAt(end)
-			.once('value').then((snapshot) => {
+		firestore.collection('matchDates')
+			.where('date', '>=', start)
+			.where('date', '<=', end)
+			.get().then((querySnapshot) => {
 				const matchDates = {};
-				snapshot.forEach((childSnapshot) => {
-					const matchDate = childSnapshot.val();
+				querySnapshot.forEach((doc) => {
+					const matchDate = doc.data();
 					const { date } = matchDate;
 					if (!has(matchDates, date)) matchDates[date] = {};
 					Object.keys(matchDate).forEach((key) => {
@@ -103,9 +94,9 @@ class FirebaseUtil {
 			});
 	}
 	
-	static getAllTeamNames = () => database
-		.ref(`teams`)
-		.once('value').then((snapshot) => {
+	static getAllTeamNames = () => firestore
+		.collection('teams')
+		.get().then((querySnapshot) => {
 			const teamNames = {
 				shortName: [],
 				name: [],
@@ -115,8 +106,8 @@ class FirebaseUtil {
 				},
 			};
 
-			snapshot.forEach((childSnapshot) => {
-				const team = childSnapshot.val();
+			querySnapshot.forEach((doc) => {
+				const team = doc.data();
 				const { shortName } = team;
 				const name = trimTeamName(team.name);
 

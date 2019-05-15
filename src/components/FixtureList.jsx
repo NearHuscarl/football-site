@@ -8,29 +8,29 @@ import { matchPropTypes, teamModelPropTypes } from '../utilities/footballProptyp
 class FixtureList extends React.Component {
 	renderFixtureItem = (match) => {
 		const { teams } = this.props;
-		const { competitionId, homeTeamId, awayTeamId } = match;
-		if (isEmpty(teams[competitionId])) {
+		const { competition, homeTeam, awayTeam } = match;
+		if (isEmpty(teams[competition.id])) {
 			return null;
 		}
-		const homeTeam = teams[competitionId][homeTeamId];
-		const awayTeam = teams[competitionId][awayTeamId];
+		const homeTeamDetail = teams[competition.id][homeTeam.id];
+		const awayTeamDetail = teams[competition.id][awayTeam.id];
 
 		return (
 			<FixtureListItem
 				key={match.id}
 				fixture={match}
-				homeTeam={homeTeam}
-				awayTeam={awayTeam} />
+				homeTeam={homeTeamDetail}
+				awayTeam={awayTeamDetail} />
 		);
 	}
 
 	renderFixtureGroup = (matches) => {
-		const { competitionName } = matches[0];
+		const { competition } = matches[0];
 
 		return (
-			<div key={competitionName}>
+			<div key={competition.name}>
 				<div className='header'>
-					{competitionName}
+					{competition.name}
 				</div>
 				{
 					matches.map((match) => this.renderFixtureItem(match))
@@ -45,7 +45,7 @@ class FixtureList extends React.Component {
 		const competitionIds = Object.values(competitionIdSet);
 
 		matches.forEach((match) => {
-			const { competitionId } = match;
+			const competitionId = match.competition.id;
 			if (competitionIds.indexOf(competitionId) === -1) return;
 
 			if (isEmpty(matchesByCompetition[competitionId])) {

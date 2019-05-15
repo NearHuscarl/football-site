@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
+import Image from './Image';
 import Position from './Position'
 import StarRating from './StarRating'
 import Rating from './Rating'
 import { playerPropTypes } from '../utilities/footballProptypes';
+import defaultAvatar from '../../public/images/Default_Player_Avatar.png';
 
 class PlayerDetailModal extends React.Component {
 	shouldComponentUpdate(nextProps) {
@@ -27,7 +29,7 @@ class PlayerDetailModal extends React.Component {
 
 		return (
 			<div className='container'>
-				<img alt='player avatar' src={player.avatar} />
+				<Image className='mr-s' alt='player avatar' src={player.avatar} defaultImage={defaultAvatar} />
 				<div className='modal__player-summary'>
 					<h1>{player.shortName}</h1>
 					<div>{player.name}</div>
@@ -66,15 +68,15 @@ class PlayerDetailModal extends React.Component {
 				</div>
 				<div>
 					<span className='bold'>Preferred Foot:</span>{' '}
-					{player.preferredFoot}
+					{player.stats.preferredFoot}
 				</div>
 				<div>
 					<span className='bold'>Work Rate:</span>{' '}
-					{player.workRate}
+					{player.stats.workRate}
 				</div>
 				<div>
 					<span className='bold'>Body Type:</span>{' '}
-					{player.bodyType}
+					{player.stats.bodyType}
 				</div>
 			</React.Fragment>
 		)
@@ -94,80 +96,59 @@ class PlayerDetailModal extends React.Component {
 				</div>
 				<div>
 					<span className='bold'>Reputation:</span>{' '}
-					<StarRating score={player.internationalReputation} />
+					<StarRating score={player.stats.internationalReputation} />
 				</div>
 				<div>
 					<span className='bold'>Skill Moves:</span>{' '}
-					<StarRating score={player.skillMoves} />
+					<StarRating score={player.stats.skillMoves} />
 				</div>
 				<div>
 					<span className='bold'>Weak Foot:</span>{' '}
-					<StarRating score={player.weakFoot} />
+					<StarRating score={player.stats.weakFoot} />
 				</div>
 				<div>
 					<span className='bold'>Release Clause:</span>{' '}
-					{player.releaseClause}
+					{player.stats.releaseClause}
 				</div>
 			</React.Fragment>
 		);
 	}
 
-	// TODO: merge with renderNationalTeamInfo() once refactor player data structure
-	renderTeamInfo = () => {
+	renderTeamInfo = (isNationalTeam) => {
 		const { player } = this.props;
+		if (isNationalTeam && !player.nationalTeam) return null;
+		const team = isNationalTeam ? player.nationalTeam : player.team;
 
 		return (
 			<React.Fragment>
 				<div className='vertical-align'>
-					<img alt='national team logo' src={player.teamLogo} className='mr-s' />
-					<h3>{player.teamName}</h3>
+					<img alt='team logo' src={team.logo} className='mr-s' />
+					<h3>{isNationalTeam ? team.country : team.name}</h3>
 				</div>
 				<div>
 					<span className='bold'>Position:</span>{' '}
-					<Position>{player.teamPosition}</Position>
+					<Position>{team.position}</Position>
 				</div>
 				<div>
 					<span className='bold'>Rating:</span>{' '}
-					<Rating>{player.teamRating}</Rating>
+					<Rating>{team.rating}</Rating>
 				</div>
 				<div>
 					<span className='bold'>Shirt Number:</span>{' '}
-					{player.teamShirtNumber}
+					{team.shirtNumber}
 				</div>
-				<div>
-					<span className='bold'>Join Date:</span>{' '}
-					{player.teamJoinDate}
-				</div>
-				<div>
-					<span className='bold'>Contact End at:</span>{' '}
-					{player.teamContractEndDate}
-				</div>
-			</React.Fragment>
-		);
-	}
-
-	renderNationalTeamInfo = () => {
-		const { player } = this.props;
-		if (!player.nationalTeamId) return null;
-
-		return (
-			<React.Fragment>
-				<div className='vertical-align'>
-					<img alt='national team logo' src={player.nationalTeamLogo} className='mr-s' />
-					<h3>{player.nationalTeamCountry}</h3>
-				</div>
-				<div>
-					<span className='bold'>Position:</span>{' '}
-					<Position>{player.nationalTeamPosition}</Position>
-				</div>
-				<div>
-					<span className='bold'>Rating:</span>{' '}
-					<Rating>{player.nationalTeamRating}</Rating>
-				</div>
-				<div>
-					<span className='bold'>Shirt Number:</span>{' '}
-					{player.nationalTeamShirtNumber}
-				</div>
+				{!isNationalTeam && (
+					<React.Fragment>
+						<div>
+							<span className='bold'>Join Date:</span>{' '}
+							{team.joinDate}
+						</div>
+						<div>
+							<span className='bold'>Contact End at:</span>{' '}
+							{team.contractEndDate}
+						</div>
+					</React.Fragment>
+				)}
 			</React.Fragment>
 		);
 	}
@@ -201,10 +182,10 @@ class PlayerDetailModal extends React.Component {
 								</div>
 								<div className='container-between'>
 									<div className='col col-2'>
-										{this.renderTeamInfo()}
+										{this.renderTeamInfo(false)}
 									</div>
 									<div className='col col-2'>
-										{this.renderNationalTeamInfo()}
+										{this.renderTeamInfo(true)}
 									</div>
 								</div>
 							</div>

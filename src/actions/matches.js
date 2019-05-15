@@ -1,8 +1,8 @@
 import moment from 'moment';
 import has from 'lodash/has';
 import FootballData from 'footballdata-api-v2';
-import database from '../firebase/firebase';
-import { checkCacheTime, updateCacheTime, filterRef, updateChildRef } from './util'
+import firestore from '../firebase/firebase';
+import { checkCacheTime, updateCacheTime, get, update } from './util'
 import { competitionIds } from '../settings';
 import getDateRange from '../utilities/getDateRange';
 import Log from '../utilities/log'
@@ -24,23 +24,6 @@ const defaultParams = {
 	dateTo: moment().add(10, 'days').format('YYYY-MM-DD'), // maximum is 10-day difference
 }
 
-const flattenMatchData = (match) => {
-	const result = match;
-	
-	result.competitionId = match.competition.id;
-	result.competitionName = match.competition.name;
-	result.awayTeamId = match.awayTeam.id;
-	result.awayTeamName = match.awayTeam.name;
-	result.homeTeamId = match.homeTeam.id;
-	result.homeTeamName = match.homeTeam.name;
-	
-	delete result.competition;
-	delete result.homeTeam;
-	delete result.awayTeam;
-	
-	return result;
-}
-
 export const refreshMatch = (params = defaultParams) => {
 	const footballData = new FootballData(process.env.FOOTBALL_DATA_API_KEY);
 	Log.warning(`start getting matches: competitionIds=${params.competitionIds} dateFrom=${params.dateFrom} dateTo=${params.dateTo}`);
@@ -53,8 +36,7 @@ export const refreshMatch = (params = defaultParams) => {
 		const matchDate = {};
 		const matchResults = [];
 
-		matches.forEach((m) => {
-			const match = flattenMatchData(m);
+		matches.forEach((match) => {
 			const date = moment.utc(match.utcDate).format('YYYY-MM-DD');
 
 			if (!has(matchDate, date)) matchDate[date] = {};
@@ -62,13 +44,15 @@ export const refreshMatch = (params = defaultParams) => {
 			matchDate[date][match.status] += 1;
 			
 			matchResults.push(match);
-			updateChildRef(database.ref('matches'), 'id', { equalTo: match.id }, match);
+			update(firestore
+				.collection('matches')
+				.where('id', '==', match.id), match);
 		});
 
 		const dateRange = getDateRange(moment(params.dateFrom), moment(params.dateTo));
 		dateRange.forEach((date) => {
 			const matchDatePayload = { date, ...matchDate[date] };
-			updateChildRef(database.ref('matchDates'), 'date', { equalTo: date }, matchDatePayload);
+			update(firestore.collection('matchDates').where('date', '==', date), matchDatePayload);
 		});
 
 		updateCacheTime('matches');
@@ -86,10 +70,10 @@ const startFetchMatches = () =>
 					return refreshMatch();
 				}
 
-				return filterRef(database.ref('matches'), 'utcDate', {
-					startAt: moment().format('YYYY-MM-DD'),
-					endAt: moment().add(11, 'days').format('YYYY-MM-DD'),
-				});
+				return get(firestore
+					.collection('matches')
+					.where('utcDate', '>=', moment().format('YYYY-MM-DD'))
+					.where('utcDate', '<', moment().add(11, 'days').format('YYYY-MM-DD')));
 			})
 			.then((matches) => {
 				dispatch(fetchMatchesCompleted(matches));

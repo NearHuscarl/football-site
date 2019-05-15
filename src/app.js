@@ -28,27 +28,29 @@ const renderApp = () => {
 renderApp();
 
 // import FirebaseUtil from './firebase/firebaseUtil';
-// import moment from 'moment';
-// import database from './firebase/firebase';
-// import checkUpdatePlayers from './actions/players';
-// checkUpdatePlayers();
+// import firestore from './firebase/firebase';
+// import { updateCacheTime, set, update, get } from './actions/util';
+// import checkUpdateTeams from './actions/teams';
 
-// store.dispatch(startFetchPlayerFromTeam(64));
-// database.ref('teams').orderByChild('id').equalTo(62).once('value').then((snap) => {
-// 	snap.forEach((child) => {
-// 		console.log(child.key);
-// 	})
-// });
-// database.ref('players').orderByChild('id').equalTo(204311).once('value').then((snap) => {
-// 	snap.forEach((child) => {
-// 		console.log(child.val());
-// 	})
+// checkUpdateTeams(true);
+
+// firestore.collection('players').get().then((snap) => {
+// 	const players = [];
+// 	snap.forEach((doc) => players.push(doc.data()));
+// 	console.log(players);
+// })
+// store.dispatch(startFetchTeams());
+
+// data.forEach((item) => {
+// 	firestore.collection('articles').add(item).then(() => {
+// 		console.log('Added ' + item.url + ' to firestore');
+// 	});
+// })
+
+
+// FirebaseUtil.logArticles('2018-01-01', '2020-01-01');
 
 
 // FirebaseUtil.getAllTeamNameHashes().then((teamNames) => {
 // 	console.log(teamNames);
 // });
-// FirebaseUtil.logArticles('2019-05-01', '2019-06-01');
-
-// import startSearchMatches from './actions/matchResults';
-// store.dispatch(startSearchMatches());

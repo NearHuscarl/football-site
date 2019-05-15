@@ -11,16 +11,17 @@ class NewsList extends React.Component {
 		return false;
 	}
 
-	renderArticle = (article, highlightedWords) => (
-		<NewsListItem key={article.url} article={article} highlightedWords={highlightedWords} />
-	);
-
 	renderArticles = () => {
 		const { articles, highlightedWords } = this.props;
 		const components = [];
 
 		articles.forEach((article) => {
-			components.push(this.renderArticle(article, highlightedWords));
+			components.push(
+				<NewsListItem
+					key={article.url}
+					article={article}
+					highlightedWords={highlightedWords} />
+			);
 		});
 
 		return components;

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Carousel } from 'react-responsive-carousel';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
+import intersection from 'lodash/intersection';
 import take from 'lodash/take';
 import moment from 'moment';
 import { competitionIds } from '../settings';
@@ -32,37 +33,30 @@ class FixtureTile extends React.Component {
 			return false;
 		}
 
-		return this.competitionIds.every((competitionId) => {
-			if (!has(teams, competitionId)) {
-				return false;
-			}
-			if (!has(fixtures, competitionId)) {
-				return false;
-			}
-			return true;
-		});
+		return this.competitionIds.every((competitionId) => has(teams, competitionId))
+			&& this.competitionIds.some((competitionId) => has(fixtures, competitionId));
 	}
 
 	renderFixture = (fixture) => {
 		const { teams } = this.props;
-		const { competitionId, homeTeamId, awayTeamId } = fixture;
-		const homeTeam = teams[competitionId][homeTeamId];
-		const awayTeam = teams[competitionId][awayTeamId];
+		const { competition, homeTeam, awayTeam } = fixture;
+		const homeTeamDetail = teams[competition.id][homeTeam.id];
+		const awayTeamDetail = teams[competition.id][awayTeam.id];
 		const date = moment.utc(fixture.utcDate).format('HH:mm ddd DD MMM');
 
 		return (
 			<div className='fixture-body' key={fixture.id}>
 				<div className='fixture__logo' >
-					<Image alt='home team' src={homeTeam.crestUrl} defaultImage={defaultLogo} />
+					<Image alt='home team' src={homeTeamDetail.crestUrl} defaultImage={defaultLogo} />
 				</div>
 				<div className='fixture__info'>
 					<div className='fixture__team'>
 						<span className='fixture__team-name'>
-							{homeTeam.shortName}
+							{homeTeamDetail.shortName}
 						</span>
 						<span className='fixture__team-score'>-</span>
 						<span className='fixture__team-name'>
-							{awayTeam.shortName}
+							{awayTeamDetail.shortName}
 						</span>
 					</div>
 					<div className='fixture__date'>
@@ -70,7 +64,7 @@ class FixtureTile extends React.Component {
 					</div>
 				</div>
 				<div className='fixture__logo' >
-					<Image alt='away team' src={awayTeam.crestUrl} defaultImage={defaultLogo} />
+					<Image alt='away team' src={awayTeamDetail.crestUrl} defaultImage={defaultLogo} />
 				</div>
 			</div>
 		);
@@ -80,7 +74,7 @@ class FixtureTile extends React.Component {
 		const { fixtures } = this.props;
 		const latestFixtures = take(fixtures[competitionId], 5); // matches are already sorted by utcDate (asc)
 		const matchdays = [];
-		const { competitionName } = latestFixtures[0];
+		const { competition } = latestFixtures[0];
 
 		latestFixtures.forEach((fixture) => {
 			const { matchday } = fixture;
@@ -93,7 +87,7 @@ class FixtureTile extends React.Component {
 		return (
 			<div className='tile-imageitem' key={competitionId}>
 				<div className='fixture-title'>
-					{`${competitionName} | Matchday ${matchdays.join('/')}`}
+					{`${competition.name} | Matchday ${matchdays.join('/')}`}
 				</div>
 				{latestFixtures.map((fixture) => this.renderFixture(fixture))}
 			</div>
@@ -101,6 +95,8 @@ class FixtureTile extends React.Component {
 	}
 
 	render() {
+		const fixtureCompeitions = Object.keys(this.props.fixtures).map((k) => Number(k));
+
 		return (this.isDataReady() ?
 			<div className='carousel-wrapper'>
 				<Carousel
@@ -115,7 +111,7 @@ class FixtureTile extends React.Component {
 					showStatus={false}
 					onClickItem={() => history.push('/fixtures')}>
 					{
-						this.competitionIds
+						intersection(fixtureCompeitions, this.competitionIds)
 							.map((competitionId) => this.renderFixtures(competitionId))
 					}
 				</Carousel>
@@ -130,12 +126,12 @@ const getMatchesByCompetition = (matches) => {
 	const matchesByCompetition = {};
 
 	matches.forEach((match) => {
-		const { competitionId } = match;
+		const { competition } = match;
 
-		if (!has(matchesByCompetition, competitionId)) {
-			matchesByCompetition[competitionId] = [];
+		if (!has(matchesByCompetition, competition.id)) {
+			matchesByCompetition[competition.id] = [];
 		}
-		matchesByCompetition[competitionId].push(match);
+		matchesByCompetition[competition.id].push(match);
 	});
 
 	return matchesByCompetition;

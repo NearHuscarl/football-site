@@ -25,7 +25,7 @@ export const startSearchStanding = () =>
 
 		const getResults = (standingResults = {}) => {
 			if (isEmpty(standingResults)) return;
-			const table = standingResults[competitionId][filters.scoreType.toLowerCase()];
+			const table = standingResults[competitionId].standings[filters.scoreType.toLowerCase()];
 			dispatch(searchStandingCompleted(table, competitionId));
 		}
 		
@@ -35,11 +35,11 @@ export const startSearchStanding = () =>
 
 		if (standings[competitionId]) {
 			getResults(standings);
-			return Promise.resolve(null);
+			return Promise.resolve();
 		}
 
 		return dispatch(startFetchStanding(competitionId)).then(() => {
 			getResults(getState().standings.models);
-			return Promise.resolve(null);
+			return Promise.resolve();
 		});
 	}

@@ -1,7 +1,7 @@
 import NewsAPI from 'newsapi';
 import moment from 'moment';
-import database from '../firebase/firebase';
-import { checkCacheTime, updateCacheTime, updateChildRef } from './util';
+import firestore from '../firebase/firebase';
+import { checkCacheTime, updateCacheTime, update, get } from './util';
 import { newsSources } from '../settings';
 import Log from '../utilities/log'
 
@@ -23,35 +23,20 @@ const fetchArticlesCompleted = (articles) => ({
 	},
 });
 
-export const flattenArticleData = (article) => {
-	const result = article;
-	
-	result.sourceId = article.source.id;
-	result.sourceName = article.source.name;
-	
-	delete result.source;
-	return result;
-}
-
 // check new source with older news and remove duplicated ones
 const filterArticles = (articles) => {
 	// Remove other sport articles
 	const footballArticles = articles.filter(article => /\/(football|soccer)\b/.test(article.url));
+	const startDate = moment().subtract(3, 'days').format('YYYY-MM-DD');
+	const oldUrls = {}; // mimic C# HashSet
+	const addOldUrls = (article) => {
+		oldUrls[article.url] = true;
+	}
 
-	return database
-		.ref('articles')
-		.orderByChild('publishedAt')
-		.startAt(moment().subtract(3, 'days').format('YYYY-MM-DD'))
-		.once('value').then((snapshot) => {
-			const oldUrls = {}; // mimic C# HashSet
-
-			snapshot.forEach((childSnapshot) => {
-				const { url } = childSnapshot.val();
-				oldUrls[url] = true;
-			});
-
-			return footballArticles.filter((article) => !oldUrls[article.url]);
-		});
+	return get(firestore
+		.collection('articles')
+		.where('publishedAt', '>=', startDate), addOldUrls)
+		.then(() => footballArticles.filter((article) => !oldUrls[article.url]));
 }
 
 const refreshArticle = () => {
@@ -62,19 +47,17 @@ const refreshArticle = () => {
 	return newsapi.v2.topHeadlines({
 		sources,
 		pageSize: 100,
-	// eslint-disable-next-line arrow-body-style
+		// eslint-disable-next-line arrow-body-style
 	}).then((response) => {
 		return filterArticles(response.articles);
 	}).then((articles) => {
 		const articleResults = [];
 
-		articles.forEach((a) => {
-			const article = flattenArticleData(a);
-
+		articles.forEach((article) => {
 			articleResults.push(article);
-			updateChildRef(database.ref('articles'), 'url', {
-				equalTo: article.url
-			}, article, 0 - moment(article.publishedAt).valueOf());
+			update(firestore
+				.collection('articles')
+				.where('url', '==', article.url), article);
 		});
 
 		updateCacheTime('articles');
@@ -86,15 +69,11 @@ export const startFetchArticlesFrom = (articleCount) =>
 	(dispatch) => {
 		dispatch(fetchArticlesPending());
 
-		return database
-			.ref('articles')
-			.orderByPriority()
-			.limitToFirst(articleCount)
-			.once('value').then((snapshot) => {
-				const articles = [];
-				snapshot.forEach((childSnapshot) => {
-					articles.push(childSnapshot.val());
-				});
+		return get(firestore
+			.collection('articles')
+			.orderBy('publishedAt', 'desc')
+			.limit(articleCount))
+			.then((articles) => {
 				dispatch(fetchArticlesCompleted(articles))
 			});
 	}
@@ -109,19 +88,12 @@ export const startFetchArticles = () =>
 					return refreshArticle();
 				}
 
-				return database
-					.ref('articles')
-					.orderByPriority()
-					.limitToFirst(15)
-					.once('value').then((snapshot) => {
-						const articles = [];
-						snapshot.forEach((childSnapshot) => {
-							articles.push(childSnapshot.val());
-						});
-						return articles;
+				return get(firestore
+					.collection('articles')
+					.orderBy('publishedAt', 'desc')
+					.limit(15))
+					.then((articles) => {
+						dispatch(fetchArticlesCompleted(articles))
 					});
 			})
-			.then((result) => {
-				dispatch(fetchArticlesCompleted(result));
-			});
 	}

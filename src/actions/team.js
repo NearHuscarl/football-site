@@ -1,7 +1,6 @@
-import lowerFirst from 'lodash/lowerFirst'
 import moment from 'moment';
-import database from '../firebase/firebase';
-import { filterRef } from './util';
+import firestore from '../firebase/firebase';
+import { get } from './util';
 
 const fetchTeamPending = () => ({
 	type: 'FETCH_TEAM_PENDING',
@@ -23,25 +22,19 @@ const computeAge = (player) => {
 const startFetchTeam = (id) =>
 	(dispatch) => {
 		dispatch(fetchTeamPending());
-		let teamResult;
-		const squad = { starting: [], sub: [], res: [], onLoan: [] };
+		let team = null;
 
-		return filterRef(database.ref('teams'), 'id', { equalTo: id })
-			.then((result) => {
-				const [team] = result;
-				teamResult = team;
-				return Promise.all(team.squad.map((player) => database
-					.ref('players')
-					.orderByChild('id')
-					.equalTo(player.id)
-					.once('value').then((snapshot) => {
-						snapshot.forEach((childSnapshot) => {
-							const playerDetail = computeAge(childSnapshot.val());
-							squad[lowerFirst(player.role)].push(playerDetail);
-						});
-					})));
+		return firestore.collection('teams')
+			.where('id', '==', id)
+			.get().then((querySnapshot) => {
+				const [doc] = querySnapshot.docs;
+				team = doc.data();
+
+				return get(firestore.collection(`teams/${doc.id}/squad`));
+			}).then((squad) => {
+				team.squad = squad.map((player) => computeAge(player));
+				dispatch(fetchTeamCompleted(team));
 			})
-			.then(() => dispatch(fetchTeamCompleted({ ...teamResult, squad })));
 	}
 
 export default startFetchTeam;

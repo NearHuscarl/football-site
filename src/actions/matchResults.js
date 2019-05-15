@@ -1,7 +1,7 @@
 import moment from 'moment';
-import database from '../firebase/firebase';
+import firestore from '../firebase/firebase';
 import { refreshMatch } from './matches';
-import { filterRef } from './util';
+import { get } from './util';
 import { competitions } from '../settings';
 import Log from '../utilities/log';
 
@@ -31,27 +31,32 @@ const getDateRangeToUpdateMatches = (date) => {
 
 /**
  * 
- * @param {firebase.database.DataSnapshot} dateSnapshot 
  * @param {string} startDate 
- * @param {string} endDate 
+ * @param {string} endDate
  */
-const checkIfNeedUpdate = (dateSnapshot, startDate, endDate) => {
-	const dateDuration = moment(endDate).diff(moment(startDate), 'days') + 1;
+const checkIfNeedUpdate = (startDate, endDate) =>
+	firestore
+		.collection('matchDates')
+		.where('date', '>=', startDate)
+		.where('date', '<=', endDate)
+		.get().then((querySnapshot) => {
+			const dateDuration = moment(endDate).diff(moment(startDate), 'days') + 1;
 
-	if (dateSnapshot.numChildren() < dateDuration) {
-		return true;
-	}
-	
-	let needUpdate = false;
-	dateSnapshot.forEach((childSnapshot) => {
-		if (childSnapshot.child('SCHEDULED').val() > 0 &&
-			moment(childSnapshot.child('date').val()).isBefore(moment(), 'day')) {
-			needUpdate = true;
-		}
-		return needUpdate; // true to break loop
-	});
-	return needUpdate;
-}
+			if (querySnapshot.size < dateDuration) {
+				return true;
+			}
+			
+			let needUpdate = false;
+			querySnapshot.docs.some((doc) => {
+				const matchDate = doc.data();
+				if (matchDate.SCHEDULED && matchDate.SCHEDULED > 0 &&
+					moment(matchDate.date).isBefore(moment(), 'day')) {
+					needUpdate = true;
+				}
+				return needUpdate; // true to break loop
+			});
+			return needUpdate;
+		})
 
 const startSearchMatches = () => (dispatch, getState) => {
 	dispatch(searchMatchesPending());
@@ -59,13 +64,9 @@ const startSearchMatches = () => (dispatch, getState) => {
 	const startDate = moment(filters.date).format('YYYY-MM-DD');
 	const endDate = moment(startDate).format('YYYY-MM-DD'); // TODO: add endDate filter
 
-	return database
-		.ref('matchDates')
-		.orderByChild('date')
-		.startAt(startDate)
-		.endAt(endDate)
-		.once('value').then((snapshop) => {
-			if (checkIfNeedUpdate(snapshop, startDate, endDate)) {
+	return checkIfNeedUpdate(startDate, endDate)
+		.then((needUpdate) => {
+			if (needUpdate) {
 				return refreshMatch({
 					competitionIds: Object.keys(competitions).toString(),
 					...getDateRangeToUpdateMatches(startDate),
@@ -76,14 +77,13 @@ const startSearchMatches = () => (dispatch, getState) => {
 			}
 
 			Log.debug(`Start searching for matches on firebase startDate=${startDate} endDate=${endDate} competitions=${filters.competition}`);
-			return filterRef(database.ref('matches'), 'utcDate', {
-				startAt: startDate,
-				endAt: moment(endDate).add(1, 'days').format('YYYY-MM-DD'),
-			});
+			return get(firestore.collection('matches')
+				.where('utcDate', '>=', startDate)
+				.where('utcDate', '<', moment(endDate).add(1, 'days').format('YYYY-MM-DD')));
 		})
 		.then((matches) => {
 			const filteredResults = matches.filter((match) =>
-				(match.competitionId === filters.competition || filters.competition === 'all'));
+				(match.competition.id === filters.competition || filters.competition === 'all'));
 			dispatch(searchMatchesCompleted(filteredResults));
 		});
 }
