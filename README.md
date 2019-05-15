@@ -7,7 +7,7 @@ Latest football news, fixtures, results, statistics, standings
 ## Library and tool
 
 -  Front-end: react-redux
--  Back-end: firebase
+-  Back-end: firestore cloud
 
 ## APIs used
 
@@ -30,10 +30,6 @@ $ git clone https://github.com/NearHuscarl/football-site
 $ cd football-site
 $ yarn install
 ```
-
-## Setup login systems
-
-Follow [firebase instructions](https://firebase.google.com/docs/auth/?authuser=0) to add different login systems in your app
 
 ## Setup firebase
 
