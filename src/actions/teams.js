@@ -1,7 +1,7 @@
 import FootballData from 'footballdata-api-v2';
 import has from 'lodash/has';
 import firestore from '../firebase/firebase';
-import { checkCacheTime, updateCacheTime, batchUpdate } from './util';
+import { checkCacheTime, updateCacheTime } from './util';
 import { getPlayerDetails } from './players';
 import footballDataToSofifaTeamId from '../utilities/footballDataToSofifaTeamId';
 import obsoleteFDTeamLogoIds from '../utilities/obsoleteFDTeamLogoIds';
@@ -83,7 +83,6 @@ const refreshTeam = (competitionIds) => {
 		await fdTeamResults.reduce((prev, fdTeamResult) =>
 			prev.then(async () => {
 				const teamBatch = firestore.batch();
-				const queries = [];
 				const { competition } = fdTeamResult;
 
 				fdTeamResult.teams.forEach((t) => {
@@ -92,24 +91,22 @@ const refreshTeam = (competitionIds) => {
 					const sofifaTeam = sofifaTeamDict[footballDataToSofifaTeamId[fdTeam.id]];
 					const { team, squad } = mergeTeamInfo(fdTeam, sofifaTeam, playerDict);
 					const squadBatch = firestore.batch();
+					const teamRef = firestore.doc(`teams/${team.id}`);
 
-					queries.push(batchUpdate(teamBatch, firestore.collection('teams').where('id', '==', team.id), team, (ref) => {
-						squad.forEach((player) => {
-							const playerRef = firestore.doc(`teams/${ref.id}/squad/${player.id}`);
-							squadBatch.set(playerRef, player, { merge: true });
-						});
-						squadBatch.commit().then(() => Log.debug(`batch update team ${team.name} squad`));
-					}).then((isUpdated) => {
-						const operation = isUpdated ? 'update' : 'add';
-						console.log(`${operation} team ${team.name}`)
-					}));
+					teamBatch.set(teamRef, team, { merge: true });
+
+					squad.forEach((player) => {
+						const playerRef = firestore.doc(`teams/${team.id}/squad/${player.id}`);
+						squadBatch.set(playerRef, player, { merge: true });
+					});
+					squadBatch.commit().then(() => Log.debug(`batch update team ${team.name} squad`));
 				});
 
-				await Promise.all(queries);
 				await teamBatch.commit().then(() => {
 					Log.debug(`batch update ${competition.name}'s teams`)
 				});
 			}), Promise.resolve());
+		Log.debug('update teams completed');
 		updateCacheTime('teams');
 	});
 }

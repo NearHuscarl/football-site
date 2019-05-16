@@ -1,6 +1,6 @@
 import FootballData from 'footballdata-api-v2';
 import firestore from '../firebase/firebase';
-import { checkCacheTime, updateCacheTime, get, update } from './util';
+import { checkCacheTime, updateCacheTime } from './util';
 import Log from '../utilities/log'
 
 const fetchStandingPending = (competitionId) => ({
@@ -45,8 +45,7 @@ const refreshStanding = (competitionId) => {
 	}).then((data) => {
 		const standings = flattenStandingData(data);
 		
-		update(firestore.collection('standings')
-			.where('competition.id', '==', competitionId), standings)
+		firestore.doc(`standings/${competitionId}`).set(standings, { merge: true })
 			.then(() => updateCacheTime('standings', competitionId));
 		return standings;
 	}).catch((err) => {
@@ -63,9 +62,8 @@ const startFetchStanding = (competitionId) =>
 				if (expired) {
 					return refreshStanding(competitionId);
 				}
-				return get(firestore.collection('standings')
-					.where('competition.id', '==', competitionId))
-					.then((result) => result[0]);
+				return firestore.doc(`standings/${competitionId}`)
+					.get().then((doc) => doc.data());
 			})
 			.then((standing) => {
 				dispatch(fetchStandingCompleted(competitionId, standing));

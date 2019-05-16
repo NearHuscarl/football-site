@@ -1,5 +1,5 @@
 import firestore from '../firebase/firebase';
-import { checkCacheTime, updateCacheTime, get, batchUpdate } from './util'
+import { checkCacheTime, updateCacheTime, get } from './util'
 import Log from '../utilities/log'
 
 export const fetchPlayersPending = () => ({
@@ -33,27 +33,20 @@ const refreshPlayers = () => {
 		.then(async (players) => {
 			const maxBatchWriteOperations = 500;
 			let batch = firestore.batch();
-			let queries = [];
 			let playerCountFromLastBatch = 0;
 
 			await players.reduce((prev, p, index) =>
 				prev.then(async () => {
 					const player = computeFirstName(p);
 					const playerCount = index + 1;
+					const playerRef = firestore.doc(`players/${player.id}`);
 
-					queries.push(batchUpdate(batch,
-						firestore.collection('players').where('id', '==', player.id), player)
-						.then((isUpdated) => {
-							const operation = isUpdated ? 'update' : 'add';
-							console.log(`${playerCount} ${operation} player ${player.name}`)
-						}));
+					batch.set(playerRef, player, { merge: true });
 	
 					if (playerCount % maxBatchWriteOperations === 0 || playerCount === players.length) {
-						await Promise.all(queries);
 						await batch.commit().then(() => {
 							Log.debug(`batch update players: ${playerCountFromLastBatch + 1}-${playerCount}`);
 							batch = firestore.batch(); // get a new write batch
-							queries = [];
 							playerCountFromLastBatch = playerCount;
 						});
 					}

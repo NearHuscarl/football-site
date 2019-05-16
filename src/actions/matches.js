@@ -2,7 +2,7 @@ import moment from 'moment';
 import has from 'lodash/has';
 import FootballData from 'footballdata-api-v2';
 import firestore from '../firebase/firebase';
-import { checkCacheTime, updateCacheTime, get, update } from './util'
+import { checkCacheTime, updateCacheTime, get } from './util'
 import { competitionIds } from '../settings';
 import getDateRange from '../utilities/getDateRange';
 import Log from '../utilities/log'
@@ -44,15 +44,13 @@ export const refreshMatch = (params = defaultParams) => {
 			matchDate[date][match.status] += 1;
 			
 			matchResults.push(match);
-			update(firestore
-				.collection('matches')
-				.where('id', '==', match.id), match);
+			firestore.doc(`matches/${match.id}`).set(match, { merge: true });
 		});
 
 		const dateRange = getDateRange(moment(params.dateFrom), moment(params.dateTo));
 		dateRange.forEach((date) => {
 			const matchDatePayload = { date, ...matchDate[date] };
-			update(firestore.collection('matchDates').where('date', '==', date), matchDatePayload);
+			firestore.doc(`matchDates/${date}`).set(matchDatePayload, { merge: true });
 		});
 
 		updateCacheTime('matches');

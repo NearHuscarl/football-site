@@ -22,19 +22,16 @@ const computeAge = (player) => {
 const startFetchTeam = (id) =>
 	(dispatch) => {
 		dispatch(fetchTeamPending());
-		let team = null;
 
-		return firestore.collection('teams')
-			.where('id', '==', id)
-			.get().then((querySnapshot) => {
-				const [doc] = querySnapshot.docs;
-				team = doc.data();
+		return Promise.all([
+			firestore.doc(`teams/${id}`).get().then((doc) => doc.data()),
+			get(firestore.collection(`teams/${id}/squad`))
+		]).then((result) => {
+			const [team, squad] = result;
 
-				return get(firestore.collection(`teams/${doc.id}/squad`));
-			}).then((squad) => {
-				team.squad = squad.map((player) => computeAge(player));
-				dispatch(fetchTeamCompleted(team));
-			})
+			team.squad = squad.map((player) => computeAge(player));
+			dispatch(fetchTeamCompleted(team));
+		});
 	}
 
 export default startFetchTeam;
