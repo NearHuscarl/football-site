@@ -31,7 +31,12 @@ export const getTeamDetails = () =>
  */
 const mergeTeamInfo = (fdTeam, sofifaTeam, playerDict) => {
 	const team = { ...fdTeam, ...sofifaTeam, };
-	const squad = team.squad.map((player) => ({ ...playerDict[player.id], role: player.role }));
+	const squad = team.squad.map((player) => {
+		const result = playerDict[player.id];
+		result.role = player.role;
+		result.team.id = fdTeam.id;
+		return result;
+	});
 
 	team.id = fdTeam.id; 
 	team.founded = sofifaTeam.contact.founded; // TODO: move founded field to root in library

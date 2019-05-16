@@ -29,27 +29,13 @@ renderApp();
 
 // import FirebaseUtil from './firebase/firebaseUtil';
 // import firestore from './firebase/firebase';
-// import { updateCacheTime, set, update, get } from './actions/util';
-// import checkUpdateTeams from './actions/teams';
+// import { updateCacheTime, set, get } from './actions/util';
+// import deburr from 'lodash/deburr';
+// import checkUpdateTeams from './actions/players';
 
 // checkUpdateTeams(true);
 
-// firestore.collection('players').get().then((snap) => {
-// 	const players = [];
-// 	snap.forEach((doc) => players.push(doc.data()));
-// 	console.log(players);
-// })
-// store.dispatch(startFetchTeams());
-
-// data.forEach((item) => {
-// 	firestore.collection('articles').add(item).then(() => {
-// 		console.log('Added ' + item.url + ' to firestore');
-// 	});
-// })
-
-
 // FirebaseUtil.logArticles('2018-01-01', '2020-01-01');
-
 
 // FirebaseUtil.getAllTeamNameHashes().then((teamNames) => {
 // 	console.log(teamNames);

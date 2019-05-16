@@ -1,5 +1,7 @@
+import invert from 'lodash/invert';
 import firestore from '../firebase/firebase';
 import { checkCacheTime, updateCacheTime, get } from './util'
+import footballDataToSofifaTeamId from '../utilities/footballDataToSofifaTeamId';
 import Log from '../utilities/log'
 
 export const fetchPlayersPending = () => ({
@@ -13,12 +15,13 @@ export const fetchPlayersCompleted = (players) => ({
 	},
 });
 
-const computeFirstName = (player) => {
+const processPlayerData = (player, fdTeamDict) => {
 	const result = player;
 
 	// Get the last word basically, since firebase doesn't offer full text search
 	// We can only search by whole name or name prefix
 	result.firstName = player.shortName.split(' ').pop();
+	result.team.id = Number(fdTeamDict[player.team.id]) || -1;
 
 	return result;
 }
@@ -32,12 +35,13 @@ const refreshPlayers = () => {
 	return getPlayerDetails()
 		.then(async (players) => {
 			const maxBatchWriteOperations = 500;
+			const fdTeamDict = invert(footballDataToSofifaTeamId);
 			let batch = firestore.batch();
 			let playerCountFromLastBatch = 0;
 
 			await players.reduce((prev, p, index) =>
 				prev.then(async () => {
-					const player = computeFirstName(p);
+					const player = processPlayerData(p, fdTeamDict);
 					const playerCount = index + 1;
 					const playerRef = firestore.doc(`players/${player.id}`);
 

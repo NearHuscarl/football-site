@@ -43,7 +43,8 @@ const getClassNameFromPosition = (position) => {
 			return 'pos--misc';
 
 		default:
-			throw Error(`Unknown player position: ${position}`);
+			return '';
+			// throw Error(`Unknown player position: ${position}`);
 	}
 }
 

@@ -1,18 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Image from './Image';
 import TooltipTeam from './TooltipTeam';
 import { scorerPropTypes } from '../utilities/footballProptypes';
+import defaultAvatar from '../../public/images/Default_Player_Avatar.png';
+import Position from './Position';
+import withPlayerModal from '../hoc/PlayerList';
 
-class TopScorerList extends React.Component {
-	renderScorerItem = (scorer) => (
-		<ul key={scorer.player.name} className='list-item-base'>
+const renderScorerItem = (scorer, onClickPlayer) => (
+	<div className='list-item-base vertical-align'
+		key={scorer.name} >
+		<Image
+			className='a'
+			width={80}
+			height={80}
+			alt='avatar'
+			src={scorer.avatar || defaultAvatar}
+			onClick={() => onClickPlayer(scorer)}
+			onKeyPress={() => onClickPlayer(scorer)}
+			defaultImage={defaultAvatar} />
+		<ul className='ml-s'>
 			<li>
 				<span className='bold'>Name:</span>{' '}
-				{scorer.player.name}
+				{scorer.shortName || scorer.name}
 			</li>
 			<li>
 				<span className='bold'>Position:</span>{' '}
-				{scorer.player.position}
+				{Array.isArray(scorer.position) ?
+					<Position>{scorer.position}</Position> :
+					scorer.position
+				}
 			</li>
 			<li>
 				<span className='bold'>Team:</span>{' '}
@@ -25,29 +42,32 @@ class TopScorerList extends React.Component {
 				{scorer.numberOfGoals}
 			</li>
 		</ul>
-	)
+	</div>
+)
 
-	render() {
-		const { scorers } = this.props;
+const TopScorerList = (props) => {
+	const { scorers, onClickPlayer } = props;
 
-		return (
-			<div className='top-scorer'>
-				<div className='header'>
-					Top Scorers
-				</div>
-				<div className='top-scorer-body'>
-					<div className='top-scorer-list'>{
-						scorers.map((scorer) => this.renderScorerItem(scorer))
-					}
-					</div>
+	return (
+		<div className='top-scorer'>
+			<div className='header'>
+				Top Scorers
+			</div>
+			<div className='top-scorer-body'>
+				<div className='top-scorer-list'>{
+					scorers.map((scorer) => renderScorerItem(scorer, onClickPlayer))
+				}
 				</div>
 			</div>
-		);
-	}
+		</div>
+	);
 }
+
+export const TopScorerListMock = TooltipTeam;
 
 TopScorerList.propTypes = {
 	scorers: PropTypes.arrayOf(scorerPropTypes).isRequired,
+	onClickPlayer: PropTypes.func.isRequired,
 };
 
-export default TopScorerList;
+export default withPlayerModal(TopScorerList);

@@ -41,7 +41,10 @@ export const playerPropTypes = PropTypes.shape({
 	name: PropTypes.string,
 	overallRating: PropTypes.number,
 	potential: PropTypes.number,
-	position: PropTypes.arrayOf(PropTypes.string),
+	position: PropTypes.oneOfType([
+		PropTypes.arrayOf(PropTypes.string),
+		PropTypes.string
+	]),
 	shortName: PropTypes.string,
 	stats: PropTypes.shape({
 		bodyType: PropTypes.string,

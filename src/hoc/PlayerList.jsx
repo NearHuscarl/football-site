@@ -29,14 +29,14 @@ const withPlayerModal = (WrappedComponent) =>
 
 		render() {
 			return (
-				<div>
+				<React.Fragment>
 					<WrappedComponent onClickPlayer={this.onClickPlayer} {...this.props} />
 					<PlayerDetailModal
 						isOpen={this.state.isPlayerModalOpen}
 						onRequestClose={this.closePlayerModal}
 						player={this.state.selectedPlayer}
 					/>
-				</div>
+				</React.Fragment>
 			);
 		}
 	}
