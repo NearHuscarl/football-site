@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react';
+import take from 'lodash/take';
 import PlayerListHeader from './PlayerListHeader';
 import Image from './Image';
 import Position from './Position';
@@ -66,7 +67,7 @@ class PlayerList extends React.Component {
 	positionRenderer = (params) => {
 		const positions = params.value;
 
-		return <Position>{positions}</Position>;
+		return <Position>{take(positions, 2)}</Position>;
 	}
 
 	ratingRenderer = (params) => {
@@ -104,7 +105,7 @@ class PlayerList extends React.Component {
 					<AgGridColumn headerName='' field='avatar' width={60} sortable={false}
 						cellRenderer='avatarRenderer' cellStyle={{ padding: 0 }} />
 					<AgGridColumn headerName='Name' field='shortName' width={200} cellRenderer='nameRenderer' />
-					<AgGridColumn headerName='Position' field='team.position' width={70} cellRenderer='positionRenderer' />
+					<AgGridColumn headerName='Position' field='position' width={75} cellRenderer='positionRenderer' />
 					<AgGridColumn headerName='Age' field='age' width={50} />
 					<AgGridColumn headerName='Overall' field='overallRating' width={67} cellRenderer='ratingRenderer' />
 					<AgGridColumn headerName='Potential' field='potential' cellRenderer='ratingRenderer' />

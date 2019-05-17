@@ -1,6 +1,7 @@
 import React from 'react';
 import StarRating from './StarRating';
 import Rating from './Rating';
+import TooltipTeam from './TooltipTeam';
 import { teamPropTypes } from '../utilities/footballProptypes';
 
 const getStarting11AverageAge = (team) => {
@@ -30,7 +31,8 @@ const renderTeamSummary = (team) => (
 				<span className='bold'>Competition:</span>{' '}{team.competition.name}
 			</li>
 			<li>
-				<span className='bold'>Rival Team:</span>{' '}{team.rivalTeam}
+				<span className='bold'>Rival Team:</span>{' '}
+				<TooltipTeam id={team.rivalTeam.id}>{team.rivalTeam.name}</TooltipTeam>
 			</li>
 			<li>
 				<span className='bold'>Club color:</span>{' '}{team.clubColors}

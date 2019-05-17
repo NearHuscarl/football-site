@@ -114,7 +114,7 @@ export const teamPropTypes = PropTypes.shape({
 	area: nameProptypes,
 	countryFlag: PropTypes.string,
 	competition: nameProptypes,
-	rivalTeam: PropTypes.string,
+	rivalTeam: nameProptypes,
 	clubColors: PropTypes.string,
 	tla: PropTypes.string,
 	venue: PropTypes.string,

@@ -14,7 +14,11 @@ const PageHeader = ({ title, children }) => (
 
 PageHeader.propTypes = {
 	title: PropTypes.string,
-	children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.node)]),
+	children: PropTypes.oneOfType([
+		PropTypes.element,
+		PropTypes.node,
+		PropTypes.arrayOf(PropTypes.node)
+	]),
 };
 
 PageHeader.defaultProps = {

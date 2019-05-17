@@ -1,5 +1,6 @@
 import FootballData from 'footballdata-api-v2';
 import has from 'lodash/has';
+import invert from 'lodash/invert';
 import firestore from '../firebase/firebase';
 import { checkCacheTime, updateCacheTime } from './util';
 import { getPlayerDetails } from './players';
@@ -20,7 +21,7 @@ const fetchTeamsCompleted = (teams) => ({
 });
 
 export const getTeamDetails = () =>
-	fetch('https://gist.githubusercontent.com/NearHuscarl/7f171acfdbb5ad4dd74d6676c30c587f/raw/0912797187a8ae7239aa4dc83d7d20eb7e185cca/squads.json')
+	fetch('https://gist.githubusercontent.com/NearHuscarl/7f171acfdbb5ad4dd74d6676c30c587f/raw/ac0d86e1d66c4c25c49d123764d0121c9e9667a3/squads.json')
 		.then((response) => response.json());
 
 /**
@@ -29,7 +30,7 @@ export const getTeamDetails = () =>
  * @param {object} teamDetails 
  * @param {object} playerDict 
  */
-const mergeTeamInfo = (fdTeam, sofifaTeam, playerDict) => {
+const mergeTeamInfo = (fdTeam, sofifaTeam, playerDict, fdTeamDict) => {
 	const team = { ...fdTeam, ...sofifaTeam, };
 	const squad = team.squad.map((player) => {
 		const result = playerDict[player.id];
@@ -39,6 +40,7 @@ const mergeTeamInfo = (fdTeam, sofifaTeam, playerDict) => {
 	});
 
 	team.id = fdTeam.id; 
+	team.rivalTeam.id = Number(fdTeamDict[sofifaTeam.rivalTeam.id]) || -1;
 	team.founded = sofifaTeam.contact.founded; // TODO: move founded field to root in library
 
 	if (has(obsoleteFDTeamLogoIds, team.id)) {
@@ -84,6 +86,7 @@ const refreshTeam = (competitionIds) => {
 		const [players, sofifaTeams, ...fdTeamResults] = results;
 		const sofifaTeamDict = toHashSet(sofifaTeams);
 		const playerDict = toHashSet(players);
+		const fdTeamDict = invert(footballDataToSofifaTeamId);
 
 		await fdTeamResults.reduce((prev, fdTeamResult) =>
 			prev.then(async () => {
@@ -94,7 +97,7 @@ const refreshTeam = (competitionIds) => {
 					const fdTeam = t;
 					fdTeam.competition = { id: competition.id, name: competition.name };
 					const sofifaTeam = sofifaTeamDict[footballDataToSofifaTeamId[fdTeam.id]];
-					const { team, squad } = mergeTeamInfo(fdTeam, sofifaTeam, playerDict);
+					const { team, squad } = mergeTeamInfo(fdTeam, sofifaTeam, playerDict, fdTeamDict);
 					const squadBatch = firestore.batch();
 					const teamRef = firestore.doc(`teams/${team.id}`);
 

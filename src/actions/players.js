@@ -3,6 +3,7 @@ import firestore from '../firebase/firebase';
 import { checkCacheTime, updateCacheTime, get } from './util'
 import footballDataToSofifaTeamId from '../utilities/footballDataToSofifaTeamId';
 import Log from '../utilities/log'
+import getAge from '../utilities/getAge';
 
 export const fetchPlayersPending = () => ({
 	type: 'FETCH_PLAYERS_PENDING',
@@ -27,7 +28,7 @@ const processPlayerData = (player, fdTeamDict) => {
 }
 
 export const getPlayerDetails = () =>
-	fetch('https://gist.githubusercontent.com/NearHuscarl/7f171acfdbb5ad4dd74d6676c30c587f/raw/289f512e4acd2c7ec255b06243d0d15e0b4d7466/players.json')
+	fetch('https://gist.githubusercontent.com/NearHuscarl/7f171acfdbb5ad4dd74d6676c30c587f/raw/0b073b5b596123c12a74280dee4eeda14a9f6342/players.json')
 		.then((response) => response.json());
 
 const refreshPlayers = () => {
@@ -72,16 +73,24 @@ const checkUpdatePlayers = (force = false) =>
 			return Promise.resolve();
 		});
 
+const computeAge = (players) => players.map((player) => {
+	const playerWithAge = player;
+	playerWithAge.age = getAge(player.birthday);
+	return playerWithAge;
+});
+
 export const startFetchPotentialPlayers = () =>
 	(dispatch) => {
 		dispatch(fetchPlayersPending());
 		return get(firestore.collection('players')
-			.where('potential', '>=', 85)
+			.where('potential', '>=', 80)
 			.orderBy('potential', 'desc')
-			.limit(250)).then((players) => {
-			const potentialPlayers = players.filter((player) => player.potential - player.overallRating >= 5);
-			dispatch(fetchPlayersCompleted(potentialPlayers));
-		})
+			.limit(25))
+			.then((players) => {
+				const potentialPlayers = players
+					.filter((player) => player.potential - player.overallRating >= 4)
+				dispatch(fetchPlayersCompleted(computeAge(potentialPlayers)));
+			})
 	}
 
 export const startFetchTopPlayers = () =>
@@ -92,7 +101,7 @@ export const startFetchTopPlayers = () =>
 			.where('overallRating', '>=', 85)
 			.orderBy('overallRating', 'desc')
 			.limit(20))
-			.then((players) => dispatch(fetchPlayersCompleted(players)))
+			.then((players) => dispatch(fetchPlayersCompleted(computeAge(players))))
 	}
 
 export default checkUpdatePlayers;

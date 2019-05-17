@@ -93,7 +93,7 @@ class TooltipTeam extends React.Component {
 				className={className}
 				onMouseEnter={this.onMouseEnter}
 				component={team ? () => this.renderTeamInfo(team) : 'span'}>
-				<FakeLink to={`team/${id}`}>
+				<FakeLink to={`/team/${id}`}>
 					{children}
 				</FakeLink>
 			</Tooltip>
