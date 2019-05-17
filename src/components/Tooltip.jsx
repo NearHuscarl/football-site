@@ -15,7 +15,7 @@ class Tooltip extends React.Component {
 			left: 0,
 			top: 0,
 		};
-		this.estimatedWidth = 450;
+		this.estimatedWidth = 400;
 		this.estimatedHeight = 180;
 	}
 

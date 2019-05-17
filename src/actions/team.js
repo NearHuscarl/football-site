@@ -1,6 +1,6 @@
-import moment from 'moment';
 import firestore from '../firebase/firebase';
 import { get } from './util';
+import getAge from '../utilities/getAge';
 
 const fetchTeamPending = () => ({
 	type: 'FETCH_TEAM_PENDING',
@@ -15,7 +15,7 @@ const fetchTeamCompleted = (team) => ({
 
 const computeAge = (player) => {
 	const playerWithAge = player;
-	playerWithAge.age = moment().diff(moment(player.birthday), 'years');
+	playerWithAge.age = getAge(player.birthday);
 	return playerWithAge;
 }
 
