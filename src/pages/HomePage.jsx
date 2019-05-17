@@ -1,12 +1,26 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Headlines from '../components/Headlines';
 import TileGroup from '../components/TileGroup';
+import { articlePropTypes } from '../utilities/footballProptypes';
 
-const HomePage = () => (
-	<div>
-		<Headlines />
+const HomePage = (props) => (
+	<React.Fragment>
+		<Headlines headlines={props.headlines} />
 		<TileGroup />
-	</div>
+	</React.Fragment>
 )
 
-export default HomePage;
+HomePage.propTypes = {
+	headlines: PropTypes.arrayOf(articlePropTypes).isRequired,
+};
+
+const mapStateToProps = (state) => ({
+	headlines: state.articles.headlines,
+});
+
+export default connect(
+	mapStateToProps,
+	undefined,
+)(HomePage);

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import moment from 'moment';
@@ -11,7 +10,6 @@ import PageHeader from './PageHeader';
 import defaultArticleImage from '../../public/images/Default_Article_Image.jpg';
 import { articlePropTypes } from '../utilities/footballProptypes';
 
-// TODO: convert into presentation component
 class Headlines extends React.Component {
 	constructor(props) {
 		super(props);
@@ -123,17 +121,8 @@ class Headlines extends React.Component {
 	}
 }
 
-export const MockHeadlines = Headlines;
-
 Headlines.propTypes = {
 	headlines: PropTypes.arrayOf(articlePropTypes).isRequired,
 };
 
-const mapStateToProps = (state) => ({
-	headlines: state.articles.headlines,
-});
-
-export default connect(
-	mapStateToProps,
-	undefined,
-)(Headlines);
+export default Headlines;

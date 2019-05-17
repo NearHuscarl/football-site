@@ -75,10 +75,10 @@ class StandingTableSmall extends React.Component {
 					getRowClass={this.getRowClass}
 					domLayout='print'
 					{...rest}>
-					    <AgGridColumn headerName='#' field='position' width={36} cellStyle={{ textAlign: 'center' }} cellClass={this.getRankCellClass} />
+					    <AgGridColumn headerName='#' field='position' width={38} cellStyle={{ textAlign: 'center' }} cellClass={this.getRankCellClass} />
 					    <AgGridColumn headerName='Team' field='team.name' width={177} cellStyle={{ textAlign: 'left' }} />
 					    <AgGridColumn headerName='P' field='playedGames' width={39} />
-					    <AgGridColumn headerName='+/-' field='goalDifference' width={45} />
+					    <AgGridColumn headerName='+/-' field='goalDifference' width={44} />
 					    <AgGridColumn headerName='PTS' field='points' width={45} />
 				</AgGridReact>
 			</div>
