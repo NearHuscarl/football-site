@@ -27,17 +27,9 @@
     display: flex;
     font-size: $font-size-small;
     z-index: 1001;
+    padding: $s-size;
+}
 
-    .tooltip-team__image {
-        align-self: center;
-        padding: $s-size;
-
-        img {
-            width: 8rem;
-        }
-    }
-    
-    .tooltip-team__text {
-        padding: $s-size;
-    }
+.logo {
+    width: 8rem;
 }

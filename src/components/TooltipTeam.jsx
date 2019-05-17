@@ -4,6 +4,8 @@ import has from 'lodash/has';
 import store from '../store/configureStore';
 import Tooltip from './Tooltip'
 import Image from './Image';
+import Rating from './Rating';
+import StarRating from './StarRating';
 import FakeLink from './FakeLink';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
 import withHistory from '../hoc/TooltipTeam';
@@ -32,30 +34,34 @@ class TooltipTeam extends React.Component {
 
 	renderTeamInfo = (team) => (
 		<React.Fragment>
-			<div className='tooltip-team__image'>{
-				<Image alt='team logo' src={team.crestUrl} defaultImage={defaultLogo} />
-			}
+			<div className='container-col center mr-s'>
+				<div className='mb-s'>{
+					<Image className='logo' alt='team logo' src={team.crestUrl} defaultImage={defaultLogo} />
+				}
+				</div>
+				<div>
+					<Rating>{team.attack}</Rating>{' '}
+					<Rating>{team.midfield}</Rating>{' '}
+					<Rating>{team.defence}</Rating>{' '}
+				</div>
 			</div>
-			<div className='tooltip-team__text'>
+			<div>
 				<div>
-					<span className='bold'>Code:</span>{' '}
-					{team.tla}
+					<span className='bold'>Domestic Prestige:</span>{' '}
+					<StarRating score={team.domesticPrestige} maxScore={10} />
 				</div>
 				<div>
-					<span className='bold'>Area:</span>{' '}
-					{team.areaName}
+					<span className='bold'>International Prestige:</span>{' '}
+					<StarRating score={team.internationalPrestige} maxScore={10} />
 				</div>
 				<div>
-					<span className='bold'>Club color:</span>{' '}
-					{team.clubColors}
+					<span className='bold'>Overall Rating:</span>{' '}<Rating>{team.overall}</Rating>
 				</div>
 				<div>
-					<span className='bold'>Founded:</span>{' '}
-					{team.founded}
+					<span className='bold'>Area:</span>{' '}{team.area.name}
 				</div>
 				<div>
-					<span className='bold'>Venue:</span>{' '}
-					{team.venue}
+					<span className='bold'>Stadium:</span>{' '}{team.venue}
 				</div>
 				<div>
 					<span className='bold'>Email:</span>{' '}
@@ -63,10 +69,6 @@ class TooltipTeam extends React.Component {
 						type='button'
 						className='button button--link-red'
 						onClick={() => window.open(`mailto:${team.contact.email}`)}>{team.contact.email}</button>
-				</div>
-				<div>
-					<span className='bold'>Address:</span>{' '}
-					{team.contact.address}
 				</div>
 				<div>
 					<span className='bold'>Website:</span>{' '}

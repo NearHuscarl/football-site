@@ -16,7 +16,7 @@ class Tooltip extends React.Component {
 			top: 0,
 		};
 		this.estimatedWidth = 450;
-		this.estimatedHeight = 200;
+		this.estimatedHeight = 180;
 	}
 
 	onMouseEnterTooltip = (e) => {

@@ -16,7 +16,6 @@ const fetchTopScorersCompleted = (competitionId, scorers) => ({
 	},
 });
 
-
 const compareName = (name1, name2) => {
 	if (name1 === name2) return true;
 

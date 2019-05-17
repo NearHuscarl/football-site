@@ -18,6 +18,12 @@
 	flex-direction: column;
 }
 
+// Use wit display: flex
+.center {
+	align-items: center;
+	justify-content: center;
+}
+
 .col {
 	margin: $s-size;
 }
