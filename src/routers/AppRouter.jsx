@@ -48,7 +48,7 @@ const AppRouter = () => (
 				<Route path="/fixtures" component={FixturesPage} exact />
 				<Route path="/standings" component={StandingPage} />
 				<Route path="/team/:id" component={TeamPage} />
-				<Route path="/players" component={PlayersPage} exact />
+				<Route path="/players/:sort*" component={PlayersPage} />
 				<Route component={NotFoundPage} />
 			</Switch>
 			<Footer />

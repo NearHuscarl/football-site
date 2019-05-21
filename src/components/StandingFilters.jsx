@@ -58,6 +58,7 @@ class StandingFilters extends React.Component {
 							onChange={this.onCompetitionOptionChange}
 							options={this.getOptions(competitions)}
 							placeholder='Select competition...'
+							isClearable={false}
 						/>
 					</div>
 					<div className="input-group__item">
@@ -67,6 +68,7 @@ class StandingFilters extends React.Component {
 							onChange={this.onYearOptionChange}
 							options={this.getOptions(standingYears)}
 							placeholder='Select year...'
+							isClearable={false}
 						/>
 					</div>
 					<div className="input-group__item">
@@ -76,6 +78,7 @@ class StandingFilters extends React.Component {
 							onChange={this.onScoreOptionChange}
 							options={this.getOptions(standingScores)}
 							placeholder='Home/Away score'
+							isClearable={false}
 						/>
 					</div>
 				</div>

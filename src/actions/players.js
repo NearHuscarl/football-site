@@ -1,34 +1,64 @@
+import deburr from 'lodash/deburr';
 import invert from 'lodash/invert';
 import firestore from '../firebase/firebase';
-import { checkCacheTime, updateCacheTime, get } from './util'
+import { checkCacheTime, updateCacheTime } from './util'
 import footballDataToSofifaTeamId from '../utilities/footballDataToSofifaTeamId';
-import Log from '../utilities/log'
 import getAge from '../utilities/getAge';
+import getWeight from '../utilities/getWeight';
+import Log from '../utilities/log';
 
-export const fetchPlayersPending = () => ({
-	type: 'FETCH_PLAYERS_PENDING',
-});
+const getPotentialScore = (player) => {
+	const { potential, overallRating } = player;
+	const age = getAge(player.birthday);
 
-export const fetchPlayersCompleted = (players) => ({
-	type: 'FETCH_PLAYERS_COMPLETED',
-	payload: {
-		players,
-	},
-});
+	return Number((
+		getWeight(potential, 85, 100) +
+		getWeight(overallRating, 75, 100) +
+		getWeight(age, 25, 15) +
+		getWeight(potential - overallRating, 0, 50) * 2
+	).toFixed(5));
+}
 
 const processPlayerData = (player, fdTeamDict) => {
 	const result = player;
 
-	// Get the last word basically, since firebase doesn't offer full text search
-	// We can only search by whole name or name prefix
-	result.firstName = player.shortName.split(' ').pop();
+	result._query = {};
+
+	// Since firestore query does not offer full text search like
+	// SQL query without third party services like elastic search which
+	// are not free. The workaround here is to split the name into
+	// array of words and store in C#-like hashset then search for whole word
+	// something like: query.where(`_query.name.${query}`, '==', true)
+	const name = deburr(player.name.toLowerCase());
+	const nameArray = name.split(/\s+/);
+
+	const nameDict = {}; // { 'messi': true }
+	nameArray.forEach((word) => (nameDict[word] = true));
+	result._query.name = nameDict;
+
+	const nameBirthdayDict = {}; // { 'messi': '1981-01-01' }
+	const { birthday } = player; 
+	nameArray.forEach((word) => (nameBirthdayDict[word] = birthday))
+	result._query.name_birthday = nameBirthdayDict;
+
+	const nameRatingDict = {}; // { 'messi': 95 }
+	const { overallRating } = player; 
+	nameArray.forEach((word) => (nameRatingDict[word] = overallRating))
+	result._query.name_rating = nameRatingDict;
+
+	const namePotentialDict = {}; // { 'messi': 95 }
+	const { potential } = player; 
+	nameArray.forEach((word) => (namePotentialDict[word] = potential))
+	result._query.name_potential = namePotentialDict;
+
+	result._query.potentialScore = getPotentialScore(player);
 	result.team.id = Number(fdTeamDict[player.team.id]) || -1;
 
 	return result;
 }
 
 export const getPlayerDetails = () =>
-	fetch('https://gist.githubusercontent.com/NearHuscarl/7f171acfdbb5ad4dd74d6676c30c587f/raw/0b073b5b596123c12a74280dee4eeda14a9f6342/players.json')
+	fetch('https://gist.githubusercontent.com/NearHuscarl/7f171acfdbb5ad4dd74d6676c30c587f/raw/63facf51e06074feeb7900ac142024c7adde03eb/players.json')
 		.then((response) => response.json());
 
 const refreshPlayers = () => {
@@ -72,36 +102,5 @@ const checkUpdatePlayers = (force = false) =>
 			}
 			return Promise.resolve();
 		});
-
-const computeAge = (players) => players.map((player) => {
-	const playerWithAge = player;
-	playerWithAge.age = getAge(player.birthday);
-	return playerWithAge;
-});
-
-export const startFetchPotentialPlayers = () =>
-	(dispatch) => {
-		dispatch(fetchPlayersPending());
-		return get(firestore.collection('players')
-			.where('potential', '>=', 80)
-			.orderBy('potential', 'desc')
-			.limit(25))
-			.then((players) => {
-				const potentialPlayers = players
-					.filter((player) => player.potential - player.overallRating >= 4)
-				dispatch(fetchPlayersCompleted(computeAge(potentialPlayers)));
-			})
-	}
-
-export const startFetchTopPlayers = () =>
-	(dispatch) => {
-		dispatch(fetchPlayersPending());
-
-		return get(firestore.collection('players')
-			.where('overallRating', '>=', 85)
-			.orderBy('overallRating', 'desc')
-			.limit(20))
-			.then((players) => dispatch(fetchPlayersCompleted(computeAge(players))))
-	}
 
 export default checkUpdatePlayers;

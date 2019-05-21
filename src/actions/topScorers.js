@@ -41,7 +41,6 @@ const comparePlayer = (fdPlayer, sofifaPlayer) => {
 	const fdPlayerName = deburr(fdPlayer.name);
 	const sofifaPlayerName = deburr(sofifaPlayer.name);
 	if (fdPlayerName === deburr(sofifaPlayer.shortName)
-		|| compareName(deburr(fdPlayer.firstName), sofifaPlayerName)
 		|| compareName(fdPlayerName, sofifaPlayerName)
 		|| compareName(sofifaPlayerName, fdPlayerName)) {
 		return true;

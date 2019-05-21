@@ -9,7 +9,7 @@
  * hashMultipleWords('this is', { id: 1000 })
  * // output: { 'this': { 'is': { 'leaf': true, id: 1000 } } }
  * ```
- * @param keywords Multiple words seperated by whitespaces in string
+ * @param {string} keywords Multiple words seperated by whitespaces
  */
 const hashMultipleWords = (keywords, info) => {
 	const wordHashes = {};

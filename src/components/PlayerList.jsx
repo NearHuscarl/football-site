@@ -7,9 +7,12 @@ import Image from './Image';
 import Position from './Position';
 import Rating from './Rating';
 import StarRating from './StarRating';
+import { TooltipTeamHistory } from './TooltipTeam';
 import defaultAvatar from '../../public/images/Default_Player_Avatar.png';
+import defaultLogo from '../../public/images/Default_Team_Logo.png';
 import { playerPropTypes } from '../utilities/footballProptypes';
 import withPlayerModal from '../hoc/PlayerList';
+import { historyPropTypes } from '../utilities/routerProptypes'
 
 class PlayerList extends React.Component {
 	constructor(props) {
@@ -63,6 +66,27 @@ class PlayerList extends React.Component {
 			</div>
 		);
 	}
+	
+	teamRenderer = (params) => {
+		const team = params.value;
+		if (!this.props.history) return null;
+
+		return (
+			<span className='vertical-align'>
+				<TooltipTeamHistory id={team.id} history={this.props.history}>
+					<div className='vertical-align mr-s a'>
+						<Image alt='team logo' src={team.logo} defaultImage={defaultLogo} />
+					</div>
+				</TooltipTeamHistory>
+				{team.name}
+			</span>
+		);
+	}
+
+	teamNameComparer = (team1, team2) => {
+		if (team1.name === team2.name) return 0;
+		return team1.name > team2.name ? 1 : -1;
+	}
 
 	positionRenderer = (params) => {
 		const positions = params.value;
@@ -77,7 +101,7 @@ class PlayerList extends React.Component {
 	}
 
 	render() {
-		const { players } = this.props;
+		const { displayTeam, displayHeight, displayWeight, players } = this.props;
 
 		return (
 			<div className='ag-theme-balham table-wrapper'>
@@ -91,6 +115,7 @@ class PlayerList extends React.Component {
 						defaultRowRenderer: this.defaultRowRenderer,
 						avatarRenderer: this.avatarRenderer,
 						nameRenderer: this.nameRenderer,
+						teamRenderer: this.teamRenderer,
 						positionRenderer: this.positionRenderer,
 						ratingRenderer: this.ratingRenderer,
 						// loadingOverlayComponent: this.loadingOverlayComponent,
@@ -105,12 +130,17 @@ class PlayerList extends React.Component {
 					<AgGridColumn headerName='' field='avatar' width={60} sortable={false}
 						cellRenderer='avatarRenderer' cellStyle={{ padding: 0 }} />
 					<AgGridColumn headerName='Name' field='shortName' width={200} cellRenderer='nameRenderer' />
+					<AgGridColumn headerName='Team' field='team' width={225} cellRenderer='teamRenderer'
+						comparator={this.teamNameComparer}
+						hide={!displayTeam} />
 					<AgGridColumn headerName='Position' field='position' width={75} cellRenderer='positionRenderer' />
 					<AgGridColumn headerName='Age' field='age' width={50} />
 					<AgGridColumn headerName='Overall' field='overallRating' width={67} cellRenderer='ratingRenderer' />
 					<AgGridColumn headerName='Potential' field='potential' cellRenderer='ratingRenderer' />
 					<AgGridColumn headerName='Value' field='value' width={69} />
 					<AgGridColumn headerName='Wage' field='wage' width={69} />
+					<AgGridColumn headerName='Height' field='height' width={78} hide={!displayHeight} />
+					<AgGridColumn headerName='Weight' field='weight' width={84} hide={!displayWeight} />
 				</AgGridReact>
 			</div>
 		)
@@ -122,10 +152,18 @@ export const PlayerListMock = PlayerList;
 PlayerList.propTypes = {
 	players: PropTypes.arrayOf(playerPropTypes).isRequired,
 	onClickPlayer: PropTypes.func,
+	displayTeam: PropTypes.bool,
+	displayHeight: PropTypes.bool,
+	displayWeight: PropTypes.bool,
+	history: historyPropTypes,
 };
 
 PlayerList.defaultProps = {
 	onClickPlayer: null,
+	displayTeam: false,
+	displayHeight: false,
+	displayWeight: false,
+	history: null,
 }
 
 export default withPlayerModal(PlayerList);

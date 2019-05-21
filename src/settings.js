@@ -11,6 +11,13 @@ export const competitionIds = {
 	primeiraLiga: 2017, // Portugal
 }
 
+export const player = {
+	minAge: 15,
+	maxAge: 45,
+	minRating: 0,
+	maxRating: 100,
+}
+
 export const competitionInfo = {
 	[competitionIds.premierLeague]: {
 		championLeagueRanks: [1, 4], // Top 4 have a place in CL next season

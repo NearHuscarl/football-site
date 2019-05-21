@@ -7,6 +7,7 @@ import AppRouter from './routers/AppRouter';
 import store from './store/configureStore';
 import setupStore from './store/setupStore';
 import 'normalize.css/normalize.css';
+import 'rc-menu/assets/index.css';
 import './styles/styles.scss';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';

@@ -39,7 +39,7 @@ class SearchBar extends React.Component {
 	}
 
 	render() {
-		const { placeholder, buttonClassName, renderSearchButton } = this.props;
+		const { placeholder, buttonClassName, renderSearchButton, loading } = this.props;
 		const { state } = this;
 
 		return (
@@ -60,7 +60,11 @@ class SearchBar extends React.Component {
 							aria-label='Search'
 							className={buttonClassName}
 							onClick={this.search}>
-							<i className="fa fa-search fa-fw fa-sm" />
+							{loading ?
+								<i className='fa fa-circle-o-notch fa-sm spin' />
+								:
+								<i className="fa fa-search fa-fw fa-sm" />
+							}
 						</button>
 					</div>
 				}
@@ -74,12 +78,14 @@ SearchBar.propTypes = {
 	onSubmit: PropTypes.func.isRequired,
 	renderSearchButton: PropTypes.bool,
 	buttonClassName: PropTypes.string,
+	loading: PropTypes.bool,
 };
 
 SearchBar.defaultProps = {
 	placeholder: 'Search...',
 	renderSearchButton: true,
 	buttonClassName: 'button button--icon button--yellow button--search',
+	loading: false,
 };
 
 export default SearchBar

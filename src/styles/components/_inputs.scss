@@ -19,3 +19,10 @@
 	@extend .text-input;
 	height: 10rem;
 }
+
+// numeric input
+.react-numeric-input {
+	input {
+		padding: 0 1rem !important;
+	}
+}

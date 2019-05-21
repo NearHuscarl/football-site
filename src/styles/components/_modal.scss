@@ -28,7 +28,7 @@ body {
 
 .ReactModal__Overlay--after-open {
 	opacity: 1;
-    transform: translateX(0);
+    transform: scale(1);
 }
 
 .ReactModal__Overlay--before-close {

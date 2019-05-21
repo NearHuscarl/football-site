@@ -17,7 +17,7 @@ PageHeader.propTypes = {
 	children: PropTypes.oneOfType([
 		PropTypes.element,
 		PropTypes.node,
-		PropTypes.arrayOf(PropTypes.node)
+		PropTypes.arrayOf(PropTypes.node),
 	]),
 };
 

@@ -1,14 +1,45 @@
-.mainmenu {
+// -- rc-menu --
+.rc-menu {
     margin: 0;
     background-color: lighten($color: $dark-blue, $amount: 5%);
     color: darken($color: white, $amount: 10%);
     border-bottom: none;
 
-    li:hover, .rc-menu-item-selected {
+    // override default margin
+    li {
+        margin: 0;
+    }
+
+    .rc-menu-item, .rc-menu-submenu > .rc-menu-submenu-title {
+        padding: $s-size;
+        padding-top: $m-size;
+    }
+    
+    .rc-menu-item {
+        // border-bottom: none;
+        font-family: 'Quicksand-Bold';
+    }
+
+    .rc-menu-submenu {
+        font-family: 'Quicksand-Bold';
+
+        .rc-menu-item {
+            padding-left: 20px; // Make submenu padding left the same as menu
+        }
+    }
+
+    li:hover, .rc-menu-item-selected, .rc-menu-submenu-selected {
         color: $dark-blue;
     }
 
-    li:hover {
+    li:hover, .rc-menu-item {
         cursor: pointer;
+    }
+}
+
+.rc-menu-sub {
+
+    .rc-menu-item {
+        color: $dark-blue !important;
     }
 }

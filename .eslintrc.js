@@ -22,6 +22,8 @@ module.exports = {
         "jest": true,
     },
     'rules': {
+        'no-underscore-dangle': 0,
+        'no-return-assign': ['error', 'except-parens'],
         // deprecated
         'jsx-a11y/label-has-for': 0,
         'jsx-a11y/label-has-associated-control': [2, {

@@ -13,6 +13,8 @@ import matchResultsReducer from '../reducers/matchResults';
 import standingFiltersReducer from '../reducers/standingFilters';
 import standingResultReducer from '../reducers/standingResult';
 import topScorersReducer from '../reducers/topScorers';
+import playersReducer from '../reducers/players';
+import playerFiltersReducer from '../reducers/playerFilters';
 import competitionsReducer from '../reducers/competitions';
 import tooltipReducer from '../reducers/tooltip';
 
@@ -30,6 +32,8 @@ const store = createStore(
 		standingFilters: standingFiltersReducer,
 		standingResult: standingResultReducer,
 		topScorers: topScorersReducer,
+		players: playersReducer,
+		playerFilters: playerFiltersReducer,
 		competitions: competitionsReducer,
 		tooltip: tooltipReducer,
 	}),

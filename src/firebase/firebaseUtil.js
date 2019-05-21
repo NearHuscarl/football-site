@@ -1,6 +1,7 @@
 import defaultsDeep from 'lodash/defaultsDeep';
 import has from 'lodash/has';
 import uniq from 'lodash/uniq';
+import camelCase from 'lodash/camelCase';
 import moment from 'moment';
 import firestore from './firebase';
 import hashMultipleWords from '../utilities/hashMultipleWords'
@@ -93,10 +94,25 @@ class FirebaseUtil {
 				console.log(matchDates);
 			});
 	}
-	
-	static getAllTeamNames = () => firestore
-		.collection('teams')
-		.get().then((querySnapshot) => {
+
+
+	static getTeamNamesByCompetition = () =>
+		firestore.collection('teams').get().then((querySnapshot) => {
+			const teamNames = {};
+
+			querySnapshot.forEach((doc) => {
+				const team = doc.data();
+				const competition = camelCase(team.competition.name);
+				if (!teamNames[competition]) teamNames[competition] = {};
+				
+				teamNames[competition][team.id] = trimTeamName(team.name);
+			});
+
+			return teamNames;
+		})
+
+	static getAllTeamNames = () =>
+		firestore.collection('teams').get().then((querySnapshot) => {
 			const teamNames = {
 				shortName: [],
 				name: [],

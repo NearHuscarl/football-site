@@ -19,7 +19,7 @@ const withHistory = (WrappedComponent) =>
 			const { team } = this.state;
 			const { history } = this.props;
 
-			history.push(`team/${team.id}`)
+			history.push(`/team/${team.id}`)
 		}
 
 		render() {
