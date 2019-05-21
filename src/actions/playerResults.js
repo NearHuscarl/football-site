@@ -87,7 +87,7 @@ const getQueriesFromFilters = (filters) => {
 
 	if (filters.filterType === 'Age') {
 		return collection
-			.where(`_query.name_birthday.${filters.query}`, '>=', getBirthday(filters.maxAge))
+			.where(`_query.name_birthday.${filters.query}`, '>=', getBirthday(filters.maxAge + 1))
 			.where(`_query.name_birthday.${filters.query}`, '<=', getBirthday(filters.minAge))
 			.orderBy(`_query.name_birthday.${filters.query}`, 'asc');
 	}
