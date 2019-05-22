@@ -99,6 +99,16 @@ class PlayerList extends React.Component {
 
 		return <Rating>{rating}</Rating>;
 	}
+	
+	// Stats is number with unit in string: '83kg', '$470K', '1.89m'...
+	statsComparer = (stats1, stats2) => {
+		const getNumber = (stats) => Number(stats.replace(/[^\d]/g, ''))
+		const num1 = getNumber(stats1);
+		const num2 = getNumber(stats2);
+
+		if (num1 === num2) return 0;
+		return num1 > num2 ? 1 : -1;
+	}
 
 	render() {
 		const { displayTeam, displayHeight, displayWeight, players } = this.props;
@@ -137,10 +147,10 @@ class PlayerList extends React.Component {
 					<AgGridColumn headerName='Age' field='age' width={50} />
 					<AgGridColumn headerName='Overall' field='overallRating' width={67} cellRenderer='ratingRenderer' />
 					<AgGridColumn headerName='Potential' field='potential' cellRenderer='ratingRenderer' />
-					<AgGridColumn headerName='Value' field='value' width={69} />
-					<AgGridColumn headerName='Wage' field='wage' width={69} />
-					<AgGridColumn headerName='Height' field='height' width={78} hide={!displayHeight} />
-					<AgGridColumn headerName='Weight' field='weight' width={84} hide={!displayWeight} />
+					<AgGridColumn headerName='Value' field='value' width={69} comparator={this.statsComparer} />
+					<AgGridColumn headerName='Wage' field='wage' width={69} comparator={this.statsComparer} />
+					<AgGridColumn headerName='Height' field='height' width={78} hide={!displayHeight} comparator={this.statsComparer} />
+					<AgGridColumn headerName='Weight' field='weight' width={84} hide={!displayWeight} comparator={this.statsComparer} />
 				</AgGridReact>
 			</div>
 		)
