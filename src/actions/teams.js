@@ -9,17 +9,6 @@ import obsoleteFDTeamLogoIds from '../utilities/obsoleteFDTeamLogoIds';
 import { competitionIds as competitionIdSet } from '../settings';
 import Log from '../utilities/log'
 
-const fetchTeamsPending = () => ({
-	type: 'FETCH_TEAMS_PENDING',
-});
-
-const fetchTeamsCompleted = (teams) => ({
-	type: 'FETCH_TEAMS_COMPLETED',
-	payload: {
-		teams,
-	},
-});
-
 export const getTeamDetails = () =>
 	fetch('https://gist.githubusercontent.com/NearHuscarl/7f171acfdbb5ad4dd74d6676c30c587f/raw/ac0d86e1d66c4c25c49d123764d0121c9e9667a3/squads.json')
 		.then((response) => response.json());
@@ -30,14 +19,8 @@ export const getTeamDetails = () =>
  * @param {object} teamDetails 
  * @param {object} playerDict 
  */
-const mergeTeamInfo = (fdTeam, sofifaTeam, playerDict, fdTeamDict) => {
+const mergeTeamInfo = (fdTeam, sofifaTeam, fdTeamDict) => {
 	const team = { ...fdTeam, ...sofifaTeam, };
-	const squad = team.squad.map((player) => {
-		const result = playerDict[player.id];
-		result.role = player.role;
-		result.team.id = fdTeam.id;
-		return result;
-	});
 
 	team.id = fdTeam.id; 
 	team.rivalTeam.id = Number(fdTeamDict[sofifaTeam.rivalTeam.id]) || -1;
@@ -58,10 +41,26 @@ const mergeTeamInfo = (fdTeam, sofifaTeam, playerDict, fdTeamDict) => {
 	delete team.email;
 	delete team.phone;
 	delete team.website;
-	delete team.squad; // squad is a seperate subcollection
+	delete team.squad; // squad is a seperate collection
 
-	return { team, squad };
+	return team;
 }
+
+/**
+ * 
+ * @param {object} fdTeam 
+ * @param {{
+ * 	squad: object[]
+ * }} sofifaTeam 
+ * @param {*} playerDict 
+ */
+const getSquad = (fdTeam, sofifaTeam, playerDict) =>
+	sofifaTeam.squad.map((player) => {
+		const result = playerDict[player.id];
+		result.role = player.role;
+		result.team.id = fdTeam.id;
+		return result;
+	});
 
 const refreshTeam = (competitionIds) => {
 	const footballData = new FootballData(process.env.FOOTBALL_DATA_API_KEY);
@@ -92,22 +91,18 @@ const refreshTeam = (competitionIds) => {
 			prev.then(async () => {
 				const teamBatch = firestore.batch();
 				const { competition } = fdTeamResult;
+				const competitionRef = firestore.doc(`competitions/${competition.id}`)
 
 				fdTeamResult.teams.forEach((t) => {
 					const fdTeam = t;
 					fdTeam.competition = { id: competition.id, name: competition.name };
 					const sofifaTeam = sofifaTeamDict[footballDataToSofifaTeamId[fdTeam.id]];
-					const { team, squad } = mergeTeamInfo(fdTeam, sofifaTeam, playerDict, fdTeamDict);
-					const squadBatch = firestore.batch();
-					const teamRef = firestore.doc(`teams/${team.id}`);
+					const team = mergeTeamInfo(fdTeam, sofifaTeam, fdTeamDict);
+					const squad = getSquad(fdTeam, sofifaTeam, playerDict);
+					const teamRef = firestore.doc(`teams/${team.id}`)
 
-					teamBatch.set(teamRef, team, { merge: true });
-
-					squad.forEach((player) => {
-						const playerRef = firestore.doc(`teams/${team.id}/squad/${player.id}`);
-						squadBatch.set(playerRef, player, { merge: true });
-					});
-					squadBatch.commit().then(() => Log.debug(`batch update team ${team.name} squad`));
+					teamBatch.set(teamRef, { ...team, squad }, { merge: true });
+					teamBatch.set(competitionRef, { teams: { [team.id]: team } }, { merge: true });
 				});
 
 				await teamBatch.commit().then(() => {
@@ -127,22 +122,5 @@ const checkUpdateTeams = (force = false, competitionIds = Object.values(competit
 			}
 			return Promise.resolve();
 		});
-
-export const startFetchTeams = () =>
-	(dispatch) => {
-		dispatch(fetchTeamsPending());
-		return firestore.collection('teams').get().then((querySnapshot) => {
-			const teamResults = {};
-
-			querySnapshot.forEach((doc) => {
-				const team = doc.data();
-				const competitionId = team.competition.id;
-				
-				if (!teamResults[competitionId]) teamResults[competitionId] = {};
-				teamResults[competitionId][team.id] = team;
-			});
-			dispatch(fetchTeamsCompleted(teamResults));
-		});
-	}
 
 export default checkUpdateTeams;

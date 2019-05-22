@@ -137,8 +137,10 @@ export const teamPropTypes = PropTypes.shape({
 	}),
 });
 
-export const teamModelPropTypes = PropTypes.objectOf(
-	PropTypes.objectOf(teamPropTypes),
+export const competitionModelPropTypes = PropTypes.objectOf(
+	PropTypes.shape({
+		teams: PropTypes.objectOf(teamPropTypes),
+	}),
 );
 
 export const scorerPropTypes = PropTypes.shape({

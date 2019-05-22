@@ -1,7 +1,7 @@
 import FootballData from 'footballdata-api-v2';
 import deburr from 'lodash/deburr'
 import firestore from '../firebase/firebase';
-import { checkCacheTime, updateCacheTime, get } from './util';
+import { checkCacheTime, updateCacheTime } from './util';
 import Log from '../utilities/log';
 
 export const fetchTopScorersPending = () => ({
@@ -59,8 +59,9 @@ const getPlayerDetails = async (scorers) => {
 			const scorerTeamId = scorer.team.id;
 
 			if (!topScorerTeams[scorerTeamId]) {
-				const team = await get(firestore.collection(`teams/${scorerTeamId}/squad`))
-				topScorerTeams[scorerTeamId] = team;
+				const squad = await firestore.doc(`teams/${scorerTeamId}`).get()
+					.then((doc) => doc.data().squad);
+				topScorerTeams[scorerTeamId] = squad;
 			}
 
 			const squad = topScorerTeams[scorerTeamId];
@@ -94,7 +95,9 @@ const getPlayerDetails = async (scorers) => {
 
 		}), Promise.resolve());
 
-	Log.debug('top scorers detail not found', notFound);
+	if (notFound.length > 0) {
+		Log.debug('top scorers detail not found', notFound);
+	}
 	return results;
 }
 
@@ -116,18 +119,17 @@ const refreshTopScorer = (competitionId) => {
 	const footballData = new FootballData(process.env.FOOTBALL_DATA_API_KEY);
 
 	Log.warning(`start getting top scorers: competitionId=${competitionId}`);
-	return footballData.getScorersFromCompetition({
-		competitionId,
-	}).then((data) => {
-		return flattenTopScorersData(data);
-	}).then((topScorers) => {
-		firestore.doc(`topScorers/${competitionId}`)
-			.set(topScorers)
-			.then(() => updateCacheTime('topScorers', competitionId));
-		return topScorers;
-	}).catch((err) => {
-		Log.error(`refreshTopScorer: ${err}`);
-	});
+	return footballData.getScorersFromCompetition({ competitionId })
+		.then((data) => flattenTopScorersData(data))
+		.then((topScorers) => {
+			firestore.doc(`topScorers/${competitionId}`)
+				.set(topScorers)
+				.then(() => updateCacheTime('topScorers', competitionId));
+			return topScorers;
+		})
+		.catch((err) => {
+			Log.error(`refreshTopScorer: ${err}`);
+		});
 }
 
 const startFetchTopScorers = (competitionId) =>

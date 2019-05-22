@@ -11,14 +11,14 @@ import defaultLogo from '../../public/images/Default_Team_Logo.png';
 import withHistory from '../hoc/TooltipTeam';
 
 const getTeam = (teamId) => {
-	const teams = store.getState().teams.models;
-	const competitionIds = Object.keys(teams);
+	const competitions = store.getState().competitions.models;
+	const competitionIds = Object.keys(competitions);
 
 	for (let i = 0; i < competitionIds.length; i += 1) {
 		const competitionId = competitionIds[i];
 
-		if (has(teams[competitionId], teamId)) {
-			return teams[competitionId][teamId];
+		if (has(competitions[competitionId].teams, teamId)) {
+			return competitions[competitionId].teams[teamId];
 		}
 	}
 	return null;

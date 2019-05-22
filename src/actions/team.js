@@ -1,5 +1,4 @@
 import firestore from '../firebase/firebase';
-import { get } from './util';
 import getAge from '../utilities/getAge';
 
 const fetchTeamPending = () => ({
@@ -23,15 +22,13 @@ const startFetchTeam = (id) =>
 	(dispatch) => {
 		dispatch(fetchTeamPending());
 
-		return Promise.all([
-			firestore.doc(`teams/${id}`).get().then((doc) => doc.data()),
-			get(firestore.collection(`teams/${id}/squad`))
-		]).then((result) => {
-			const [team, squad] = result;
+		return firestore.doc(`teams/${id}`).get()
+			.then((doc) => {
+				const team = doc.data();
 
-			team.squad = squad.map((player) => computeAge(player));
-			dispatch(fetchTeamCompleted(team));
-		});
+				team.squad = team.squad.map((player) => computeAge(player));
+				dispatch(fetchTeamCompleted(team));
+			});
 	}
 
 export default startFetchTeam;

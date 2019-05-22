@@ -8,7 +8,7 @@ import TopScorerList from '../components/TopScorerList';
 import Loader from '../components/Loader';
 import { startSearchStanding } from '../actions/standingResult';
 import obsoleteFDTeamLogoIds from '../utilities/obsoleteFDTeamLogoIds';
-import { teamModelPropTypes, rankPropTypes, topScorerPropTypes } from '../utilities/footballProptypes';
+import { competitionModelPropTypes, rankPropTypes, topScorerPropTypes } from '../utilities/footballProptypes';
 import { historyPropTypes } from '../utilities/routerProptypes'
 
 export class StandingPage extends React.Component {
@@ -18,12 +18,12 @@ export class StandingPage extends React.Component {
 	}
 
 	render() {
-		const { topScorers, standingResult, teams, history } = this.props;
+		const { topScorers, standingResult, competitions, history } = this.props;
 		const { competitionId, result, pending } = standingResult;
 		const table = result.map((rank) => {
 			const { team } = rank;
 			if (has(obsoleteFDTeamLogoIds, team.id)) {
-				team.crestUrl = teams[competitionId][team.id].crestUrl;
+				team.crestUrl = competitions[competitionId].teams[team.id].crestUrl;
 			}
 			return rank;
 		});
@@ -56,7 +56,7 @@ StandingPage.propTypes = {
 		pending: PropTypes.bool,
 	}).isRequired,
 	topScorers: topScorerPropTypes,
-	teams: teamModelPropTypes.isRequired,
+	competitions: competitionModelPropTypes.isRequired,
 	history: historyPropTypes.isRequired,
 };
 
@@ -67,7 +67,7 @@ StandingPage.defaultProps = {
 const mapStateToProps = (state) => ({
 	topScorers: state.topScorers.models[state.standingResult.competitionId],
 	standingResult: state.standingResult,
-	teams: state.teams.models,
+	competitions: state.competitions.models,
 });
 
 const mapDispatchToProps = (dispatch) => ({

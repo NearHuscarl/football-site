@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { css } from 'emotion';
-import startCase from 'lodash/startCase';
 import get from 'lodash/get';
 import SearchBar from './SearchBar';
 import PageHeader from './PageHeader';
@@ -30,9 +29,10 @@ import {
 import startSearchPlayers from '../actions/playerResults';
 import nationalities from '../utilities/nationalities';
 import positions from '../utilities/positions';
-import teams from '../utilities/teams';
 import { player } from '../settings';
+import { competitionModelPropTypes } from '../utilities/footballProptypes';
 import playerFiltersPropTypes from '../utilities/playerFiltersProptypes';
+import trimTeamName from '../utilities/trimTeamName';
 
 const filterTypes = ['General', 'Age', 'Overall Rating', 'Potential'];
 const starOptions = [1, 2, 3, 4, 5];
@@ -58,19 +58,25 @@ class PlayerListFilters extends React.Component {
 
 	getTeamOptions = () => {
 		const groupOptions = [];
-		Object.keys(teams).forEach((competitionName) => {
+		const { competitions } = this.props;
+
+		Object.keys(competitions).forEach((competitionId) => {
+			const competition = competitions[competitionId];
 			const options = [];
-			Object.keys(teams[competitionName]).forEach((teamId) => {
+			
+			Object.keys(competition.teams).forEach((teamId) => {
 				options.push({
-					label: teams[competitionName][teamId],
+					label: trimTeamName(competition.teams[teamId].name),
 					value: Number(teamId),
 				});
 			});
+
 			groupOptions.push({
-				label: startCase(competitionName),
+				label: competition.name,
 				options,
 			});
 		});
+
 		return groupOptions;
 	}
 
@@ -378,6 +384,7 @@ export const MockPlayerListFilters = PlayerListFilters;
 PlayerListFilters.propTypes = {
 	isSearching: PropTypes.bool.isRequired,
 	filters: playerFiltersPropTypes.isRequired,
+	competitions: competitionModelPropTypes.isRequired,
 	setPlayerFilterType: PropTypes.func.isRequired,
 	setPlayerSearchQuery: PropTypes.func.isRequired,
 	setPlayerNationality: PropTypes.func.isRequired,
@@ -398,6 +405,7 @@ PlayerListFilters.propTypes = {
 
 const mapStateToProps = (state) => ({
 	isSearching: state.players.pending && state.players.mode === 'search',
+	competitions: state.competitions.models,
 });
 
 const mapDispatchToProps = (dispatch) => ({

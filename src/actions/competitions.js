@@ -27,16 +27,13 @@ const refreshCompetitions = () => {
 	}).then((response) => response.json()).then((data) => {
 		const competitionArray = data.competitions;
 		const competitionIds = Object.values(competitionIdSet);
-		const results = {};
 
 		competitionArray.forEach((competition) => {
 			if (competitionIds.indexOf(competition.id) !== -1) {
-				results[competition.id] = competition;
-				firestore.doc(`competitions/${competition.id}`).set(competition);
+				firestore.doc(`competitions/${competition.id}`).set(competition, { merge: true });
 			}
 		});
 		updateCacheTime('competitions');
-		return results;
 	});
 }
 
@@ -47,7 +44,7 @@ const startFetchCompetitions = () =>
 		return checkCacheTime('competitions')
 			.then((expired) => {
 				if (expired) {
-					return refreshCompetitions()
+					refreshCompetitions()
 				}
 
 				const results = {};

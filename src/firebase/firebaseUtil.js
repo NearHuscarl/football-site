@@ -95,7 +95,6 @@ class FirebaseUtil {
 			});
 	}
 
-
 	static getTeamNamesByCompetition = () =>
 		firestore.collection('teams').get().then((querySnapshot) => {
 			const teamNames = {};

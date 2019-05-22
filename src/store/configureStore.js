@@ -4,7 +4,6 @@ import { composeWithDevTools } from 'redux-devtools-extension'; // eslint-disabl
 import articleReducer from '../reducers/articles';
 import standingsReducer from '../reducers/standings';
 import matchesReducer from '../reducers/matches';
-import teamsReducer from '../reducers/teams';
 import teamReducer from '../reducers/team';
 import articleFiltersReducer from '../reducers/articleFilters';
 import articleResultsReducer from '../reducers/articleResults';
@@ -23,7 +22,6 @@ const store = createStore(
 		articles: articleReducer,
 		standings: standingsReducer,
 		matches: matchesReducer,
-		teams: teamsReducer,
 		team: teamReducer,
 		articleFilters: articleFiltersReducer,
 		articleResults: articleResultsReducer,

@@ -12,7 +12,7 @@ import { history } from '../routers/AppRouter';
 import Image from './Image';
 import Loader from './Loader';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
-import { teamModelPropTypes, matchPropTypes } from '../utilities/footballProptypes';
+import { competitionModelPropTypes, matchPropTypes } from '../utilities/footballProptypes';
 
 class FixtureTile extends React.Component {
 	constructor(props) {
@@ -27,21 +27,21 @@ class FixtureTile extends React.Component {
 	}
 
 	isDataReady = () => {
-		const { fixtures, teams } = this.props;
+		const { fixtures, competitions } = this.props;
 
-		if (isEmpty(fixtures) || isEmpty(teams)) {
+		if (isEmpty(fixtures) || isEmpty(competitions)) {
 			return false;
 		}
 
-		return this.competitionIds.every((competitionId) => has(teams, competitionId))
+		return this.competitionIds.every((competitionId) => has(competitions, competitionId))
 			&& this.competitionIds.some((competitionId) => has(fixtures, competitionId));
 	}
 
 	renderFixture = (fixture) => {
-		const { teams } = this.props;
+		const { competitions } = this.props;
 		const { competition, homeTeam, awayTeam } = fixture;
-		const homeTeamDetail = teams[competition.id][homeTeam.id];
-		const awayTeamDetail = teams[competition.id][awayTeam.id];
+		const homeTeamDetail = competitions[competition.id].teams[homeTeam.id];
+		const awayTeamDetail = competitions[competition.id].teams[awayTeam.id];
 		const date = moment.utc(fixture.utcDate).format('HH:mm ddd DD MMM');
 
 		return (
@@ -139,12 +139,12 @@ const getMatchesByCompetition = (matches) => {
 
 FixtureTile.propTypes = {
 	fixtures: PropTypes.objectOf(PropTypes.arrayOf(matchPropTypes)).isRequired,
-	teams: teamModelPropTypes.isRequired,
+	competitions: competitionModelPropTypes.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	fixtures: getMatchesByCompetition(state.matches.models),
-	teams: state.teams.models,
+	competitions: state.competitions.models,
 })
 
 export default connect(

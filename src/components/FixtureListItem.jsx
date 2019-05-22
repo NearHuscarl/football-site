@@ -3,10 +3,11 @@ import moment from 'moment';
 import Image from './Image';
 import TooltipTeam from './TooltipTeam';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
-import { matchPropTypes, teamPropTypes } from '../utilities/footballProptypes';
+import { matchPropTypes } from '../utilities/footballProptypes';
 
-const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
+const FixtureListItem = ({ fixture }) => {
 	const date = moment.utc(fixture.utcDate).format('HH:mm');
+	const { homeTeam, awayTeam } = fixture;
 
 	return (
 		<div className='fixturelist-item' key={fixture.id}>
@@ -38,8 +39,6 @@ const FixtureListItem = ({ fixture, homeTeam, awayTeam }) => {
 
 FixtureListItem.propTypes = {
 	fixture: matchPropTypes.isRequired,
-	homeTeam: teamPropTypes.isRequired,
-	awayTeam: teamPropTypes.isRequired,
 };
 
 export default FixtureListItem;
