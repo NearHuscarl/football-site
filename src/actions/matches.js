@@ -11,10 +11,11 @@ const fetchMatchesPending = () => ({
 	type: 'FETCH_MATCHES_PENDING',
 });
 
-const fetchMatchesCompleted = (matches) => ({
+const fetchMatchesCompleted = (matches, competitions) => ({
 	type: 'FETCH_MATCHES_COMPLETED',
 	payload: {
 		matches,
+		competitions,
 	},
 });
 
@@ -59,7 +60,7 @@ export const refreshMatch = (params = defaultParams) => {
 }
 
 const startFetchMatches = () =>
-	(dispatch) => {
+	(dispatch, getState) => {
 		dispatch(fetchMatchesPending());
 
 		return checkCacheTime('matches')
@@ -74,7 +75,8 @@ const startFetchMatches = () =>
 					.where('utcDate', '<', moment().add(11, 'days').format('YYYY-MM-DD')));
 			})
 			.then((matches) => {
-				dispatch(fetchMatchesCompleted(matches));
+				const competitions = getState().competitions.models;
+				dispatch(fetchMatchesCompleted(matches, competitions));
 			});
 	}
 

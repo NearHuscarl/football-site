@@ -12,7 +12,7 @@ import { history } from '../routers/AppRouter';
 import Image from './Image';
 import Loader from './Loader';
 import defaultLogo from '../../public/images/Default_Team_Logo.png';
-import { competitionModelPropTypes, matchPropTypes } from '../utilities/footballProptypes';
+import { matchPropTypes } from '../utilities/footballProptypes';
 
 class FixtureTile extends React.Component {
 	constructor(props) {
@@ -27,36 +27,32 @@ class FixtureTile extends React.Component {
 	}
 
 	isDataReady = () => {
-		const { fixtures, competitions } = this.props;
+		const { fixtures } = this.props;
 
-		if (isEmpty(fixtures) || isEmpty(competitions)) {
+		if (isEmpty(fixtures)) {
 			return false;
 		}
 
-		return this.competitionIds.every((competitionId) => has(competitions, competitionId))
-			&& this.competitionIds.some((competitionId) => has(fixtures, competitionId));
+		return this.competitionIds.some((competitionId) => has(fixtures, competitionId));
 	}
 
 	renderFixture = (fixture) => {
-		const { competitions } = this.props;
-		const { competition, homeTeam, awayTeam } = fixture;
-		const homeTeamDetail = competitions[competition.id].teams[homeTeam.id];
-		const awayTeamDetail = competitions[competition.id].teams[awayTeam.id];
+		const { homeTeam, awayTeam } = fixture;
 		const date = moment.utc(fixture.utcDate).format('HH:mm ddd DD MMM');
 
 		return (
 			<div className='fixture-body' key={fixture.id}>
 				<div className='fixture__logo' >
-					<Image alt='home team' src={homeTeamDetail.crestUrl} defaultImage={defaultLogo} />
+					<Image alt='home team' src={homeTeam.crestUrl} defaultImage={defaultLogo} />
 				</div>
 				<div className='fixture__info'>
 					<div className='fixture__team'>
 						<span className='fixture__team-name'>
-							{homeTeamDetail.shortName}
+							{homeTeam.shortName}
 						</span>
 						<span className='fixture__team-score'>-</span>
 						<span className='fixture__team-name'>
-							{awayTeamDetail.shortName}
+							{awayTeam.shortName}
 						</span>
 					</div>
 					<div className='fixture__date'>
@@ -64,7 +60,7 @@ class FixtureTile extends React.Component {
 					</div>
 				</div>
 				<div className='fixture__logo' >
-					<Image alt='away team' src={awayTeamDetail.crestUrl} defaultImage={defaultLogo} />
+					<Image alt='away team' src={awayTeam.crestUrl} defaultImage={defaultLogo} />
 				</div>
 			</div>
 		);
@@ -139,12 +135,10 @@ const getMatchesByCompetition = (matches) => {
 
 FixtureTile.propTypes = {
 	fixtures: PropTypes.objectOf(PropTypes.arrayOf(matchPropTypes)).isRequired,
-	competitions: competitionModelPropTypes.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	fixtures: getMatchesByCompetition(state.matches.models),
-	competitions: state.competitions.models,
 })
 
 export default connect(

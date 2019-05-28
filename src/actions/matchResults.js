@@ -2,17 +2,18 @@ import moment from 'moment';
 import firestore from '../firebase/firebase';
 import { refreshMatch } from './matches';
 import { get } from './util';
-import { competitions } from '../settings';
+import { competitions as competitionIdSet } from '../settings';
 import Log from '../utilities/log';
 
 const searchMatchesPending = () => ({
 	type: 'SEARCH_MATCHES_PENDING',
 });
 
-const searchMatchesCompleted = (results) => ({
+const searchMatchesCompleted = (results, competitions) => ({
 	type: 'SEARCH_MATCHES_COMPLETED',
 	payload: {
 		results,
+		competitions,
 	},
 });
 
@@ -68,7 +69,7 @@ const startSearchMatches = () => (dispatch, getState) => {
 		.then((needUpdate) => {
 			if (needUpdate) {
 				return refreshMatch({
-					competitionIds: Object.keys(competitions).toString(),
+					competitionIds: Object.keys(competitionIdSet).toString(),
 					...getDateRangeToUpdateMatches(startDate),
 				}).then((matches) => matches.filter((match) => {
 					const utcDate = moment.utc(match.utcDate).format('YYYY-MM-DD');
@@ -84,7 +85,8 @@ const startSearchMatches = () => (dispatch, getState) => {
 		.then((matches) => {
 			const filteredResults = matches.filter((match) =>
 				(match.competition.id === filters.competition || filters.competition === 'all'));
-			dispatch(searchMatchesCompleted(filteredResults));
+			const competitions = getState().competitions.models;
+			dispatch(searchMatchesCompleted(filteredResults, competitions));
 		});
 }
 
