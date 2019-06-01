@@ -30,7 +30,7 @@ module.exports = {
             'assert': 'either', // 'htmlFor', 'nesting', 'both', 'either'
         }],
         // "linebreak-style": ["error", "unix"]
-        'linebreak-style': ['error', 'windows'],
+        // 'linebreak-style': ['error', 'windows'],
         'indent': [2, 'tab', { 'SwitchCase': 1 }],
         'prefer-template': 0,
         'react/destructuring-assignment': [0],

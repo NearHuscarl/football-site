@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Image = ({ alt, defaultImage, ...props }) => (
+const Image = ({ alt, src, defaultImage, ...props }) => (
 	<img
 		onError={(e) => {
 			e.target.onerror = null;
@@ -10,15 +10,18 @@ const Image = ({ alt, defaultImage, ...props }) => (
 			}
 		}}
 		alt={alt}
+		src={src || defaultImage}
 		{...props} />
 );
 
 Image.propTypes = {
+	src: PropTypes.string,
 	alt: PropTypes.string.isRequired,
 	defaultImage: PropTypes.string,
 };
 
 Image.defaultProps = {
+	src: '',
 	defaultImage: null,
 };
 

@@ -6,8 +6,16 @@
     "configurations": [
         {
             "type": "chrome",
+            "request": "launch",
+            "name": "Launch new Chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceRoot}",
+            "runtimeExecutable": "/usr/bin/chromium"
+        },
+        {
+            "type": "chrome",
             "request": "attach",
-            "name": "Launch Chrome against localhost",
+            "name": "Attach",
             "url": "http://localhost:8080/*",
             "webRoot": "${workspaceFolder}",
             // https://stackoverflow.com/a/53319718/9449426
