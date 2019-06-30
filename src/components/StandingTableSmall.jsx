@@ -55,7 +55,7 @@ class StandingTableSmall extends React.Component {
 		return '';
 	}
 
-	getRowData = (standing) => standing.map((row) => {
+	getRowData = (standing = []) => standing.map((row) => {
 		const newRow = row;
 		newRow.team.name = trimTeamName(row.team.name);
 		return newRow;
@@ -88,12 +88,13 @@ class StandingTableSmall extends React.Component {
 
 StandingTableSmall.propTypes = {
 	className: PropTypes.string,
-	standing: PropTypes.arrayOf(rankPropTypes).isRequired,
+	standing: PropTypes.arrayOf(rankPropTypes),
 	competitionId: PropTypes.number.isRequired,
 };
 
 StandingTableSmall.defaultProps = {
 	className: '',
+	standing: undefined,
 };
 
 export default StandingTableSmall;

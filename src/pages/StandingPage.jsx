@@ -19,7 +19,7 @@ export class StandingPage extends React.Component {
 
 	render() {
 		const { topScorers, standingResult, competitions, history } = this.props;
-		const { competitionId, result, pending } = standingResult;
+		const { competitionId, result = [], pending } = standingResult;
 		const table = result.map((rank) => {
 			const { team } = rank;
 			if (has(obsoleteFDTeamLogoIds, team.id)) {
