@@ -16,7 +16,7 @@ class StandingTile extends React.Component {
 		this.competitions = [
 			competitionIds.premierLeague,
 			competitionIds.primeraDivision,
-			competitionIds.bundesliga,
+			// competitionIds.bundesliga,
 			competitionIds.serieA,
 		];
 	}

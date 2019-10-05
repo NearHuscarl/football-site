@@ -23,6 +23,7 @@ class FixtureTile extends React.Component {
 			competitionIds.primeraDivision,
 			competitionIds.bundesliga,
 			competitionIds.serieA,
+			competitionIds.championLeague,
 		];
 	}
 
@@ -79,11 +80,16 @@ class FixtureTile extends React.Component {
 			}
 		});
 		matchdays.sort();
+		
+		let headerText = competition.name;
+		if (competition.id !== competitionIds.championLeague) {
+			headerText += ' | Matchday ${matchdays.join('/')}'
+		}
 
 		return (
 			<div className='tile-imageitem' key={competitionId}>
 				<div className='fixture-title'>
-					{`${competition.name} | Matchday ${matchdays.join('/')}`}
+					{headerText}
 				</div>
 				{latestFixtures.map((fixture) => this.renderFixture(fixture))}
 			</div>
@@ -92,29 +98,40 @@ class FixtureTile extends React.Component {
 
 	render() {
 		const fixtureCompeitions = Object.keys(this.props.fixtures).map((k) => Number(k));
+		const { matchPending } = this.props;
+		const isDataReady = this.isDataReady();
 
-		return (this.isDataReady() ?
-			<div className='carousel-wrapper'>
-				<Carousel
-					width='34rem'
-					useKeyboardArrows
-					infiniteLoop
-					autoPlay
-					interval={5000}
-					transitionTime={600}
-					showIndicators={false}
-					showThumbs={false}
-					showStatus={false}
-					onClickItem={() => history.push('/fixtures')}>
-					{
-						intersection(fixtureCompeitions, this.competitionIds)
-							.map((competitionId) => this.renderFixtures(competitionId))
-					}
-				</Carousel>
-			</div>
-			:
-			<Loader />
-		);
+		if (isDataReady) {
+			return (
+				<div className='carousel-wrapper'>
+					<Carousel
+						width='34rem'
+						useKeyboardArrows
+						infiniteLoop
+						autoPlay
+						interval={5000}
+						transitionTime={600}
+						showIndicators={false}
+						showThumbs={false}
+						showStatus={false}
+						onClickItem={() => history.push('/fixtures')}>
+						{
+							intersection(fixtureCompeitions, this.competitionIds)
+								.map((competitionId) => this.renderFixtures(competitionId))
+						}
+					</Carousel>
+				</div>
+			);
+		}
+		if (!isDataReady && !matchPending) {
+			return (
+				<div className='carousel-wrapper' style={{ display: 'flex', alignItems: 'center', margin: '0 auto' }}>
+					No match available now
+				</div>
+			);
+		}
+		// if (!isDataReady && matchPending)
+		return <Loader />;
 	}
 }
 
@@ -135,10 +152,12 @@ const getMatchesByCompetition = (matches) => {
 
 FixtureTile.propTypes = {
 	fixtures: PropTypes.objectOf(PropTypes.arrayOf(matchPropTypes)).isRequired,
+	matchPending: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	fixtures: getMatchesByCompetition(state.matches.models),
+	matchPending: state.matches.pending,
 })
 
 export default connect(

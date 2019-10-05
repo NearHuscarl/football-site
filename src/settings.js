@@ -1,6 +1,5 @@
 // Name - ID mappings
 export const competitionIds = {
-	// championLeague: 2001,
 	bundesliga: 2002,
 	premierLeague: 2021,
 	championship: 2016,
@@ -9,6 +8,7 @@ export const competitionIds = {
 	ligue1: 2015,
 	eredivisie: 2003, // Netherlands
 	primeiraLiga: 2017, // Portugal
+	championLeague: 2001,
 }
 
 export const player = {
@@ -70,6 +70,7 @@ export const competitions = {
 	[competitionIds.championship]: 'Championship',
 	[competitionIds.eredivisie]: 'Eredivisie',
 	[competitionIds.primeiraLiga]: 'Primeira Liga',
+	[competitionIds.championLeague]: 'Champions League',
 }
 
 // http://www.football-data.org/documentation/quickstart#filtering
