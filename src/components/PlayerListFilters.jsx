@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { css } from 'emotion';
 import get from 'lodash/get';
+import has from 'lodash/has';
 import SearchBar from './SearchBar';
 import PageHeader from './PageHeader';
 import NumericInput from './NumericInput';
@@ -63,7 +64,9 @@ class PlayerListFilters extends React.Component {
 		Object.keys(competitions).forEach((competitionId) => {
 			const competition = competitions[competitionId];
 			const options = [];
-			
+
+			if (!has(competition, 'teams')) return;
+
 			Object.keys(competition.teams).forEach((teamId) => {
 				options.push({
 					label: trimTeamName(competition.teams[teamId].name),
