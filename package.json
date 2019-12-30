@@ -8,6 +8,9 @@
 		"type": "git",
 		"url": "https://github.com/NearHuscarl/football-site.git"
 	},
+	"engines": {
+		"node": "12.13.0"
+	},
 	"scripts": {
 		"lint": "eslint . --ext=js,jsx --ignore-path .eslintignore",
 		"build:dev": "webpack",
