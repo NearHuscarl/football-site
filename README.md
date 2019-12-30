@@ -60,12 +60,17 @@ $ yarn test
 ## Deploy on heroku
 - Install heroku CLI on your computer
 
+- Setup heroku
 ```bash
 $ heroku login
 $ cd <project-dir>
 $ heroku create app-name
-$ ./setup_heroku.sh # this is bash script, use git bash to run on window
+$ ./setup_heroku.sh # this is a bash script, use git bash to run on window
 $ git remote -v # confirm the remote is setup
+```
+
+- Deploy on heroku
+```bash
 $ git push heroku master
 ```
 
