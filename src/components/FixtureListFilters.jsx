@@ -64,7 +64,7 @@ class FixtureListFilters extends React.Component {
 				<div className="input-group">
 					<div className="input-group__item">
 						<SelectOptions
-							width='18rem'
+							width='20rem'
 							defaultValue={this.getDefaultOption()}
 							onChange={this.onSourceChange}
 							options={this.getCompetitionOptions()}
