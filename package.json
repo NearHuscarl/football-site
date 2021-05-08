@@ -30,7 +30,7 @@
 		"font-awesome": "^4.7.0",
 		"footballdata-api-v2": "^2.3.0",
 		"history": "^4.7.2",
-		"lodash": "^4.17.13",
+		"lodash": "^4.17.21",
 		"moment": "^2.22.2",
 		"newsapi": "^2.4.0",
 		"normalize.css": "^8.0.0",
